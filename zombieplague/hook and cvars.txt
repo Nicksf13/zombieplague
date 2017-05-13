@@ -1,0 +1,72 @@
+[Round]
+- Atributes:
+Name - String
+Chance - Number
+MinPlayers - Number
+SpecialRound - Boolean
+Deathmatch - Boolean
+StartSound - String
+
+- Functions:
+StartFunction() - Used to prepare the start of the round
+
+[Round Manager]
+- Atributes:
+RoundState - Number
+Round - Number
+Rounds - Table<Round>
+PlayersToPlay - Table<Player>
+Deathmatch - Boolean
+
+- Functions:
+AddRoundType(RoundType Round) - Used to add a new round to the gamemode
+
+SearchRounds() - Called on initialize, used to load gamemode rounds
+
+GetServerStatus() - Return: ServerStatus -- Used to return the current ServerStatus from server
+
+SetTimer(Number Time, Function TimeFunction) -- Used to set a round event (Like round end)
+
+GetTime() - Return: Number -- Used to get remaining event time
+
+SetRoundState(Number RoundState) -- Used to set the round state (ROUND Constants)
+
+GetRoundState() -- Used to return the current round state
+
+SetSpecialRound(Boolean SpecialRound) -- Used to configure if the round is an infection round or a killing round
+
+IsEspecialRound() - Return: Boolean -- Used to retrieve if the round is special
+
+CheckRoundEnd() -- Used to check if the round should end (No humans/zombies)
+
+WaitPlayers() -- Used to make server wait for players
+
+EndRound(Number Reason) -- Used to end the round with a reason
+
+TryNewRound() -- Used to check if a new round preparation can start
+
+Prepare() - Return: Boolean -- Used to try a new round preparation, if the round can start it will return true, if not, false.
+
+AddRound() -- Used to inc 1 to round counter
+
+GetRound() - Return Number -- Used to retrieve round counter
+
+[Class Manager]
+
+[HumanClass]
+- Atributes:
+Name - String
+MaxHealth - Number
+Armor - Number
+PModel - String
+Speed - Number
+RunSpeed - Number
+CrouchSpeed - Number
+Gravity - Number
+Battery - Number
+Breath - Number
+JumpPower - Number
+Footstep - Boolean
+
+-Functions:
+FallFunction() - Return: Boolean -- Used to set if the class will suffer from fall damage

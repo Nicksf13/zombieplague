@@ -1,0 +1,11 @@
+"zombieplague"
+{
+	"base"		"base"
+	"title"		"Zombie Plague"
+	"maps"		"^zm_|^zs_"
+	"menusystem"	"1"
+
+	"settings"
+	{
+	}
+}
