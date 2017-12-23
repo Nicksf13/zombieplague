@@ -6,8 +6,10 @@ function ExtraItem:OnBuy(ply)
 	ply:GodEnable()
 	ply:ZPEmitSound(SafeTableRandom(ZombieMadnessSounds), 5, true)
 	timer.Create("ZPGod" .. ply:SteamID64(), 5, 1, function()
-		ply:SetLight(nil)
-		ply:GodDisable()
+		if IsValid(ply) then
+			ply:SetLight(nil)
+			ply:GodDisable()
+		end
 	end)
 end
 function ExtraItem:CanBuy(ply)
