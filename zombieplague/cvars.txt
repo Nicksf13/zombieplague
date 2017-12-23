@@ -1,0 +1,22 @@
+zp_ap_total - How many ammo packs a human will earn after 'zp_ap_damage' damage caused.
+zp_ap_damage - How much damage a human must cause to earn an ammo packs.
+zp_ap_zombies - Zombie must earn ammo packs when infect an human
+zp_ap_zombies_total - How many ammo packs a zombie will earn when he infected a human
+zp_ap_kill_human - How many ammo packs a zombie will earn when killed a zombie
+zp_ap_kill_zombie - How many ammo packs a zombie will earn when killed a zombie
+zp_realistic_mode - Is realistc mode?
+zp_nemesis_health_mode - Nemesis health mode - 0 = No extra health, 1 = zp_nemesis_health_player * Total alive humans, 2 - zp_nemesis_health
+zp_nemesis_health_player - Nemesis health per player
+zp_nemesis_health - Nemesis health
+zp_survivor_health_mode - Survivor health mode - 0 = No extra health, 1 = zp_survivor_health_player * Total alive humans, 2 - zp_survivor_health
+zp_survivor_health_player - Survivor health per player
+zp_survivor_health - Survivor health
+zp_zombie_footstep - Zombie must emit footstep sound?
+zp_admin_human_model - Set if admin will receive a special human player model.
+zp_admin_zombie_model - Set if admin will receive a special zombie player model.
+zp_voice_all - Player should hear other team players?
+zp_can_hear_death - Player should hear dead players?
+zp_chat_all - Player can read other team players?
+zp_can_see_death - Player can read dead players?
+zp_maps_to_vote - How many maps will be showed on votemap
+zp_map_prop_damage_multiplier - Prop damage multiplier

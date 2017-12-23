@@ -1,12 +1,25 @@
-ZOMBIE_KNIFE = "weapon_fists"
+ZOMBIE_KNIFE = "zp_weapon_fists"
 HUMAN_KNIFE = "weapon_crowbar"
 
 INFECTION_BOMB = "weapon_frag"
 
-ALLOWED_PREFIX = {"zm_", "ze_"}
+ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
 
 AdminHumanPlayerModel = ""
 AdminZombiePlayerModel = ""
+
+NemesisClass = {Health = 3000,
+		Speed = 250,
+		RunSpeed = 270,
+		CrouchedSpeed = 0.5,
+		Gravity = 0.8
+	}
+SurvivorClass = {Health = 250,
+		Speed = 250,
+		RunSpeed = 270,
+		CrouchedSpeed = 0.5,
+		Gravity = 0.8
+	}
 
 ---------------------------------Sounds---------------------------------
 FallDamageSounds = {"zombieplague/zombie_fall1.mp3"} -- For Zombies
@@ -49,13 +62,19 @@ ZombieDeathSounds = {"npc/zombie/zombie_die1.wav",
 ZombieIdle = {"zombieplague/zombie_brains1.mp3",
 	"zombieplague/zombie_brains2.mp3"}
 	
-ZombieMadness = {"zombieplague/zombie_madness1.mp3"}
+ZombieMadnessSounds = {"zombieplague/zombie_madness1.mp3"}
 	
 HumanTaunts = {}
 
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
-	
+
+for k, SoundPath in pairs(ZombieKnifeSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieMadnessSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
 for k, SoundPath in pairs(FallDamageSounds) do
 	resource.AddFile("sound/" .. SoundPath)
 end
@@ -116,7 +135,7 @@ CreateConVar("zp_nemesis_health_player", 250, 8, "cvar used to set how much heal
 CreateConVar("zp_nemesis_health", 3000, 8, "cvar used to the health of nemesis.")
 
 CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")
-CreateConVar("zp_survivor_health_player", 250, 8, "cvar used to set how much health survivor will earn per player.")
+CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set how much health survivor will earn per player.")
 CreateConVar("zp_survivor_health", 300, 8, "cvar used to the health of survivor.")
 
 CreateConVar("zp_zombie_footstep", 1, 8, "cvar used to set if zombies will emit footstep sounds.") 
@@ -126,5 +145,11 @@ CreateConVar("zp_admin_zombie_model", 0, 8, "cvar used to set if admin will rece
 
 CreateConVar("zp_voice_all", 1, 8, "cvar used to set if players will hear other team players.")
 CreateConVar("zp_can_hear_death", 0, 8, "cvar used to set if players will hear death players")
+CreateConVar("zp_chat_all", 1, 8, "cvar used to set if players will read other team players.")
+CreateConVar("zp_can_see_death", 0, 8, "cvar used to set if players will read death players")
 
-CreateConVar("zp_maps_to_vote", 7, 8, "cvar used to set how many maps will be displayed on votemap");
+CreateConVar("zp_maps_to_vote", 7, 8, "cvar used to set how many maps will be displayed on votemap")
+CreateConVar("zp_map_prop_damage_multiplier", 1, 8, "cvar used to set the map prop multiplier")
+
+CreateConVar("zp_nemesis_earn", 0, 8, "cvar used to set if nemesis will earn class atributes")
+CreateConVar("zp_survivor_earn", 0, 8, "cvar used to set if survivor will earn class atributes")

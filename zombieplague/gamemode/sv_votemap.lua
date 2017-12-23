@@ -1,13 +1,19 @@
 ZPVoteMap = {MapsToVote = {}, Voting = false}
 
-function ZPVoteMap:StartVotemap(Prefix)
+function ZPVoteMap:StartVotemap(Prefixes)
 	local MapsToVote = {}
 	local Maps = file.Find("maps/*.bsp", "GAME")
 	local i = 0
+	local Map
 	while(#Maps > 0 && i < cvars.Number("zp_maps_to_vote", 7)) do
-		local Map = table.remove(Maps, math.random(1, #Maps))
-		table.insert(MapsToVote, {Name = string.Replace(Map, ".bsp", ""), Votes = 0})
-		i = i + 1
+		Map = table.remove(Maps, math.random(1, #Maps))
+		for k, Prefix in pairs(Prefixes) do
+			if string.StartWith(Map, Prefix) then
+				table.insert(MapsToVote, {Name = string.Replace(Map, ".bsp", ""), Votes = 0})
+				i = i + 1
+				break
+			end
+		end
 	end
 	local AuxVotemap = {}
 	for k, v in pairs(MapsToVote) do

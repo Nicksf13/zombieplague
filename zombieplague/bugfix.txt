@@ -1,0 +1,57 @@
+1.01 -- Changes
+- sv_weaponmanager
+Change the way to add weapons
+WeaponManager:AddWeaponMultiplier(WeaponID, DamageMultiplier) - Weapon.DamageMultiplier can now be set without put the gun in the weapon menu
+
+- zp_default_extraitems
+Zombie Madness fixed
+
+- sv_eventmanager
+Hear footstep issues fixed
+Zombie Health regen is now working
+Zombie Idle sound is now working
+
+- sv_votemap
+Fixed votemap issue: all maps were being listed (no filter).
+
+- sv_roundmanager
+Rounds now can draw
+Rounds are now easier to add (No function required).
+Global vars added
+PlayerCanSeePlayersChat/PlayerCanHearPlayersVoice - When the round ends now you can hear players
+
+- cl_player
+Fixed no player found issue (call a function on a boolean)
+
+- cl_menu
+Classes menus are now describing ZPClass.
+
+- pt-br
+Minor corrections
+
+-plague mode
+Random team sort
+
+-plague mode deathmatch
+Random team sort
+
+-swarm mode
+Random team sort
+
+-Zombie Plague commands are now replaced with Commands:AddCommand()
+
+--Add
+sv_classmanager
+- Classes now have abilities.
+- Classes now have Damage Amplifiers
+- Classes now have description
+- NewHumanClass function created
+- NewZombieClass function created
+
+MAJOR
+- Added sv_commands (Now it's easier to add a command to server)
+- Added sv_mapconfig (Load custom configs for specified maps/prefixes)
+- Added sv_bank (Deposit/withdraw your ammo packs (Admins can give ammo packs now))
+- Added zp_weapon_fists (Custom weapon fists for zombie plague)
+- Added zp_antidote_bullets
+- Added zp_tvirus
