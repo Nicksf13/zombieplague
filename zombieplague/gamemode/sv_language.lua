@@ -2,7 +2,7 @@ Dictionary = {Languages = {}}
 
 function Dictionary:SearchLanguages()
 	local Files = file.Find("zombieplague/gamemode/languages/*.lua", "LUA")
-	if Files != nil then
+	if Files then
 		for k, File in pairs(Files) do
 			include("zombieplague/gamemode/languages/" .. File)
 		end
@@ -21,10 +21,24 @@ function Dictionary:GetServerSideLanguageBook(LanguageID)
 	return Dictionary:GetLanguageBook(LanguageID).Values.Server
 end
 function Dictionary:GetClientSideLanguageBook(LanguageID)
-	if Dictionary.Languages[LanguageID] == nil then
+	if !Dictionary.Languages[LanguageID] then
 		LanguageID = 1
 	end
 	return {ID = LanguageID, Value = Dictionary:GetLanguageBook(LanguageID).Values.Client}
+end
+function Dictionary:RegisterPhrase(LanguageAlias, PhraseID, Phrase, Client)
+	local Language
+	for k, Lang in pairs(self.Languages) do
+		if Lang.ID == LanguageAlias then
+			Language = Lang.Values
+			break
+		end
+	end
+	if Language then
+		Language[(Client and "Client" or "Server")][PhraseID] = Phrase
+	else
+		print("Unkown language: '" .. LanguageAlias .. "'!")
+	end
 end
 function Dictionary:GetLanguageIDs()
 	local Languages = {}
@@ -33,30 +47,14 @@ function Dictionary:GetLanguageIDs()
 	end
 	return Languages
 end
-function Dictionary:BroadcastColorMessage(PhraseID, Clr, Exclude)
-	for k, ply in pairs(player.GetAll()) do
-		if Exclude == nil || !table.HasValue(Exclude, ply) then
-			SendColorMessage(ply, Dictionary:GetPhrase(PhraseID, ply), Clr)
-		end
-	end
-end
-function Dictionary:BroadcastPopupMessage(PhraseID, Exclude)
-	for k, ply in pairs(player.GetAll()) do
-		if Exclude == nil || !table.HasValue(Exclude, ply) then
-			SendPopupMessage(ply, Dictionary:GetPhrase(PhraseID, ply))
-		end
-	end
-end
 function Dictionary:OpenLanguageMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("SendLanguage")
 		net.WriteTable(Dictionary:GetLanguageIDs())
 	net.Send(ply)
 end
-hook.Add("PlayerSay", "ZPLanguages", function(ply, txt)
-	if txt == "/languages" then
-		Dictionary:OpenLanguageMenu(ply)
-	end
+Commands:AddCommand("zombies", "Open language menu.", function(ply, args)
+	Dictionary:OpenLanguageMenu(ply)
 end)
 net.Receive("RequestLanguageMenu", function(len, ply)
 	Dictionary:OpenLanguageMenu(ply)

@@ -10,7 +10,7 @@ local NumpadKeys = {
 	KEY_9,
 	KEY_0,
 }
-MMenu = {Options = {}, Page = 1, NetworkString = ""}
+MMenu = {Options = {}, Page = 1, NetworkString = "", LastPress = 0}
 
 function CreateMenu()
 	MMenu.ZPOptions = {Options = {}}
@@ -29,8 +29,10 @@ function CreateMenu()
 		
 		hook.Add("SetupMove", "ZPMenuKeyListener", function(ply, mvd)
 			for k, PressFunction in pairs(MMenu.ZPOptions.PressFunctions) do
-				if input.WasKeyPressed(NumpadKeys[k]) then
+				if input.WasKeyPressed(NumpadKeys[k]) && MMenu.LastPress < CurTime() then
 					PressFunction(7 * (MMenu.Page - 1) + k)
+					MMenu.LastPress = CurTime() + 0.1
+					break
 				end
 			end
 		end)

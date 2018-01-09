@@ -49,6 +49,15 @@ function PLAYER:GetZPClass()
 		return self:GetHumanClass()
 	end
 end
+function PLAYER:SetNextAbilityUse(NextAbilityUse)
+	self.NextAbilityUse = NextAbilityUse
+end
+function PLAYER:GetNextAbilityUse()
+	return self.NextAbilityUse or 0
+end
+function PLAYER:CanUseAbility()
+	return CurTime() - self:GetNextAbilityUse() > 0
+end
 function PLAYER:GiveZombieAllowedWeapon(Weap)
 	self:AddZombieAllowedWeapon(Weap)
 	self:Give(Weap)
@@ -63,6 +72,9 @@ function PLAYER:GetZombieAllowedWeapons()
 	return self.AllowedWeapons or {}
 end
 function PLAYER:ZombieCanUseWeapon(Weap)
+	if Weap == ZOMBIE_KNIFE then
+		return true
+	end
 	for k, LocalWeap in pairs(self:GetZombieAllowedWeapons()) do
 		if LocalWeap == Weap then
 			return true
@@ -70,8 +82,22 @@ function PLAYER:ZombieCanUseWeapon(Weap)
 	end
 	return false
 end
+function PLAYER:RemoveZombieAllowedWeapon(Weapon)
+	self:StripWeapon(Weapon)
+	table.RemoveByValue(self:GetZombieAllowedWeapons(), Weapon)
+end
 function PLAYER:ResetZombieAllowedWeapons()
 	self:SetZombieAllowedWeapons({ZOMBIE_KNIFE})
+end
+function PLAYER:SetFootstep(Footstep)
+	self.Footstep = Footstep
+	net.Start("SendFoostep")
+		net.WriteString(self:SteamID())
+		net.WriteBool(Footstep != false)
+	net.Broadcast()
+end
+function PLAYER:GetFootstep()
+	return self.Footstep
 end
 ---------------------------Damage---------------------------
 function PLAYER:TakeLastDamage()
@@ -98,7 +124,7 @@ function PLAYER:AddTotalDamage(TotalDamage)
 	TotalDamage = self:GetTotalDamage() + TotalDamage
 	local AmmoPacks = math.floor(TotalDamage / cvars.Number("zp_ap_damage", 500))
 	if AmmoPacks > 0 then
-		self:AddAmmoPacks(AmmoPacks)
+		self:GiveAmmoPacks(AmmoPacks)
 	end
 	self:SetTotalDamage(TotalDamage % cvars.Number("zp_ap_damage", 500))
 end
@@ -131,7 +157,7 @@ function PLAYER:IsTalking()
 	return self.Talking or false
 end
 -------------------------Ammo Packs-------------------------
-function PLAYER:AddAmmoPacks(Amount)
+function PLAYER:GiveAmmoPacks(Amount)
 	self:SetAmmoPacks(self:GetAmmoPacks() + Amount)
 end
 function PLAYER:TakeAmmoPacks(Amount)
@@ -200,8 +226,12 @@ function PLAYER:TakeBreath(Breath)
 	self:SetBreath(self:GetBreath() - Breath)
 end
 function PLAYER:SetBreath(Breath)
-	if Breath < 0 then
+	if Breath <= 0 then
 		Breath = 0
+		local DmgInfo = DamageInfo()
+		DmgInfo:SetDamage(cvars.Number("zp_breath_damage", 5))
+		DmgInfo:SetDamageType(DMG_DROWNRECOVER)
+		self:TakeDamageInfo(DmgInfo)
 	elseif Breath > self:GetMaxBreath() then
 		Breath = self:GetMaxBreath()
 	end
@@ -250,7 +280,7 @@ function PLAYER:GiveWeapon(Weap)
 end
 function PLAYER:SetPrimaryWeapon(PrimaryWeapon)
 	self.PrimaryWeapon = PrimaryWeapon
-	if PrimaryWeapon != nil then
+	if PrimaryWeapon then
 		if !self:GetPrimaryWeaponGiven() then
 			self:GiveWeapon(PrimaryWeapon)
 			self:SetPrimaryWeaponGiven(true)
@@ -268,10 +298,9 @@ function PLAYER:HasPrimaryWeapon()
 end
 function PLAYER:SetSecondaryWeapon(SecondaryWeapon)
 	self.SecondaryWeapon = SecondaryWeapon
-	if SecondaryWeapon != nil then
+	if SecondaryWeapon then
 		if !self:GetSecondaryWeaponGiven() then
 			self:GiveWeapon(SecondaryWeapon)
-			
 			self:SetSecondaryWeaponGiven(true)
 		end
 	end
@@ -311,7 +340,7 @@ function PLAYER:SetLastMove(LastMove)
 	self.LastMove = LastMove
 end
 function PLAYER:GetLastMove()
-	return self.LastMove or CurTime()
+	return self.LastMove or CurTime() + 1
 end
 function PLAYER:MoveSpectateID(Move, Players)
 	self.SpectateID = ((self:GetSpectateID() + Move + #Players) % #Players)
@@ -351,6 +380,7 @@ function PLAYER:Infect()
 	self:SetAuxGravity(ZombieClass.Gravity)
 	self:SetMaxBreath(ZombieClass.Breath)
 	self:SetJumpPower(ZombieClass.JumpPower)
+	self:SetDamageAmplifier(ZombieClass.DamageAmplifier)
 	if self:FlashlightIsOn() then
 		self:Flashlight(false)
 	end
@@ -385,6 +415,7 @@ function PLAYER:MakeHuman()
 	self:SetModel(HumanClass.PModel)
 	self:SetMaxBreath(HumanClass.Breath)
 	self:SetMaxBatteryCharge(HumanClass.Battery)
+	self:SetDamageAmplifier(HumanClass.DamageAmplifier)
 	self:AllowFlashlight(true)
 	self:SetupHands()
 	self:Give(HUMAN_KNIFE)
@@ -404,6 +435,16 @@ function PLAYER:MakeHuman()
 	else
 		WeaponManager:OpenPrimaryWeaponMenu(self)
 	end
+	
+	if HumanClass.Ability then
+		SendPopupMessage(self, Dictionary:GetPhrase("NoticeHasHability", self))
+	end
+end
+function PLAYER:SetDamageAmplifier(DamageAmplifier)
+	self.DamageAmplifier = DamageAmplifier
+end
+function PLAYER:GetDamageAmplifier()
+	return self.DamageAmplifier or 1
 end
 function PLAYER:Cure()
 	self:MakeHuman()
@@ -414,12 +455,23 @@ function PLAYER:MakeNemesis()
 	local HealthMode = cvars.Number("zp_nemesis_health_mode", 0)
 	
 	if HealthMode == 1 then
-		self:SetHealth(self:Health() + RoundManager:CountHumansAlive() * cvars.Number("zp_nemesis_health_player", 100))
+		local Health = self:Health() + RoundManager:CountHumansAlive() * cvars.Number("zp_nemesis_health_player", 100)
+		self:SetHealth(Health)
+		self:SetMaxHealth(Health)
 	elseif HealthMode == 2 then
 		self:SetHealth(cvars.Number("zp_nemesis_health", 3000))
+		self:SetMaxHealth(cvars.Number("zp_nemesis_health", 3000))
+	else
+		self:SetHealth(NemesisClass.Health)
+		self:SetMaxHealth(NemesisClass.Health)
 	end
-	
-	self:SetAuxGravity(0.5)
+	if !cvars.Bool("zp_nemesis_earn", false) then
+		self:SetWalkSpeed(NemesisClass.Speed)
+		self:SetRunSpeed(NemesisClass.RunSpeed)
+		self:SetCrouchedWalkSpeed(NemesisClass.CrouchedSpeed)
+		self:SetAuxGravity(NemesisClass.Gravity)
+	end
+	self:SetDamageAmplifier(cvars.Number("zp_nemesis_damage", 10))
 	self:SetLight(NEMESIS_COLOR)
 	self:SetNemesis(true)
 end
@@ -434,15 +486,22 @@ function PLAYER:IsNemesis()
 	return self.Nemesis
 end
 function PLAYER:MakeSurvivor()
-	local HealthMode = cvars.Number("zp_survivor_health_mode", 0)
+	local HealthMode = cvars.Number("zp_survivor_health_mode", 1)
 	
 	if HealthMode == 1 then
-		self:SetHealth(self:Health() + RoundManager:CountZombiesAlive() * cvars.Number("zp_survivor_health_player", 100))
+		self:SetHealth(self:Health() + RoundManager:CountZombiesAlive() * cvars.Number("zp_survivor_health_player", 30))
 	elseif HealthMode == 2 then
 		self:SetHealth(cvars.Number("zp_survivor_health", 3000))
+	else
+		self:SetHealth(SurvivorClass.Health)
 	end
-	
-	self:SetAuxGravity(0.8)
+	if !cvars.Bool("zp_survivor_earn", false) then
+		self:SetWalkSpeed(SurvivorClass.Speed)
+		self:SetRunSpeed(SurvivorClass.RunSpeed)
+		self:SetCrouchedWalkSpeed(SurvivorClass.CrouchedSpeed)
+		self:SetAuxGravity(SurvivorClass.Gravity)
+	end
+	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 1.5))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
 end
@@ -475,20 +534,13 @@ end
 function PLAYER:ZPCanEmitSound()
 	return CurTime() > (self.ZPEmit or 0)
 end
-function PLAYER:ShouldEmitFootStep()
-	if self:IsZombie() then
-		return (RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && self:GetZombieClass().Footstep
-	else
-		return self:GetHumanClass().Footstep
-	end
-end
 -------------------------EmitSound--------------------------
 -----------------------Special Lights-----------------------
 function PLAYER:SetLight(Light)
 	net.Start("SendLight")
 		net.WriteString(self:SteamID())
 		net.WriteBool(Light != nil)
-		if Light != nil then
+		if Light then
 			net.WriteColor(Light)
 		end
 	net.Broadcast()
@@ -513,3 +565,4 @@ util.AddNetworkString("SendSurvivor")
 util.AddNetworkString("SendNightvision")
 util.AddNetworkString("SendVoice")
 util.AddNetworkString("SendLight")
+util.AddNetworkString("SendFoostep")

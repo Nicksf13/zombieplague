@@ -1,36 +1,31 @@
 ExtraItemsManager = {ZombieExtraItems = {}, HumansExtraItems = {}, PostRoundEvents = {}}
-
+ITEM_HUMAN = 0
+ITEM_ZOMBIE = 1
 function ExtraItemsManager:Search()
 	local Files = file.Find("zombieplague/gamemode/extraitems/*.lua", "LUA")
 	if Files != nil then
 		for k, File in pairs(Files) do
+			ExtraItem = {}
+			function ExtraItem:CanBuy(ply)
+				return ply:Alive()
+			end
 			include("zombieplague/gamemode/extraitems/" .. File)
+			
+			if !ExtraItem.Name || !ExtraItem.Price || !ExtraItem.OnBuy then
+				print("Invalid Extra Item: '" .. File .. "'")
+			elseif ExtraItem.Type == ITEM_ZOMBIE then
+				self:AddZombieExtraItem(ExtraItem)
+			else
+				self:AddHumanExtraItem(ExtraItem)
+			end
 		end
 	end
-	
 end
 function ExtraItemsManager:AddZombieExtraItem(ExtraItem)
-	if ExtraItemsManager:ValidateItem(ExtraItem) then
-		if ExtraItem.CanBuy == nil then
-			function ExtraItem:CanBuy(ply)
-				return ply:Alive()
-			end
-		end
-		table.insert(ExtraItemsManager.ZombieExtraItems, ExtraItem)
-	end
+	table.insert(ExtraItemsManager.ZombieExtraItems, ExtraItem)
 end
 function ExtraItemsManager:AddHumanExtraItem(ExtraItem)
-	if ExtraItemsManager:ValidateItem(ExtraItem) then
-		if ExtraItem.CanBuy == nil then
-			function ExtraItem:CanBuy(ply)
-				return ply:Alive()
-			end
-		end
-		table.insert(ExtraItemsManager.HumansExtraItems, ExtraItem)
-	end
-end
-function ExtraItemsManager:ValidateItem(ExtraItem)
-	return ExtraItem.Name != nil && ExtraItem.Price != nil && ExtraItem.OnBuy != nil
+	table.insert(ExtraItemsManager.HumansExtraItems, ExtraItem)
 end
 function ExtraItemsManager:GetZombiesExtraItems()
 	return ExtraItemsManager.ZombieExtraItems
@@ -55,25 +50,22 @@ end
 function ExtraItemsManager:OpenExtraItemMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("BuyExtraItem")
-		if ply:Team() == TEAM_ZOMBIES then
-			net.WriteTable(ExtraItemsManager:GetPrettyZombiesExtraItems())
-		else
-			net.WriteTable(ExtraItemsManager:GetPrettyHumansExtraItems())
-		end
+		net.WriteTable(ply:Team() == TEAM_ZOMBIES and ExtraItemsManager:GetPrettyZombiesExtraItems() or ExtraItemsManager:GetPrettyHumansExtraItems())
 	net.Send(ply)
 end
 function ExtraItemsManager:AddRemoveFunction(RemoveFunction)
 	table.insert(ExtraItemsManager.PostRoundEvents, RemoveFunction)
 end
 function ExtraItemsManager:BuyItem(ply, ExtraItem)
-	if ExtraItem != nil then
+	if ExtraItem then
 		if ply:GetAmmoPacks() >= ExtraItem.Price then
 			if ExtraItem:CanBuy(ply) then
 				ExtraItem:OnBuy(ply)
-				if ExtraItem.RemoveFunction != nil then
+				if ExtraItem.RemoveFunction then
 					table.insert(ExtraItemsManager.PostRoundEvents, ExtraItem.RemoveFunction)
 				end
 				ply:TakeAmmoPacks(ExtraItem.Price)
+				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), ExtraItem.Name))
 			else
 				SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantBuy", ply))
 			end
@@ -85,10 +77,8 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 	end
 end
 net.Receive("BuyExtraItem", function(len, ply)
-	if ply:Team() == TEAM_ZOMBIES then
-		ExtraItemsManager:BuyItem(ply, ExtraItemsManager:GetZombiesExtraItems()[net.ReadInt(16)])
-	elseif ply:Team() == TEAM_HUMANS then
-		ExtraItemsManager:BuyItem(ply, ExtraItemsManager:GetHumansExtraItems()[net.ReadInt(16)])
+	if !(ply:IsNemesis() || ply:IsSurvivor()) then
+		ExtraItemsManager:BuyItem(ply, (ply:Team() == TEAM_ZOMBIES and ExtraItemsManager:GetZombiesExtraItems() or ExtraItemsManager:GetHumansExtraItems())[net.ReadInt(16)])
 	end
 end)
 hook.Add("ZPRoundEnd", "ZPExtraItemsRemove", function()
@@ -96,13 +86,19 @@ hook.Add("ZPRoundEnd", "ZPExtraItemsRemove", function()
 		table.Remove(ExtraItemsManager.PostRoundEvents)()
 	end
 end)
-hook.Add("PlayerSay", "ZPOpenExtraMenu", function(ply, txt)
-	if txt == "/extraitem" then
+Commands:AddCommand("extraitem", "Open extra item menu.", function(ply, args)
+	if !(ply:IsNemesis() || ply:IsSurvivor()) then
 		ExtraItemsManager:OpenExtraItemMenu(ply)
+	else
+		SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantOpen", ply))
 	end
 end)
 net.Receive("RequestExtraItemMenu", function(len, ply)
-	ExtraItemsManager:OpenExtraItemMenu(ply)
+	if !(ply:IsNemesis() || ply:IsSurvivor()) then
+		ExtraItemsManager:OpenExtraItemMenu(ply)
+	else
+		SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantOpen", ply))
+	end
 end)
 
 util.AddNetworkString("BuyExtraItem")

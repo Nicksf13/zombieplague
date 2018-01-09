@@ -34,13 +34,13 @@ function PLAYER:SetNemesis(Nemesis)
 	self.Nemesis = Nemesis
 end
 function PLAYER:IsNemesis()
-	return self.Nemesis or false
+	return self.Nemesis
 end
 function PLAYER:SetSurvivor(Survivor)
 	self.Survivor = Survivor
 end
 function PLAYER:IsSurvivor()
-	return self.Survivor or false
+	return self.Survivor
 end
 function PLAYER:IsZombie()
 	return self:Team() == TEAM_ZOMBIES
@@ -85,6 +85,18 @@ end
 function PLAYER:GetLight()
 	return self.Light
 end
+function PLAYER:SetFootstep(Footstep)
+	self.Footstep = Footstep
+end
+function PLAYER:GetFootstep()
+	return self.Footstep
+end
+function PLAYER:ShouldEmitFootStep()
+	if self:IsZombie() then
+		return (RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && self:GetFootstep()
+	end
+	return self:GetFootstep()
+end
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
@@ -101,34 +113,63 @@ hook.Add("PlayerEndVoice", "ZPStartTalking", function(ply)
 end)
 
 net.Receive("SendAmmoPacks", function()
-	player.GetBySteamID(net.ReadString()):SetAmmoPacks(net.ReadInt(32)) 
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetAmmoPacks(net.ReadInt(32))
+	end
 end)
 net.Receive("SendBatteryCharge", function()
-	player.GetBySteamID(net.ReadString()):SetBattery(net.ReadFloat())
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetBattery(net.ReadFloat())
+	end
 end)
 net.Receive("SendMaxBatteryCharge", function()
-	player.GetBySteamID(net.ReadString()):SetMaxBatteryCharge(net.ReadFloat())
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetMaxBatteryCharge(net.ReadFloat())
+	end
 end)
 net.Receive("SendZombieClass", function()
-	player.GetBySteamID(net.ReadString()):SetZombieClass(net.ReadString())
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetZombieClass(net.ReadString())
+	end
 end)
 net.Receive("SendHumanClass", function()
-	player.GetBySteamID(net.ReadString()):SetHumanClass(net.ReadString())
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetHumanClass(net.ReadString())
+	end
 end)
 net.Receive("SendNemesis", function()
-	player.GetBySteamID(net.ReadString()):SetNemesis(net.ReadBool())
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetNemesis(net.ReadBool())
+	end
 end)
 net.Receive("SendSurvivor", function()
-	player.GetBySteamID(net.ReadString()):SetSurvivor(net.ReadBool())
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetSurvivor(net.ReadBool())
+	end
+end)
+net.Receive("SendFoostep", function()
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetFootstep(net.ReadBool())
+	end
 end)
 net.Receive("SendNightvision", function()
 	SetNightvision(net.ReadBool())
 end)
 net.Receive("SendLight", function()
 	local ply = player.GetBySteamID(net.ReadString())
-	if net.ReadBool() then
-		ply:SetLight(net.ReadColor())
-	else
-		ply:SetLight(nil)
+	if IsValid(ply) then
+		if net.ReadBool() then
+			ply:SetLight(net.ReadColor())
+		else
+			ply:SetLight(nil)
+		end
 	end
 end)

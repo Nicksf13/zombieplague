@@ -4,31 +4,31 @@ function BroadcastMessage(text)
 		SendColorMessage(ply, text, Color(255, 255, 255))
 	end
 end
-function BroadcastColorMessage(text, cor, listaExcluir)
+function BroadcastColorMessage(text, Clr, Exclude)
 	for k, ply in pairs(player.GetAll()) do
-		if listaExcluir == nil || !table.HasValue(listaExcluir, ply) then
-			SendColorMessage(ply, text, cor)
+		if !Exclude || !table.HasValue(Exclude, ply) then
+			SendColorMessage(ply, text, Clr)
 		end
 	end
 end
 function BroadcastSound(SoundPath, Exclude)
 	for k, ply in pairs(player.GetAll()) do
-		if Exclude == nil || !table.HasValue(Exclude, ply) then
+		if !Exclude || !table.HasValue(Exclude, ply) then
 			SendSound(ply, SoundPath)
 		end
 	end
 end
-function BroadcastNotifyMessage(txt, time, color)
+function BroadcastNotifyMessage(txt, time, Clr)
 	for k, ply in pairs(player.GetAll()) do
-		SendNotifyMessage(ply, txt, time, color)
+		SendNotifyMessage(ply, txt, time, Clr)
 	end
 end
 function SendMessage(ply, text)
 	SendColorMessage(ply, text, Color(255, 255, 255))
 end
-function SendColorMessage(ply, text, cor)
+function SendColorMessage(ply, text, Clr)
 	net.Start("SendMessage")
-		net.WriteColor(cor)
+		net.WriteColor(Clr)
 		net.WriteString(text)
 	net.Send(ply)
 end
