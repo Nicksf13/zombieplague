@@ -28,12 +28,7 @@ function WeaponManager:SearchWeapons()
 	end
 end
 function WeaponManager:GetWeaponMultiplier(Weapon)
-	for k, Weap in pairs(self.WeaponsMultiplier) do
-		if k == Weapon then
-			return Weap
-		end
-	end
-	return 1
+	return self.WeaponsMultiplier[Weapon] and self.WeaponsMultiplier[Weapon] or 1
 end
 function WeaponManager:AddWeaponMultiplier(WeaponID, DamageMultiplier)
 	self.WeaponsMultiplier[WeaponID] = DamageMultiplier
