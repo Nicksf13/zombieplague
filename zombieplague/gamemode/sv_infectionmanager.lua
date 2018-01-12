@@ -32,7 +32,7 @@ function InfectionManager:Infect(Infected, Attacker)
 		hook.Call("ZPLastHumanEvent")
 	end
 end
---Main function to infect a player, ZPCureEvent are called here
+--Main function to cure a player, ZPCureEvent are called here
 function InfectionManager:Cure(Infected, Attacker)
 	Infected:Cure()
 	Attacker:AddFrags(1)
