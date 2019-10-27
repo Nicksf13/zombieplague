@@ -113,51 +113,51 @@ function OpenZPMenu()
 							function()
 								local AmmoPacksGiveOptions = {}
 								for k, ply in pairs(player.GetAll()) do
-									table.insert(AmmoPacksGiveOptions,
-										GenerateMenuOption(ply:GetName(), function() {
-											local AmountOptions = {}
-											local GiveFunction = function(Amount)
-												net.Start("GiveTakeAmmoPack")
-													net.WriteString(ply:SteamID64())
-													net.WriteBool(true)
-													net.WriteInt(Amount, 64)
-												net.SendToServer()
-											end
+								--table.insert(AmmoPacksGiveOptions,
+								--	GenerateMenuOption(ply:GetName(), function()
+								--		local AmountOptions = {}
+								--		local GiveFunction = function(Amount)
+								--			net.Start("GiveTakeAmmoPack")
+								--				net.WriteString(ply:SteamID64())
+								--				net.WriteBool(true)
+								--				net.WriteInt(Amount, 64)
+								--			net.SendToServer()
+								--		end
 
-											table.insert(AmountOptions,
-												GenerateMenuOption("5", function()
-													GiveFunction(5)
-												end)
-											)
-											table.insert(AmountOptions,
-												GenerateMenuOption("10", function()
-													GiveFunction(10)
-												end)
-											)
-											table.insert(AmountOptions,
-												GenerateMenuOption("25", function()
-													GiveFunction(25)
-												end)
-											)
-											table.insert(AmountOptions,
-												GenerateMenuOption("50", function()
-													GiveFunction(50)
-												end)
-											)
-											table.insert(AmountOptions,
-												GenerateMenuOption("100", function()
-													GiveFunction(100)
-												end)
-											)
-											table.insert(AmountOptions,
-												GenerateMenuOption("500", function()
-													GiveFunction(5)
-												end)
-											)
+								--		table.insert(AmountOptions,
+								--			GenerateMenuOption("5", function()
+								--				GiveFunction(5)
+								--			end)
+								--		)
+								--		table.insert(AmountOptions,
+								--			GenerateMenuOption("10", function()
+								--				GiveFunction(10)
+								--			end)
+								--		)
+								--		table.insert(AmountOptions,
+								--			GenerateMenuOption("25", function()
+								--				GiveFunction(25)
+								--			end)
+								--		)
+								--		table.insert(AmountOptions,
+								--			GenerateMenuOption("50", function()
+								--				GiveFunction(50)
+								--			end)
+								--		)
+								--		table.insert(AmountOptions,
+								--			GenerateMenuOption("100", function()
+								--				GiveFunction(100)
+								--			end)
+								--		)
+								--		table.insert(AmountOptions,
+								--			GenerateMenuOption("500", function()
+								--				GiveFunction(5)
+								--			end)
+								--		)
 
-											MMenu:UpdateOptions(AmountOptions)
-										})
-									)
+								--		MMenu:UpdateOptions(AmountOptions)
+								--	)
+								--)
 								end
 								MMenu:UpdateOptions(AmmoPacksGiveOptions)
 							end

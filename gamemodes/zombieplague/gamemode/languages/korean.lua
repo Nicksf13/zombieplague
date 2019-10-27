@@ -1,4 +1,5 @@
-local Language = {ID = "Korean",
+local Language = {ID = "korean",
+	PrettyName = "한국어",
 	Values = 
 	{
 		Server = {
@@ -40,7 +41,7 @@ local Language = {ID = "Korean",
 			AmmoPackPlayerNotFound = "플레이어 '%s' 을(를) 찾을수 없습니다!",
 			AmmoPackGiverMessage = "당싱은 %d 군수 물품을 %s 에게 주었습니다!",
 			AmmoPackTakerMessage = "당신은 %d 군수 물품을 %s 에게서 가져갔습니다!",
-			CommandInvalidArgument = "이 명령어에"
+			CommandInvalidArgument = "이 명령어에",
 			CommandInvalidArgument = "이 명령어에 대한 인수가 잘못되었습니다!",
 			CommandNotAccess = "이 명령에 엑세스할수 없습니다!",
 			CommandDisabled = "이 명령어는 비활성화 되어있습니다!",
@@ -72,3 +73,4 @@ local Language = {ID = "Korean",
 		}
 	}
 }
+Dictionary:AddLanguage(Language)

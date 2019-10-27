@@ -1,4 +1,5 @@
-local Language = {ID = "Português Brasileiro",
+local Language = {ID = "pt-br",
+	PrettyName = "Português Brasileiro",
 	Values = 
 	{
 		Server = {

@@ -1,5 +1,5 @@
-ZPClass.Name = "Bomber Zombie"
-ZPClass.Description = "Spawn with an infection bomb."
+ZPClass.Name = "ZombieBomberClassName"
+ZPClass.Description = "ZombieBomberClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/zombie_classic.mdl"
 ZPClass.Speed = 240

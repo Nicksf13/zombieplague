@@ -1,4 +1,4 @@
-ExtraItem.Name = "S.L.A.M"
+ExtraItem.Name = "ExtraItemSlamName"
 ExtraItem.Price = 10
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("weapon_slam")

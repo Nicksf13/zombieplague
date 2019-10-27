@@ -1,5 +1,5 @@
-ZPClass.Name = "Camouflage Zombie"
-ZPClass.Description = "Can desguise as a human."
+ZPClass.Name = "ZombieCamouflageClassName"
+ZPClass.Description = "ZombieCamouflageClassDescription"
 ZPClass.MaxHealth = 300
 ZPClass.PModel = "models/player/zombie_classic.mdl"
 ZPClass.Speed = 230

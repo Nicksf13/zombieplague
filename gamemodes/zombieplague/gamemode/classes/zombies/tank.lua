@@ -1,5 +1,5 @@
-ZPClass.Name = "Tank Zombie"
-ZPClass.Description = "Can enable god mode to protect himself."
+ZPClass.Name = "ZombieTankClassName"
+ZPClass.Description = "ZombieTankClassDescription"
 ZPClass.MaxHealth = 4000
 ZPClass.PModel = "models/player/zombie_classic.mdl"
 ZPClass.Speed = 170

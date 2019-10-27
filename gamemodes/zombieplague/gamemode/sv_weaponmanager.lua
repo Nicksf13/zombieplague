@@ -3,7 +3,7 @@ WeaponManager = {PrimaryWeapons = {}, SecondaryWeapons = {}, WeaponsMultiplier =
 function WeaponManager:SearchWeapons()
 	local Files = file.Find("zombieplague/gamemode/weapons/*.lua", "LUA")
 	for k, File in pairs(Files) do
-		local Weapon = {}
+		Weapon = {}
 		Weapon.PrimaryWeapon = true
 		Weapon.DamageMultiplier = 1
 		function Weapon:GiveWeapon(ply)

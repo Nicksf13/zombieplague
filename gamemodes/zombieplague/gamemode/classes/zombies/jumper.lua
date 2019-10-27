@@ -1,5 +1,5 @@
-ZPClass.Name = "Jumper Zombie"
-ZPClass.Description = "His special abilty allows him to jump very high."
+ZPClass.Name = "ZombieJumperClassName"
+ZPClass.Description = "ZombieJumperClassDescription"
 ZPClass.MaxHealth = 150
 ZPClass.PModel = "models/player/zombie_classic.mdl"
 ZPClass.Speed = 240

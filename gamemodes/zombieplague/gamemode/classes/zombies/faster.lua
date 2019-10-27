@@ -1,5 +1,5 @@
-ZPClass.Name = "Faster Zombie"
-ZPClass.Description = "Can be fast. Also Can be weak."
+ZPClass.Name = "ZombieFasterClassName"
+ZPClass.Description = "ZombieFasterClassDescription"
 ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/skeleton.mdl"
 ZPClass.Speed = 200

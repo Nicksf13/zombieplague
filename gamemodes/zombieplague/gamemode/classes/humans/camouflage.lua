@@ -1,5 +1,5 @@
-ZPClass.Name = "Camouflage Human"
-ZPClass.Description = "Can desguise as a zombie."
+ZPClass.Name = "HumanCamouflageClassName"
+ZPClass.Description = "HumanCamouflageClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/riot.mdl"
 ZPClass.Speed = 220

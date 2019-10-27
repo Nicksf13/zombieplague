@@ -1,5 +1,5 @@
-ZPClass.Name = "Suicide Human"
-ZPClass.Description = "An Human that can explode."
+ZPClass.Name = "HumanSuicideClassName"
+ZPClass.Description = "HumanSuicideClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/guerilla.mdl"
 ZPClass.Speed = 230

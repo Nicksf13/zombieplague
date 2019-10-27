@@ -20,7 +20,7 @@ function RoundManager:SearchRounds()
 			RoundToAdd.ShouldBeEnabled = function()return true end
 			include("zombieplague/gamemode/rounds/" .. File)
 			
-			if RoundToAdd:ShouldBeEnabled() end
+			if RoundToAdd:ShouldBeEnabled() then
 				if !RoundToAdd.StartFunction || !RoundToAdd.Name then
 					print("Invalid round format: '" .. File .. "'!")
 				else
@@ -38,7 +38,7 @@ function RoundManager:AddRoundType(RoundType)
 		end
 	end
 end
-function RoundManager:GetServerStatus()
+function RoundManager:GetServerStatus(Requester)
 	local ServerStatus = {Timer = RoundManager:GetTime(),
 		RoundState = RoundManager:GetRoundState(),
 		Round = RoundManager:GetRound(),
@@ -48,8 +48,8 @@ function RoundManager:GetServerStatus()
 		table.insert(ServerStatus.Players, {SteamID = ply:SteamID(),
 			AmmoPacks = ply:GetAmmoPacks(),
 			Battery = ply:GetMaxBatteryCharge(),
-			ZombieClass = ply:IsNemesis() and "Nemesis" or ply:GetZombieClass().Name,
-			HumanClass = ply:IsSurvivor() and "Survivor" or ply:GetHumanClass().Name,
+			ZombieClass = ply:IsNemesis() and "Nemesis" or Dictionary:GetPhrase(ply:GetZombieClass().Name, Requester),
+			HumanClass = ply:IsSurvivor() and "Survivor" or Dictionary:GetPhrase(ply:GetHumanClass().Name, Requester),
 			Light = ply:GetLight(),
 			Footstep = ply:GetFootstep()
 		})
@@ -195,12 +195,12 @@ function RoundManager:GetGoodRounds()
 
 	return GoodRounds
 end
-function RoundManager:GetGoodRoundsName()
+function RoundManager:GetGoodRoundsName(ply)
 	local GoodRounds = {}
 	local TotalPlayers = RoundManager:CountPlayerToPlayAlive()
 	for k, Round in pairs(RoundManager:GetRounds()) do
 		if TotalPlayers >= Round.MinPlayers then
-			table.insert(GoodRounds, Round.Name)
+			table.insert(GoodRounds, Dictionary:GetPhrase(Round.Name, ply))
 		end
 	end
 
@@ -218,7 +218,7 @@ end
 function RoundManager:OpenRoundsMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("SendRounds")
-		net.WriteTable(RoundManager:GetGoodRoundsName())
+		net.WriteTable(RoundManager:GetGoodRoundsName(ply))
 	net.Send(ply)
 end
 function RoundManager:AddPlayerToPlay(ply)
@@ -281,7 +281,7 @@ function RoundManager:GetPlayersToPlay(Alive)
 end
 function RoundManager:AddDefaultRounds()
 	local ROUND = {}
-	ROUND.Name = "Simple Infection Round"
+	ROUND.Name = "RoundSimpleName"
 	ROUND.MinPlayers = cvars.Number("zp_min_players", 2)
 	ROUND.Chance = 100
 	ROUND.SpecialRound = false
@@ -297,7 +297,7 @@ function RoundManager:AddDefaultRounds()
 	RoundManager:AddRoundType(ROUND)
 	
 	ROUND = {}
-	ROUND.Name = "Multi-Infection Mode"
+	ROUND.Name = "RoundMultiInfectionName"
 	ROUND.Chance = 15
 	ROUND.MinPlayers = 4
 	function ROUND:StartFunction()
@@ -312,7 +312,7 @@ function RoundManager:AddDefaultRounds()
 	RoundManager:AddRoundType(ROUND)
 	
 	ROUND = {}
-	ROUND.Name = "Nemesis Mode"
+	ROUND.Name = "RoundNemesisName"
 	ROUND.Chance = 5
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
@@ -327,7 +327,7 @@ function RoundManager:AddDefaultRounds()
 	RoundManager:AddRoundType(ROUND)
 	
 	ROUND = {}
-	ROUND.Name = "Survivor mode"
+	ROUND.Name = "RoundSurvivorName"
 	ROUND.Chance = 5
 	ROUND.MinPlayers = 3
 	ROUND.SpecialRound = true
@@ -345,7 +345,7 @@ function RoundManager:AddDefaultRounds()
 	RoundManager:AddRoundType(ROUND)
 	
 	ROUND = {}
-	ROUND.Name = "Swarm Mode"
+	ROUND.Name = "RoundSwarmName"
 	ROUND.Chance = 10
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
@@ -368,7 +368,7 @@ function RoundManager:AddDefaultRounds()
 	RoundManager:AddRoundType(ROUND)
 	
 	ROUND = {}
-	ROUND.Name = "Plague Mode"
+	ROUND.Name = "RoundPlagueName"
 	ROUND.Chance = 10
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true

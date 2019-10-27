@@ -47,39 +47,39 @@ function ClassManager:AddHumanClass(HumanClass)
 	table.insert(ClassManager.HumanClasses, HumanClass)
 end
 function ClassManager:NewHumanClass()
-	return {Name = "Human"
-		Description = "A human"
-		MaxHealth = 100
-		Armor = 0
-		PModel = "models/player/gasmask.mdl"
-		Speed = 240
-		RunSpeed = 250
-		CrouchSpeed = 0.4
-		Gravity = 1
-		Battery = 100
-		Breath = 100
-		JumpPower = 170
-		Footstep = true
-		DamageAmplifier = 1
-		FallFunction = function()return true end
-		ShouldBeEnabled = function()return true end
+	return {Name = "HumanDefaultClassName",
+		Description = "HumanDefaultClassDescription",
+		MaxHealth = 100,
+		Armor = 0,
+		PModel = "models/player/gasmask.mdl",
+		Speed = 240,
+		RunSpeed = 250,
+		CrouchSpeed = 0.4,
+		Gravity = 1,
+		Battery = 100,
+		Breath = 100,
+		JumpPower = 170,
+		Footstep = true,
+		DamageAmplifier = 1,
+		FallFunction = function()return true end,
+		ShouldBeEnabled = function()return true end,
 	}
 end
 function ClassManager:NewZombieClass()
-	local ZombieClass = {Name = "Zombie"
-		Description = "A zombie"
-		MaxHealth = 2000
-		PModel = "models/player/zombie_classic.mdl"
-		Speed = 250
-		RunSpeed = 260
-		CrouchSpeed = 0.4
-		Gravity = 1
-		Breath = 100
-		Footstep = false
-		JumpPower = 170
-		DamageAmplifier = 1
-		FallFunction = function()return false end
-		ShouldBeEnabled = function()return true end
+	local ZombieClass = {Name = "ZombieDefaultClassName",
+		Description = "ZombieDefaultClassDescription",
+		MaxHealth = 2000,
+		PModel = "models/player/zombie_classic.mdl",
+		Speed = 250,
+		RunSpeed = 260,
+		CrouchSpeed = 0.4,
+		Gravity = 1,
+		Breath = 100,
+		Footstep = false,
+		JumpPower = 170,
+		DamageAmplifier = 1,
+		FallFunction = function()return false end,
+		ShouldBeEnabled = function()return true end,
 	}
 	function ZombieClass:WeaponGive(ply)
 		ply:Give(ZOMBIE_KNIFE)
@@ -98,7 +98,7 @@ end
 function ClassManager:OpenHumanMenu(ply)
 	local Pretty = {}
 	for k, HClass in pairs(ClassManager:GetHumanClasses()) do
-		table.insert(Pretty, HClass.Name .. " - " .. HClass.Description)
+		table.insert(Pretty, Dictionary:GetPhrase(HClass.Name, ply) .. " - " .. Dictionary:GetPhrase(HClass.Description, ply))
 	end
 	
 	net.Start("OpenBackMenu")
@@ -109,7 +109,7 @@ end
 function ClassManager:OpenZombieMenu(ply)
 	local Pretty = {}
 	for k, ZClass in pairs(ClassManager:GetZombieClasses()) do
-		table.insert(Pretty, ZClass.Name .. " - " .. ZClass.Description)
+		table.insert(Pretty, Dictionary:GetPhrase(ZClass.Name, ply) .. " - " .. Dictionary:GetPhrase(ZClass.Description, ply))
 	end
 	
 	net.Start("OpenBackMenu")

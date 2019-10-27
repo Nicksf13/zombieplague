@@ -1,4 +1,4 @@
-ExtraItem.Name = "Zombie Madness"
+ExtraItem.Name = "ExtraItemZombieMadnessName"
 ExtraItem.Price = 15
 ExtraItem.Type = ITEM_ZOMBIE
 function ExtraItem:OnBuy(ply)

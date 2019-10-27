@@ -1,4 +1,4 @@
-ExtraItemsManager = {ZombieExtraItems = {}, HumansExtraItems = {}, PostRoundEvents = {}}
+ExtraItemsManager = {ZombiesExtraItems = {}, HumansExtraItems = {}, PostRoundEvents = {}}
 ITEM_HUMAN = 0
 ITEM_ZOMBIE = 1
 function ExtraItemsManager:Search()
@@ -27,35 +27,35 @@ function ExtraItemsManager:Search()
 	end
 end
 function ExtraItemsManager:AddZombieExtraItem(ExtraItem)
-	table.insert(ExtraItemsManager.ZombieExtraItems, ExtraItem)
+	table.insert(ExtraItemsManager.ZombiesExtraItems, ExtraItem)
 end
 function ExtraItemsManager:AddHumanExtraItem(ExtraItem)
 	table.insert(ExtraItemsManager.HumansExtraItems, ExtraItem)
 end
 function ExtraItemsManager:GetZombiesExtraItems()
-	return ExtraItemsManager.ZombieExtraItems
+	return ExtraItemsManager.ZombiesExtraItems
 end
 function ExtraItemsManager:GetHumansExtraItems()
 	return ExtraItemsManager.HumansExtraItems
 end
-function ExtraItemsManager:GetPrettyZombiesExtraItems()
+function ExtraItemsManager:GetPrettyZombiesExtraItems(ply)
 	local PrettyItems = {}
-	for k, Weap in pairs(ExtraItemsManager.ZombieExtraItems) do
-		table.insert(PrettyItems, Weap.Name .. " - " .. Weap.Price)
+	for k, ExtraItem in pairs(ExtraItemsManager.ZombiesExtraItems) do
+		table.insert(PrettyItems, Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price)
 	end
 	return PrettyItems
 end
-function ExtraItemsManager:GetPrettyHumansExtraItems()
+function ExtraItemsManager:GetPrettyHumansExtraItems(ply)
 	local PrettyItems = {}
-	for k, Weap in pairs(ExtraItemsManager.HumansExtraItems) do
-		table.insert(PrettyItems, Weap.Name  .. " - " .. Weap.Price)
+	for k, ExtraItem in pairs(ExtraItemsManager.HumansExtraItems) do
+		table.insert(PrettyItems, Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price)
 	end
 	return PrettyItems
 end
 function ExtraItemsManager:OpenExtraItemMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("BuyExtraItem")
-		net.WriteTable(ply:Team() == TEAM_ZOMBIES and ExtraItemsManager:GetPrettyZombiesExtraItems() or ExtraItemsManager:GetPrettyHumansExtraItems())
+		net.WriteTable(ply:Team() == TEAM_ZOMBIES and ExtraItemsManager:GetPrettyZombiesExtraItems(ply) or ExtraItemsManager:GetPrettyHumansExtraItems(ply))
 	net.Send(ply)
 end
 function ExtraItemsManager:AddRemoveFunction(RemoveFunction)
