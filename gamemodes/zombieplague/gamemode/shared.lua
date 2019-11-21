@@ -33,5 +33,7 @@ function GM:CreateTeams()
 
 	team.SetColor(TEAM_SPECTATOR, Color(0, 255, 0))
 end
+
 include("sh_roundmanager.lua")
 include("sh_player.lua")
+include("sh_bank.lua")

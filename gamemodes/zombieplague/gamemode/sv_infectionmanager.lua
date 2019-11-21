@@ -38,7 +38,7 @@ function InfectionManager:Cure(Infected, Attacker)
 	Attacker:AddFrags(1)
 	if !RoundManager:IsRealisticMod() then
 		for k, ply in pairs(player.GetAll()) do
-			if Infected == Attacker then
+			if Infected != Attacker then
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeGetCured", ply), Infected:Name(), Attacker:Name()))
 			else
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeAntidote", ply), Infected:Name()))

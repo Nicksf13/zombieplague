@@ -18,7 +18,7 @@ Commands:AddCommand("commands", "Print the server's commands.", function(ply, ar
 	end
 	SendConsoleMessage(ply, StringCommands .. "------------------------------------------------------------")
 end)
-hook.Add("PlayerSay", "Commands", function(ply, txt, teste)
+hook.Add("PlayerSay", "Commands", function(ply, txt)
 	local args = string.Explode(" ", string.lower(txt))
 	if string.sub(args[1], 1, 1) == "/" || string.sub(args[1], 1, 1) == "!" then
 		local Command = Commands.CommandList[string.sub(args[1], 2, string.len(args[1]))]

@@ -70,7 +70,7 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 					table.insert(ExtraItemsManager.PostRoundEvents, ExtraItem.RemoveFunction)
 				end
 				ply:TakeAmmoPacks(ExtraItem.Price)
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), ExtraItem.Name))
+				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), Dictionary:GetPhrase(ExtraItem.Name, ply)))
 			else
 				SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantBuy", ply))
 			end

@@ -1,4 +1,4 @@
-CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players")
+CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
 CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
 CreateConVar("zp_survivor_damage", 1.1, 8, "cvar used to set how stronger survivor will be.")
 CreateConVar("zp_battery_flashlight_should_drain", 0, "cvar used to set if flashlight should drain battery")
@@ -21,6 +21,7 @@ CreateConVar("zp_health_should_regen", 1, 8, "cvar used to set if zombies will r
 CreateConVar("zp_health_regen_time_delay", 20, 8, "cvar used to set the delay time after last damage to regen zombie's health.")
 CreateConVar("zp_health_regen", 10, 8, "cvar used to set how much health zombies will regen.")
 CreateConVar("zp_clip_mode", 0, 8, "cvar used to set the clip mode of the weapons.")
+CreateConVar("zp_zombie_should_run", 1, 8, "cvar used to enable zombies to run")
 
 FALL_DMG_NONE = 0
 FALL_DMG_ZOMBIES = 1
@@ -77,7 +78,7 @@ function GM:EntityTakeDamage(target, dmginfo)
 					else
 						target:ZPEmitSound(SafeTableRandom(GenericDamageSounds), 1)
 					end
-					hook.Call("ZPHumanDamage", GAMEMODE, target, Attacker)
+					hook.Call("ZPHumanDamage", GAMEMODE, target, Attacker, dmginfo)
 				end
 			end
 		elseif target:IsZombie() then
@@ -313,7 +314,11 @@ function GM:PlayerSetModel(ply)
 	ply:SetupHands()
 end
 function GM:PlayerCanPickupWeapon(ply, wep)
-	return ply:IsZombie() and ply:ZombieCanUseWeapon(wep:GetClass()) or true
+	if(ply:IsZombie()) then
+		return ply:ZombieCanUseWeapon(wep:GetClass())
+	end
+
+	return true
 end
 function GM:CanPlayerSuicide(ply)
 	return false
@@ -334,7 +339,7 @@ function WaterShouldDrain()
 	return (RoundManager:IsRealisticMod() || cvars.Bool("zp_water_should_drain", 0))
 end
 function RunShouldDrain()
-	return (RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0))
+	return cvars.Bool("zp_zombie_should_run", true) && (RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0))
 end
 timer.Create("TickManager", 0.1, 0, function()
 	hook.Call("TickManager")

@@ -362,7 +362,7 @@ function PLAYER:Infect()
 	if ZombieClass != nil then
 		ClassManager:SetUserZombieClass(self, ZombieClass)
 	end
-	
+
 	local HoldingWeapon = self:GetActiveWeapon()
 	if IsValid(HoldingWeapon) then
 		self:DropWeapon(HoldingWeapon)
@@ -375,7 +375,7 @@ function PLAYER:Infect()
 	self:SetMaxHealth(ZombieClass.MaxHealth)
 	self:SetHealth(ZombieClass.MaxHealth)
 	self:SetWalkSpeed(ZombieClass.Speed)
-	self:SetRunSpeed(ZombieClass.RunSpeed)
+	self:SetRunSpeed(cvars.Bool("zp_zombie_should_run", true) and ZombieClass.RunSpeed or ZombieClass.Speed)
 	self:SetCrouchedWalkSpeed(ZombieClass.CrouchSpeed)
 	self:SetAuxGravity(ZombieClass.Gravity)
 	self:SetMaxBreath(ZombieClass.Breath)

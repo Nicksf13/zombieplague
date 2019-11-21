@@ -96,76 +96,82 @@ function OpenZPMenu()
 			Name = Dictionary:GetPhrase("MenuAdmin"),
 			Function = function()
 				local AdminOptions = {}
-				table.insert(AdminOptions, 
-					GenerateMenuOption(
-						Dictionary:GetPhrase("MenuAdminRoundChoose"),
-						function()
-							net.Start("RequestRoundsMenu")
-							net.SendToServer()
-						end
-					)
-				)
-
-				if LocalPlayer():IsSuperAdmin() && cvars.Bool("zp_realistic_mode", false) then
+				if RoundManager:GetRoundState() == ROUND_STARTING_NEW_ROUND then
 					table.insert(AdminOptions, 
 						GenerateMenuOption(
-							Dictionary:GetPhrase("MenuAdminGiveAmmoPacks"),
+							Dictionary:GetPhrase("MenuAdminRoundChoose"),
 							function()
-								local AmmoPacksGiveOptions = {}
-								for k, ply in pairs(player.GetAll()) do
-								--table.insert(AmmoPacksGiveOptions,
-								--	GenerateMenuOption(ply:GetName(), function()
-								--		local AmountOptions = {}
-								--		local GiveFunction = function(Amount)
-								--			net.Start("GiveTakeAmmoPack")
-								--				net.WriteString(ply:SteamID64())
-								--				net.WriteBool(true)
-								--				net.WriteInt(Amount, 64)
-								--			net.SendToServer()
-								--		end
-
-								--		table.insert(AmountOptions,
-								--			GenerateMenuOption("5", function()
-								--				GiveFunction(5)
-								--			end)
-								--		)
-								--		table.insert(AmountOptions,
-								--			GenerateMenuOption("10", function()
-								--				GiveFunction(10)
-								--			end)
-								--		)
-								--		table.insert(AmountOptions,
-								--			GenerateMenuOption("25", function()
-								--				GiveFunction(25)
-								--			end)
-								--		)
-								--		table.insert(AmountOptions,
-								--			GenerateMenuOption("50", function()
-								--				GiveFunction(50)
-								--			end)
-								--		)
-								--		table.insert(AmountOptions,
-								--			GenerateMenuOption("100", function()
-								--				GiveFunction(100)
-								--			end)
-								--		)
-								--		table.insert(AmountOptions,
-								--			GenerateMenuOption("500", function()
-								--				GiveFunction(5)
-								--			end)
-								--		)
-
-								--		MMenu:UpdateOptions(AmountOptions)
-								--	)
-								--)
-								end
-								MMenu:UpdateOptions(AmmoPacksGiveOptions)
+								net.Start("RequestRoundsMenu")
+								net.SendToServer()
 							end
 						)
 					)
 				end
 
-				MMenu:UpdateOptions(AdminOptions)
+				--if LocalPlayer():IsSuperAdmin() && cvars.Bool("zp_givetake_ammopacks_allowed", true) then
+				--	table.insert(AdminOptions,
+				--		GenerateMenuOption(
+				--			Dictionary:GetPhrase("MenuAdminGiveAmmoPacks"),
+				--			function()
+				--				local AmmoPacksGiveOptions = {}
+				--				for k, ply in pairs(player.GetAll()) do
+				--				--table.insert(AmmoPacksGiveOptions,
+				--				--	GenerateMenuOption(ply:GetName(), function()
+				--				--		local AmountOptions = {}
+				--				--		local GiveFunction = function(Amount)
+				--				--			net.Start("GiveTakeAmmoPack")
+				--				--				net.WriteString(ply:SteamID64())
+				--				--				net.WriteBool(true)
+				--				--				net.WriteInt(Amount, 64)
+				--				--			net.SendToServer()
+				--				--		end
+----
+				--				--		table.insert(AmountOptions,
+				--				--			GenerateMenuOption("5", function()
+				--				--				GiveFunction(5)
+				--				--			end)
+				--				--		)
+				--				--		table.insert(AmountOptions,
+				--				--			GenerateMenuOption("10", function()
+				--				--				GiveFunction(10)
+				--				--			end)
+				--				--		)
+				--				--		table.insert(AmountOptions,
+				--				--			GenerateMenuOption("25", function()
+				--				--				GiveFunction(25)
+				--				--			end)
+				--				--		)
+				--				--		table.insert(AmountOptions,
+				--				--			GenerateMenuOption("50", function()
+				--				--				GiveFunction(50)
+				--				--			end)
+				--				--		)
+				--				--		table.insert(AmountOptions,
+				--				--			GenerateMenuOption("100", function()
+				--				--				GiveFunction(100)
+				--				--			end)
+				--				--		)
+				--				--		table.insert(AmountOptions,
+				--				--			GenerateMenuOption("500", function()
+				--				--				GiveFunction(5)
+				--				--			end)
+				--				--		)
+----
+				--				--		MMenu:UpdateOptions(AmountOptions)
+				--				--	)
+				--				--)
+				--				end
+				--				MMenu:UpdateOptions(AmmoPacksGiveOptions)
+				--			end
+				--		)
+				--	)
+				--end
+
+				if(table.Count(AdminOptions) > 0) then
+					MMenu:UpdateOptions(AdminOptions)
+				else
+					notification.AddLegacy(Dictionary:GetPhrase("MenuNoOptionsAvailableNow"), NOTIFY_GENERIC, 5)
+				end
 			end
 		})
 	end
@@ -174,7 +180,7 @@ function OpenZPMenu()
 end
 function GenerateMenuOption(Name, Function)
 	return {
-		Name,
+		Name = Name,
 		Function = function(ID)
 			Function(ID)
 			hook.Remove("SetupMove", "ZPMenuKeyListener")

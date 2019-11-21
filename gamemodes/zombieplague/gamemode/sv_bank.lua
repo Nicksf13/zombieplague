@@ -1,11 +1,13 @@
 CreateConVar("zp_auto_withdraw", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
-CreateConVar("zp_auto_deposit", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
-CreateConVar("zp_givetake_ammopacks_allowed", 1, 8, "cvar used to define if super admins can give/take ammopacks")
+CreateConVar("zp_auto_deposit_when_disconnect", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
 
-Bank = {}
+Bank = {BankStorageType = "text"}
+
+include("zombieplague/gamemode/bankstorage/" .. Bank.BankStorageType .. ".lua")
+Bank.BankStorageSource:Init()
 
 function Bank:Withdraw(ply, Amount)
-	local PlyAmm = tonumber(file.Read("zombie_plague/" .. ply:SteamID64() .. ".txt", "DATA") or "0")
+	local PlyAmm = Bank.BankStorageSource:GetPlayerAmmopacks(ply)
 	
 	if PlyAmm then
 		if PlyAmm == 0 then
@@ -17,7 +19,7 @@ function Bank:Withdraw(ply, Amount)
 		Amount = tonumber(Amount)
 		if Amount && PlyAmm >= Amount then
 			ply:GiveAmmoPacks(Amount)
-			file.Write("zombie_plague/" .. ply:SteamID64() .. ".txt", PlyAmm - Amount)
+			Bank.BankStorageSource:Withdraw(ply, Amount)
 			
 			return Amount, PlyAmm - Amount
 		end
@@ -30,14 +32,10 @@ function Bank:Deposit(ply, Amount)
 	end
 	Amount = tonumber(Amount)
 	if Amount && ply:GetAmmoPacks() >= Amount then
-		if !file.Exists("zombie_plague", "DATA") then
-			file.CreateDir("zombie_plague")
-		end
 		ply:TakeAmmoPacks(Amount)
-		local PlyAmm = tonumber(file.Read("zombie_plague/" .. ply:SteamID64() .. ".txt", "DATA") or "0") + Amount
-		file.Write("zombie_plague/" .. ply:SteamID64() .. ".txt", PlyAmm)
+		Bank.BankStorageSource:Deposit(ply, Amount)
 		
-		return Amount, PlyAmm
+		return Amount, Bank.BankStorageSource:GetPlayerAmmopacks(ply)
 	end
 	return -1
 end
@@ -70,12 +68,12 @@ hook.Add("PlayerAuthed", "ZPBankWithdraw", function(ply)
 	end
 end)
 hook.Add("PlayerDisconnected", "ZPBankDeposit", function(ply)
-	if cvars.Bool("zp_auto_deposit", 1) then
+	if cvars.Bool("zp_auto_deposit_when_disconnect", 1) then
 		Bank:Deposit(ply, "*")
 	end
 end)
 hook.Add("ShutDown", "ZPBankDepositAll", function()
-	if cvars.Bool("zp_auto_deposit", 1) then
+	if cvars.Bool("zp_auto_deposit_when_disconnect", 1) then
 		for k, ply in pairs(player.GetAll()) do
 			Bank:Deposit(ply, "*")
 		end

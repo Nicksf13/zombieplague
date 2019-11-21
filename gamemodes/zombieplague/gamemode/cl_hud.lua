@@ -11,7 +11,7 @@ hook.Add("HUDPaint", "HUDZombiePlague", function()
 		if !ply:Alive() then
 			ply = LocalPlayer():GetObserverTarget() 
 		end
-		if ply then
+		if IsValid(ply) then
 			local StringHUD = ""
 			if ply:IsZombie() then	
 				StringHUD = Dictionary:GetPhrase("ClassClass") .. " " .. ply:GetZPClass() .. " - " .. Dictionary:GetPhrase("ClassHealth") .. " " .. ply:Health() .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks()
@@ -57,44 +57,44 @@ hook.Add("Think", "ZPSpecialLights", function()
 		end
 	end
 end)
-/*hook.Add("PosInitEnt", "CreateScoreboard", function()
-	local Width = 700
-	local Height = 400
-	local Margin = 4
-	local PlayerLenght = 34
-	DScoreboard = vgui.Create("DFrame")
-	DScoreboard:SetTitle("")
-	DScoreboard:ShowCloseButton(false)
-	DScoreboard:SetVisible(false)
-	function DScoreboard:Paint()
-		draw.RoundedBox(2, 0, 0, Width, Height, Color(255, 0, 0, 125))
-	end
-	local i = 1
-	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
-		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_HUMANS) or Color(120, 120, 120))
-		i = i + 1
-	end
-	i = i + 2
-	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
-		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_ZOMBIES) or Color(120, 120, 120))
-		i = i + 1
-	end
-	DScoreboard:SetSize(Width, i * PlayerLenght)
-	DScoreboard:Center()
-end)
-function DrawPlayer(ply, i, Width, Height, Margin, Clr)
-	local Y = i * Height
-	Height = Height - 10
-	local BtPlayer = vgui.Create("DButton", DScrollBoard)
-	BtPlayer:SetText("")
-	BtPlayer:
-	draw.RoundedBox(4, Margin, Y, Width - (2 * Margin), Height, Clr)
-	draw.DrawText(ply:Name(), "DermaDefault", Margin + 2, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-	draw.DrawText(ply:Ping(), "DermaDefault", Width - (Margin * 2) - 30, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT) 
-end
-function GM:ScoreboardShow()
-	DScoreboard:Show()
-end
-function GM:ScoreboardHide()
-	DScoreboard:Hide()
-end*/
+--hook.Add("PosInitEnt", "CreateScoreboard", function()
+--	local Width = 700
+--	local Height = 400
+--	local Margin = 4
+--	local PlayerLenght = 34
+--	DScoreboard = vgui.Create("DFrame")
+--	DScoreboard:SetTitle("")
+--	DScoreboard:ShowCloseButton(false)
+--	DScoreboard:SetVisible(false)
+--	function DScoreboard:Paint()
+--		draw.RoundedBox(2, 0, 0, Width, Height, Color(255, 0, 0, 125))
+--	end
+--	local i = 1
+--	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
+--		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_HUMANS) or Color(120, 120, 120))
+--		i = i + 1
+--	end
+--	i = i + 2
+--	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
+--		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_ZOMBIES) or Color(120, 120, 120))
+--		i = i + 1
+--	end
+--	DScoreboard:SetSize(Width, i * PlayerLenght)
+--	DScoreboard:Center()
+--end)
+--function DrawPlayer(ply, i, Width, Height, Margin, Clr)
+--	local Y = i * Height
+--	Height = Height - 10
+--	local BtPlayer = vgui.Create("DButton", DScrollBoard)
+--	BtPlayer:SetText("")
+--	BtPlayer:
+--	draw.RoundedBox(4, Margin, Y, Width - (2 * Margin), Height, Clr)
+--	draw.DrawText(ply:Name(), "DermaDefault", Margin + 2, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
+--	draw.DrawText(ply:Ping(), "DermaDefault", Width - (Margin * 2) - 30, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT) 
+--end
+--function GM:ScoreboardShow()
+--	DScoreboard:Show()
+--end
+--function GM:ScoreboardHide()
+--	DScoreboard:Hide()
+--end

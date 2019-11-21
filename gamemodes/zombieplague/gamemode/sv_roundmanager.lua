@@ -184,6 +184,7 @@ function RoundManager:StartRound(RoundToStart, ply)
 
 	hook.Call("ZPNewRound", GAMEMODE, RoundToStart, self:GetRound())
 end
+
 function RoundManager:GetGoodRounds()
 	local GoodRounds = {}
 	local TotalPlayers = RoundManager:CountPlayerToPlayAlive()
@@ -198,6 +199,7 @@ end
 function RoundManager:GetGoodRoundsName(ply)
 	local GoodRounds = {}
 	local TotalPlayers = RoundManager:CountPlayerToPlayAlive()
+
 	for k, Round in pairs(RoundManager:GetRounds()) do
 		if TotalPlayers >= Round.MinPlayers then
 			table.insert(GoodRounds, Dictionary:GetPhrase(Round.Name, ply))
@@ -279,6 +281,16 @@ function RoundManager:GetPlayersToPlay(Alive)
 
 	return Alive
 end
+function RoundManager:CountPlayerToPlayAlive()
+	local Alive = 0
+	for k, ply in pairs(RoundManager.PlayersToPlay) do
+		if ply:Alive() then
+			Alive = Alive + 1
+		end
+	end
+
+	return Alive
+end
 function RoundManager:AddDefaultRounds()
 	local ROUND = {}
 	ROUND.Name = "RoundSimpleName"
@@ -306,7 +318,7 @@ function RoundManager:AddDefaultRounds()
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
 		
 		for k, ply in pairs(player.GetAll()) do
-			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeMulti", ply), 5, Color(0, 255, 0))
+			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeMultiInfection", ply), 5, Color(0, 255, 0))
 		end
 	end
 	RoundManager:AddRoundType(ROUND)
@@ -314,10 +326,15 @@ function RoundManager:AddDefaultRounds()
 	ROUND = {}
 	ROUND.Name = "RoundNemesisName"
 	ROUND.Chance = 5
+	ROUND.MinPlayers = 5
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
 	function ROUND:StartFunction()
 		local Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
+		while(Nemesis:IsBot()) do
+			Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
+		end
+
 		Nemesis:MakeNemesis()
 		
 		for k, ply in pairs(player.GetAll()) do
@@ -403,13 +420,13 @@ net.Receive("SendRounds", function(len, ply)
 		local Round = RoundManager:GetGoodRounds()[net.ReadInt(16)]
 		RoundManager:StartRound(Round)
 		for k, Play in pairs(player.GetAll()) do
-			SendPopupMessage(Play, string.format(Dictionary:GetPhrase("NoticeForceRound", Play), ply:Name(), Round.Name))
+			SendPopupMessage(Play, string.format(Dictionary:GetPhrase("NoticeForceRound", Play), ply:Name(), Dictionary:GetPhrase(Round.Name, ply)))
 		end
 	else
 		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
 	end
 end)
-net.Receive("RequestRoundMenu", function(len, ply)
+net.Receive("RequestRoundsMenu", function(len, ply)
 	if ply:IsAdmin() || ply:IsSuperAdmin() then
 		RoundManager:OpenRoundsMenu(ply)
 	else

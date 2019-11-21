@@ -40,7 +40,7 @@ function Dictionary:RegisterPhrase(LanguageAlias, PhraseID, Phrase, Client)
 		print("Unknown language: '" .. LanguageAlias .. "'!")
 	end
 end
-function Dictionary:GetLanguages()
+function Dictionary:GetLanguageIDs()
 	local Languages = {}
 	for k, v in pairs(Dictionary.Languages) do
 		Languages[k] = v.PrettyName
@@ -50,7 +50,7 @@ end
 function Dictionary:OpenLanguageMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("SendLanguage")
-		net.WriteTable(Dictionary:GetLanguages())
+		net.WriteTable(Dictionary:GetLanguageIDs())
 	net.Send(ply)
 end
 Commands:AddCommand("zombies", "Open language menu.", function(ply, args)
