@@ -1,27 +1,27 @@
-CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
-CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
-CreateConVar("zp_survivor_damage", 1.1, 8, "cvar used to set how stronger survivor will be.")
-CreateConVar("zp_battery_flashlight_should_drain", 0, "cvar used to set if flashlight should drain battery")
-CreateConVar("zp_battery_flashlight_drain", 1, 8, "cvar used to set flashlight battery drain")
-CreateConVar("zp_battery_nightvision_should_drain", 0, "cvar used to set if nightvision should drain battery")
-CreateConVar("zp_battery_nightvision_drain", 1, 8, "cvar used to set nightvision battery drain")
-CreateConVar("zp_battery_voice_should_drain", 0, "cvar used to set if voice should drain battery")
-CreateConVar("zp_battery_voice_drain", 0.5, 8, "cvar used to set voice battery drain")
-CreateConVar("zp_battery_charge", 0.5, 8, "cvar used to set battery recharge")
-CreateConVar("zp_water_drain", 0, 8, "cvar used to set if water will drain player's breath.")
-CreateConVar("zp_run_drain", 0, 8, "cvar used to set if run will drain player's breath.")
-CreateConVar("zp_breath_drain", 1, 8, "cvar used to set breath drain")
-CreateConVar("zp_breath_damage", 1, 8, "cvar used to set breath damage")
-CreateConVar("zp_breath_recover", 0.5, 8, "cvar used to set breath recover")
-CreateConVar("zp_last_human_reward_mode", 1, 8, "cvar used to set last human reward")
-CreateConVar("zp_last_human_reward_health", 25, 8, "cvar used to set last human health reward")
-CreateConVar("zp_last_zombie_reward_mode", 1, 8, "cvar used to set last zombie reward")
-CreateConVar("zp_last_zombie_reward_health", 250, 8, "cvar used to set last zombie health reward")
-CreateConVar("zp_health_should_regen", 1, 8, "cvar used to set if zombies will regen health.")
-CreateConVar("zp_health_regen_time_delay", 20, 8, "cvar used to set the delay time after last damage to regen zombie's health.")
-CreateConVar("zp_health_regen", 10, 8, "cvar used to set how much health zombies will regen.")
-CreateConVar("zp_clip_mode", 0, 8, "cvar used to set the clip mode of the weapons.")
-CreateConVar("zp_zombie_should_run", 1, 8, "cvar used to enable zombies to run")
+ConvarManager:CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
+ConvarManager:CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
+ConvarManager:CreateConVar("zp_survivor_damage", 1.1, 8, "cvar used to set how stronger survivor will be.")
+ConvarManager:CreateConVar("zp_battery_flashlight_should_drain", 0, "cvar used to set if flashlight should drain battery")
+ConvarManager:CreateConVar("zp_battery_flashlight_drain", 1, 8, "cvar used to set flashlight battery drain")
+ConvarManager:CreateConVar("zp_battery_nightvision_should_drain", 0, "cvar used to set if nightvision should drain battery")
+ConvarManager:CreateConVar("zp_battery_nightvision_drain", 1, 8, "cvar used to set nightvision battery drain")
+ConvarManager:CreateConVar("zp_battery_voice_should_drain", 0, "cvar used to set if voice should drain battery")
+ConvarManager:CreateConVar("zp_battery_voice_drain", 0.5, 8, "cvar used to set voice battery drain")
+ConvarManager:CreateConVar("zp_battery_charge", 0.5, 8, "cvar used to set battery recharge")
+ConvarManager:CreateConVar("zp_water_drain", 0, 8, "cvar used to set if water will drain player's breath.")
+ConvarManager:CreateConVar("zp_run_drain", 0, 8, "cvar used to set if run will drain player's breath.")
+ConvarManager:CreateConVar("zp_breath_drain", 1, 8, "cvar used to set breath drain")
+ConvarManager:CreateConVar("zp_breath_damage", 1, 8, "cvar used to set breath damage")
+ConvarManager:CreateConVar("zp_breath_recover", 0.5, 8, "cvar used to set breath recover")
+ConvarManager:CreateConVar("zp_last_human_reward_mode", 1, 8, "cvar used to set last human reward")
+ConvarManager:CreateConVar("zp_last_human_reward_health", 25, 8, "cvar used to set last human health reward")
+ConvarManager:CreateConVar("zp_last_zombie_reward_mode", 1, 8, "cvar used to set last zombie reward")
+ConvarManager:CreateConVar("zp_last_zombie_reward_health", 250, 8, "cvar used to set last zombie health reward")
+ConvarManager:CreateConVar("zp_health_should_regen", 1, 8, "cvar used to set if zombies will regen health.")
+ConvarManager:CreateConVar("zp_health_regen_time_delay", 20, 8, "cvar used to set the delay time after last damage to regen zombie's health.")
+ConvarManager:CreateConVar("zp_health_regen", 10, 8, "cvar used to set how much health zombies will regen.")
+ConvarManager:CreateConVar("zp_clip_mode", 0, 8, "cvar used to set the clip mode of the weapons.")
+ConvarManager:CreateConVar("zp_zombie_should_run", 1, 8, "cvar used to enable zombies to run")
 
 FALL_DMG_NONE = 0
 FALL_DMG_ZOMBIES = 1
@@ -338,8 +338,13 @@ end
 function WaterShouldDrain()
 	return (RoundManager:IsRealisticMod() || cvars.Bool("zp_water_should_drain", 0))
 end
-function RunShouldDrain()
-	return cvars.Bool("zp_zombie_should_run", true) && (RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0))
+function RunShouldDrain(ply)
+	if ply:Team() == TEAM_ZOMBIES then
+		if !cvars.Bool("zp_zombie_should_run", true) then
+			return false
+		end
+	end
+	return RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0)
 end
 timer.Create("TickManager", 0.1, 0, function()
 	hook.Call("TickManager")
@@ -400,7 +405,7 @@ hook.Add("HalfSecondTickManager", "ZPBreathManager", function()
 			if WaterShouldDrain() && ply:WaterLevel() > 2 then
 				TotalDrain = TotalDrain + cvars.Number("zp_water_drain", 1)
 			end
-			if RunShouldDrain() && ply:KeyDown(IN_SPEED) && (ply:KeyDown(IN_FORWARD) || ply:KeyDown(IN_BACK) || ply:KeyDown(IN_MOVELEFT) || ply:KeyDown(IN_MOVERIGHT)) then
+			if RunShouldDrain(ply) && ply:KeyDown(IN_SPEED) && (ply:KeyDown(IN_FORWARD) || ply:KeyDown(IN_BACK) || ply:KeyDown(IN_MOVELEFT) || ply:KeyDown(IN_MOVERIGHT)) then
 				TotalDrain = TotalDrain + cvars.Number("zp_run_drain", 1)
 			end
 			

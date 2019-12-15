@@ -1,5 +1,4 @@
 ZOMBIE_KNIFE = "zp_weapon_fists"
-HUMAN_KNIFE = "weapon_crowbar"
 
 INFECTION_BOMB = "weapon_frag"
 
@@ -117,39 +116,39 @@ resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
 
 ---------------------------------Sounds---------------------------------
 -------------------------------Ammo Pack--------------------------------
-CreateConVar("zp_ap_total", 1, 8, "cvar used to set how many ammo packs humans will win after cause x damage.")
-CreateConVar("zp_ap_damage", 500, 8, "cvar used to set how much damage humans should cause to earn zp_ap_total ammo packs.")
+ConvarManager:CreateConVar("zp_ap_total", 1, 8, "cvar used to set how many ammo packs humans will win after cause x damage.")
+ConvarManager:CreateConVar("zp_ap_damage", 500, 8, "cvar used to set how much damage humans should cause to earn zp_ap_total ammo packs.")
 
-CreateConVar("zp_ap_zombies", 1, 8, "cvar used to set if Zombies should earn ammo packs when infected players.")
-CreateConVar("zp_ap_zombies_total", 1, 8, "cvar used to set the amount of ammo packs the zombie will win after infect a player.")
+ConvarManager:CreateConVar("zp_ap_zombies", 1, 8, "cvar used to set if Zombies should earn ammo packs when infected players.")
+ConvarManager:CreateConVar("zp_ap_zombies_total", 1, 8, "cvar used to set the amount of ammo packs the zombie will win after infect a player.")
 
-CreateConVar("zp_ap_kill_human", 5, 8, "cvar used to set how many ammo packs player will win if killed an human.")
-CreateConVar("zp_ap_kill_zombie", 5, 8, "cvar used to set how many ammo packs player will win if killed a zombie.")
+ConvarManager:CreateConVar("zp_ap_kill_human", 5, 8, "cvar used to set how many ammo packs player will win if killed an human.")
+ConvarManager:CreateConVar("zp_ap_kill_zombie", 5, 8, "cvar used to set how many ammo packs player will win if killed a zombie.")
 -------------------------------Ammo Pack--------------------------------
 
 ---------------------------------Configs--------------------------------
-CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realistic mode on Zombie Plague.")
+ConvarManager:CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realistic mode on Zombie Plague.")
 
-CreateConVar("zp_nemesis_health_mode", 1, 8, "cvar used to set nemesis' health mode.")
-CreateConVar("zp_nemesis_health_player", 250, 8, "cvar used to set how much health nemesis will earn per player.")
-CreateConVar("zp_nemesis_health", 3000, 8, "cvar used to the health of nemesis.")
+ConvarManager:CreateConVar("zp_nemesis_health_mode", 1, 8, "cvar used to set nemesis' health mode.")
+ConvarManager:CreateConVar("zp_nemesis_health_player", 250, 8, "cvar used to set how much health nemesis will earn per player.")
+ConvarManager:CreateConVar("zp_nemesis_health", 3000, 8, "cvar used to the health of nemesis.")
 
-CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")
-CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set how much health survivor will earn per player.")
-CreateConVar("zp_survivor_health", 300, 8, "cvar used to the health of survivor.")
+ConvarManager:CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")
+ConvarManager:CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set how much health survivor will earn per player.")
+ConvarManager:CreateConVar("zp_survivor_health", 300, 8, "cvar used to the health of survivor.")
 
-CreateConVar("zp_zombie_footstep", 1, 8, "cvar used to set if zombies will emit footstep sounds.") 
+ConvarManager:CreateConVar("zp_zombie_footstep", 1, 8, "cvar used to set if zombies will emit footstep sounds.") 
 
-CreateConVar("zp_admin_human_model", 0, 8, "cvar used to set if admin will receive a special human player model.")
-CreateConVar("zp_admin_zombie_model", 0, 8, "cvar used to set if admin will receive a special zombie player model.")
+ConvarManager:CreateConVar("zp_admin_human_model", 0, 8, "cvar used to set if admin will receive a special human player model.")
+ConvarManager:CreateConVar("zp_admin_zombie_model", 0, 8, "cvar used to set if admin will receive a special zombie player model.")
 
-CreateConVar("zp_voice_all", 1, 8, "cvar used to set if players will hear other team players.")
-CreateConVar("zp_can_hear_death", 0, 8, "cvar used to set if players will hear death players")
-CreateConVar("zp_chat_all", 1, 8, "cvar used to set if players will read other team players.")
-CreateConVar("zp_can_see_death", 0, 8, "cvar used to set if players will read death players")
+ConvarManager:CreateConVar("zp_voice_all", 1, 8, "cvar used to set if players will hear other team players.")
+ConvarManager:CreateConVar("zp_can_hear_death", 0, 8, "cvar used to set if players will hear death players")
+ConvarManager:CreateConVar("zp_chat_all", 1, 8, "cvar used to set if players will read other team players.")
+ConvarManager:CreateConVar("zp_can_see_death", 0, 8, "cvar used to set if players will read death players")
 
-CreateConVar("zp_maps_to_vote", 7, 8, "cvar used to set how many maps will be displayed on votemap")
-CreateConVar("zp_map_prop_damage_multiplier", 1, 8, "cvar used to set the map prop multiplier")
+ConvarManager:CreateConVar("zp_maps_to_vote", 7, 8, "cvar used to set how many maps will be displayed on votemap")
+ConvarManager:CreateConVar("zp_map_prop_damage_multiplier", 1, 8, "cvar used to set the map prop multiplier")
 
-CreateConVar("zp_nemesis_earn", 0, 8, "cvar used to set if nemesis will earn class atributes")
-CreateConVar("zp_survivor_earn", 0, 8, "cvar used to set if survivor will earn class atributes")
+ConvarManager:CreateConVar("zp_nemesis_earn", 0, 8, "cvar used to set if nemesis will earn class atributes")
+ConvarManager:CreateConVar("zp_survivor_earn", 0, 8, "cvar used to set if survivor will earn class atributes")

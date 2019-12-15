@@ -46,7 +46,7 @@ function CreateMenu()
 		
 		local PgJump = 7 * (MMenu.Page - 1)
 		local i = 1
-		while(i < 8 && MMenu.Options[PgJump + i] != nil) do
+		while(i < 8 && MMenu.Options[PgJump + i]) do
 			MMenu.ZPOptions:AddLine(i .. " - " .. MMenu.Options[PgJump + i].Name)
 			MMenu.ZPOptions.PressFunctions[i] = MMenu.Options[PgJump + i].Function
 			i = i + 1
@@ -191,16 +191,19 @@ end
 net.Receive("OpenZPMenu", OpenZPMenu)
 net.Receive("OpenBackMenu", function()
 	MMenu.NetworkString = net.ReadString()
-	local Opcoes = net.ReadTable()
-	local Options = {}
-	for k, Option in pairs(Opcoes) do
-		table.insert(Options, {Name = Option, Function = function(ID)
+	local ReceivedOptions = net.ReadTable()
+	local MenuOptions = {}
+
+	for ID, ReceivedOption in pairs(ReceivedOptions) do
+		table.insert(MenuOptions, {Name = ReceivedOption.Description, Order = ReceivedOption.Order, Function = function()
 			hook.Remove("SetupMove", "ZPMenuKeyListener")
 			hook.Remove("HUDPaint", "ChooseMenu")
 			net.Start(MMenu.NetworkString)
-				net.WriteInt(ID, 16)
+				net.WriteString(ID)
 			net.SendToServer()
 		end})
 	end
-	MMenu:UpdateOptions(Options)
+	
+	table.sort(MenuOptions, function(a, b) return a.Order < b.Order end)
+	MMenu:UpdateOptions(MenuOptions)
 end)

@@ -18,3 +18,7 @@ function ZPClass:Ability(ply)
 	explosion:Activate()
 	explosion:Fire("explode","",0)
 end
+
+if(ZPClass:ShouldBeEnabled()) then
+	ClassManager:AddZPClass("SuicideHuman", ZPClass, TEAM_HUMANS)
+end

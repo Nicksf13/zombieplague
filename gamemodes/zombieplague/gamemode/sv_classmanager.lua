@@ -10,10 +10,6 @@ function ClassManager:SearchClasses()
 		for k, File in pairs(Files) do
 			ZPClass = ClassManager:NewZombieClass()
 			include("zombieplague/gamemode/classes/zombies/" .. File)
-			
-			if(ZPClass:ShouldBeEnabled()) then
-				ClassManager:AddZombieClass(ZPClass)
-			end
 		end
 	end
 	
@@ -22,10 +18,6 @@ function ClassManager:SearchClasses()
 		for k, File in pairs(Files) do
 			ZPClass = ClassManager:NewHumanClass()
 			include("zombieplague/gamemode/classes/humans/" .. File)
-			
-			if(ZPClass:ShouldBeEnabled()) then
-				ClassManager:AddHumanClass(ZPClass)
-			end
 		end
 	end
 end
@@ -35,16 +27,26 @@ end
 function ClassManager:GetHumanClasses()
 	return ClassManager.HumanClasses
 end
-function ClassManager:AddZombieClass(ZombieClass)
-	resource.AddFile(ZombieClass.PModel)
-	table.insert(ClassManager.ZombieClasses, ZombieClass)
+
+function ClassManager:AddZPClass(ClassID, ZPClass, TeamID)
+	if ZombieClass || (TeamID == TEAM_HUMANS || TeamID == TEAM_ZOMBIES) then
+		local ZPTeamClasses = (TeamID == TEAM_HUMANS) and ClassManager.HumanClasses or ClassManager.ZombieClasses
+		ZPTeamClasses[ClassID] = ZPClass
+
+		resource.AddFile(ZPClass.PModel)
+	else
+		print("Invalid ZP class: " .. ClassID)
+	end
 end
-function ClassManager:GetZombieClass(ID)
-	return ClassManager:GetZombieClasses()[ID]
+function ClassManager:GetZPClass(ID, TeamID)
+	return ((TeamID == TEAM_HUMANS) and ClassManager.HumanClasses or ClassManager.ZombieClasses)[ID] or SafeTableRandom(ZPTeamClasses)
 end
-function ClassManager:AddHumanClass(HumanClass)
-	resource.AddFile(HumanClass.PModel)
-	table.insert(ClassManager.HumanClasses, HumanClass)
+function ClassManager:SetZPClass(ply, ClassID, TeamID)
+	if TeamID == TEAM_HUMANS then
+		ply:SetHumanClass(ClassManager:GetHumanClass(ClassID))
+	else
+		ply:SetZombieClass(ClassManager:GetZombieClass(ClassID))
+	end
 end
 function ClassManager:NewHumanClass()
 	return {Name = "HumanDefaultClassName",
@@ -63,6 +65,7 @@ function ClassManager:NewHumanClass()
 		DamageAmplifier = 1,
 		FallFunction = function()return true end,
 		ShouldBeEnabled = function()return true end,
+		Order = 100
 	}
 end
 function ClassManager:NewZombieClass()
@@ -80,61 +83,47 @@ function ClassManager:NewZombieClass()
 		DamageAmplifier = 1,
 		FallFunction = function()return false end,
 		ShouldBeEnabled = function()return true end,
+		Order = 100
 	}
 	function ZombieClass:WeaponGive(ply)
 		ply:Give(ZOMBIE_KNIFE)
 	end
 	return ZombieClass
 end
-function ClassManager:GetHumanClass(ID)
-	return ClassManager:GetHumanClasses()[ID]
-end
-function ClassManager:SetUserZombieClass(ply, ID)
-	ply:SetZombieClass(ClassManager:GetZombieClass(ID))
-end
-function ClassManager:SetUserHumanClass(ply, ID)
-	ply:SetHumanClass(ClassManager:GetHumanClass(ID))
-end
-function ClassManager:OpenHumanMenu(ply)
+function ClassManager:OpenZPClassMenu(ply, IsHuman)
 	local Pretty = {}
-	for k, HClass in pairs(ClassManager:GetHumanClasses()) do
-		table.insert(Pretty, Dictionary:GetPhrase(HClass.Name, ply) .. " - " .. Dictionary:GetPhrase(HClass.Description, ply))
+	local ZPClasses = IsHuman and ClassManager:GetHumanClasses() or ClassManager:GetZombieClasses()
+
+	for ZPClassID, ZPClass in pairs(ZPClasses) do
+		Pretty[ZPClassID] = {
+			Description = Dictionary:GetPhrase(ZPClass.Name, ply) .. " - " .. Dictionary:GetPhrase(ZPClass.Description, ply),
+			Order = ZPClass.Order
+		}
 	end
 	
 	net.Start("OpenBackMenu")
-		net.WriteString("SendHumanClass")
-		net.WriteTable(Pretty)
-	net.Send(ply)
-end
-function ClassManager:OpenZombieMenu(ply)
-	local Pretty = {}
-	for k, ZClass in pairs(ClassManager:GetZombieClasses()) do
-		table.insert(Pretty, Dictionary:GetPhrase(ZClass.Name, ply) .. " - " .. Dictionary:GetPhrase(ZClass.Description, ply))
-	end
-	
-	net.Start("OpenBackMenu")
-		net.WriteString("SendZombieClass")
+		net.WriteString(IsHuman and "SendHumanClass" or "SendZombieClass")
 		net.WriteTable(Pretty)
 	net.Send(ply)
 end
 
 net.Receive("SendHumanClass", function(len, ply)
-	ply:SetNextHumanClass(net.ReadInt(16))
+	ply:SetNextHumanClass(net.ReadString())
 end)
 net.Receive("SendZombieClass", function(len, ply)
-	ply:SetNextZombieClass(net.ReadInt(16))
+	ply:SetNextZombieClass(net.ReadString())
 end)
 Commands:AddCommand("zombies", "Open zombie class menu.", function(ply, args)
-	ClassManager:OpenZombieMenu(ply)
+	ClassManager:OpenZPClassMenu(ply, false)
 end)
 Commands:AddCommand("humans", "Open human class menu.", function(ply, args)
-	ClassManager:OpenHumanMenu(ply)
+	ClassManager:OpenZPClassMenu(ply, true)
 end)
 net.Receive("RequestZombieMenu", function(len, ply)
-	ClassManager:OpenZombieMenu(ply)
+	ClassManager:OpenZPClassMenu(ply, false)
 end)
 net.Receive("RequestHumanMenu", function(len, ply)
-	ClassManager:OpenHumanMenu(ply)
+	ClassManager:OpenZPClassMenu(ply, true)
 end)
 
 util.AddNetworkString("RequestZombieMenu")

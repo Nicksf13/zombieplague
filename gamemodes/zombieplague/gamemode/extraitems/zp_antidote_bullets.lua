@@ -1,3 +1,4 @@
+ExtraItem.ID = "ZPAntidoteBullets"
 ExtraItem.Name = "ExtraItemAntidoteBulletsName"
 ExtraItem.Price = 100
 function ExtraItem:OnBuy(ply)

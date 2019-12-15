@@ -1,3 +1,4 @@
+ExtraItem.ID = "ZPZombieMadness"
 ExtraItem.Name = "ExtraItemZombieMadnessName"
 ExtraItem.Price = 15
 ExtraItem.Type = ITEM_ZOMBIE

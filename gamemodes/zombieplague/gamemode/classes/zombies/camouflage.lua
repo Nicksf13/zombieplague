@@ -9,6 +9,7 @@ ZPClass.Gravity = 1
 ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 45
 function ZPClass:Ability(ply)
+	local MeleeWeapon = table.Random(WeaponManager:GetWeaponsTableByWeaponType(WEAPON_MELEE)).WeaponID
 	local AuxClass = table.Random(RoundManager:GetAliveHumans()):GetHumanClass()
 	ply:SetHealth(AuxClass.MaxHealth)
 	ply:SetWalkSpeed(AuxClass.Speed)
@@ -16,7 +17,7 @@ function ZPClass:Ability(ply)
 	ply:SetCrouchedWalkSpeed(AuxClass.CrouchSpeed)
 	ply:SetModel(AuxClass.PModel)
 	ply:SetAuxGravity(AuxClass.Gravity)
-	ply:GiveZombieAllowedWeapon(HUMAN_KNIFE)
+	ply:GiveZombieAllowedWeapon(MeleeWeapon)
 	timer.Create("Camouflage" .. ply:SteamID64(), 30, 1, function()
 		if IsValid(ply) && ply:IsZombie() then
 			local ZPClass = ply:GetZombieClass()
@@ -26,8 +27,12 @@ function ZPClass:Ability(ply)
 			ply:SetCrouchedWalkSpeed(ZPClass.CrouchSpeed)
 			ply:SetModel(ZPClass.PModel)
 			ply:SetAuxGravity(ZPClass.Gravity)
-			ply:RemoveZombieAllowedWeapon(HUMAN_KNIFE)
+			ply:RemoveZombieAllowedWeapon(MeleeWeapon)
 			ply:Give(ZOMBIE_KNIFE)
 		end
 	end)
+end
+
+if(ZPClass:ShouldBeEnabled()) then
+	ClassManager:AddZPClass("CamouflageZombie", ZPClass, TEAM_ZOMBIES)
 end

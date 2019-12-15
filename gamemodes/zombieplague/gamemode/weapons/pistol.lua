@@ -1,3 +1,4 @@
 Weapon.PrettyName = "Pistol"
 Weapon.WeaponID = "weapon_pistol"
-Weapon.PrimaryWeapon = false
+Weapon.WeaponType = WEAPON_SECONDARY
+Weapon.DamageMultiplier = 2.23

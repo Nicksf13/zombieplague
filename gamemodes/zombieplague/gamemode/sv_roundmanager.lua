@@ -1,8 +1,8 @@
-CreateConVar("zp_min_players", 2, 8, "cvar used to define minimun players to start the round.")
-CreateConVar("zp_newround_delay", 10, 8, "cvar used to define new round time delay.")
-CreateConVar("zp_infection_delay", 10, 8, "cvar used to define infection time delay.")
-CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
-CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
+ConvarManager:CreateConVar("zp_min_players", 2, 8, "cvar used to define minimun players to start the round.")
+ConvarManager:CreateConVar("zp_newround_delay", 10, 8, "cvar used to define new round time delay.")
+ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define infection time delay.")
+ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
+ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 
 RoundManager["Rounds"] = {}
 RoundManager["PlayersToPlay"] = {}
@@ -379,7 +379,7 @@ function RoundManager:AddDefaultRounds()
 			i = i + 1
 		end
 		for k, ply in pairs(player.GetAll()) do
-			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundSwarm", ply), 5, Color(0, 255, 0))
+			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeSwarm", ply), 5, Color(0, 255, 0))
 		end
 	end
 	RoundManager:AddRoundType(ROUND)
@@ -405,7 +405,7 @@ function RoundManager:AddDefaultRounds()
 		SafeTableRandom(RoundManager:GetAliveHumans()):MakeSurvivor()
 		
 		for k, ply in pairs(player.GetAll()) do
-			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundPlague", ply), 5, team.GetColor(ply:Team()))
+			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticePlague", ply), 5, team.GetColor(ply:Team()))
 		end
 	end
 	RoundManager:AddRoundType(ROUND)

@@ -1,3 +1,4 @@
+ExtraItem.ID = "ZPGrenade"
 ExtraItem.Name = "ExtraItemGrenadeName"
 ExtraItem.Price = 5
 function ExtraItem:OnBuy(ply)
@@ -8,3 +9,5 @@ function ExtraItem:OnBuy(ply)
 		ply:Give("weapon_frag")
 	end
 end
+
+WeaponManager:AddWeaponMultiplier("weapon_frag", 5)

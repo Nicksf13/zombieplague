@@ -1,14 +1,16 @@
-Dictionary = {LanguageID = 1, Language = {}}
+Dictionary = {LanguageID = "en-us", Language = {}}
 
 
 function Dictionary:GetPhrase(PhraseID)
 	return Dictionary:GetLanguageBook()[PhraseID] or "{UNKNOWN}"
 end
-function Dictionary:SetLanguageBook(Language)
-	if !file.Exists("zombieplague", "DATA") then
-		file.CreateDir("zombieplague")
+function Dictionary:SetLanguageBook(LanguageID, Language, ShouldSave)
+	if ShouldSave then
+		if !file.Exists("zombieplague", "DATA") then
+			file.CreateDir("zombieplague")
+		end
+		file.Write("zombieplague/language.txt", LanguageID)
 	end
-	file.Write("zombieplague/language.txt", Language.ID)
 	
 	Dictionary.Language = Language.Value
 end
@@ -17,9 +19,9 @@ function Dictionary:GetLanguageBook()
 end
 function Dictionary:Start()
 	if file.Exists("zombieplague/language.txt", "DATA") then
-		LanguageID = (file.Read("zombieplague/language.txt", "DATA") or 1)
+		Dictionary.LanguageID = (file.Read("zombieplague/language.txt", "DATA") or "en-us")
 	end
 end
 net.Receive("SendPlayerLanguage", function()
-	Dictionary:SetLanguageBook(net.ReadTable())
+	Dictionary:SetLanguageBook(net.ReadString(), net.ReadTable(), net.ReadBool())
 end)

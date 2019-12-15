@@ -23,3 +23,7 @@ function ZPClass:Ability(ply)
 		end
 	end)
 end
+
+if(ZPClass:ShouldBeEnabled()) then
+	ClassManager:AddZPClass("FasterZombie", ZPClass, TEAM_ZOMBIES)
+end

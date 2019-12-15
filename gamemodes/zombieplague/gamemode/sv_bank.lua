@@ -1,5 +1,5 @@
-CreateConVar("zp_auto_withdraw", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
-CreateConVar("zp_auto_deposit_when_disconnect", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
+ConvarManager:CreateConVar("zp_auto_withdraw", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
+ConvarManager:CreateConVar("zp_auto_deposit_when_disconnect", 1, 8, "cvar used to set if server will auto withdraw player's ammo packs")
 
 Bank = {BankStorageType = "text"}
 

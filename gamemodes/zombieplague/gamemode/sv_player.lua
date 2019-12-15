@@ -8,8 +8,8 @@ function PLAYER:SetZombieClass(ZombieClass)
 	net.Broadcast()
 end
 function PLAYER:GetZombieClass()
-	if self.ZombieClass == nil then
-		self:SetZombieClass(ClassManager:GetZombieClasses()[1])
+	if !self.ZombieClass then
+		self:SetZombieClass(ClassManager:GetZPClass("DefaultZombie", TEAM_ZOMBIES))
 	end
 	return self.ZombieClass
 end
@@ -29,8 +29,8 @@ function PLAYER:SetHumanClass(HumanClass)
 	net.Broadcast()
 end
 function PLAYER:GetHumanClass()
-	if self.HumanClass == nil then
-		self:SetHumanClass(ClassManager:GetHumanClasses()[1])
+	if !self.HumanClass then
+		self:SetHumanClass(ClassManager:GetZPClass("DefaultHuman", TEAM_HUMANS))
 	end
 	return self.HumanClass
 end
@@ -286,15 +286,12 @@ function PLAYER:SetPrimaryWeapon(PrimaryWeapon)
 			self:SetPrimaryWeaponGiven(true)
 		end
 	end
-	if !self:HasSecondaryWeapon() then
+	if !self:GetSecondaryWeapon() then
 		WeaponManager:OpenSecondaryWeaponMenu(self)
 	end
 end
 function PLAYER:GetPrimaryWeapon()
 	return self.PrimaryWeapon
-end
-function PLAYER:HasPrimaryWeapon()
-	return self.PrimaryWeapon != nil
 end
 function PLAYER:SetSecondaryWeapon(SecondaryWeapon)
 	self.SecondaryWeapon = SecondaryWeapon
@@ -304,12 +301,12 @@ function PLAYER:SetSecondaryWeapon(SecondaryWeapon)
 			self:SetSecondaryWeaponGiven(true)
 		end
 	end
+	if !self:GetMeleeWeapon() then
+		WeaponManager:OpenMeleeWeaponMenu(self)
+	end
 end
 function PLAYER:GetSecondaryWeapon()
 	return self.SecondaryWeapon
-end
-function PLAYER:HasSecondaryWeapon()
-	return self.SecondaryWeapon != nil
 end
 function PLAYER:SetPrimaryWeaponGiven(PrimaryWeaponGiven)
 	self.PrimaryWeaponGiven = PrimaryWeaponGiven
@@ -323,16 +320,36 @@ end
 function PLAYER:GetSecondaryWeaponGiven()
 	return self.SecondaryWeaponGiven or false
 end
+function PLAYER:SetMeleeWeapon(MeleeWeapon)
+	self.MeleeWeapon = MeleeWeapon
+	if MeleeWeapon then
+		if !self:GetMeleeWeaponGiven() then
+			self:GiveWeapon(MeleeWeapon)
+			self:SetMeleeWeaponGiven(true)
+		end
+	end
+end
+function PLAYER:GetMeleeWeapon()
+	return self.MeleeWeapon
+end
+function PLAYER:SetMeleeWeaponGiven(MeleeWeaponGiven)
+	self.MeleeWeaponGiven = MeleeWeaponGiven
+end
+function PLAYER:GetMeleeWeaponGiven()
+	return self.MeleeWeaponGiven or false
+end
 ---------------------------Weapons--------------------------
 --------------------------Languages-------------------------
-function PLAYER:SetLanguage(Language)
+function PLAYER:SetLanguage(Language, ShouldSave)
 	self.Language = Language
 	net.Start("SendPlayerLanguage")
+		net.WriteString(Language)
 		net.WriteTable(Dictionary:GetClientSideLanguageBook(Language))
+		net.WriteBool(ShouldSave)
 	net.Send(self)
 end
 function PLAYER:GetLanguage()
-	return self.Language or 1
+	return self.Language or "en-us"
 end
 --------------------------Languages-------------------------
 ---------------------------Move-----------------------------
@@ -418,17 +435,24 @@ function PLAYER:MakeHuman()
 	self:SetDamageAmplifier(HumanClass.DamageAmplifier)
 	self:AllowFlashlight(true)
 	self:SetupHands()
-	self:Give(HUMAN_KNIFE)
 	self:SetPrimaryWeaponGiven(false)
 	self:SetSecondaryWeaponGiven(false)
+	self:SetMeleeWeaponGiven(false)
 	
-	if self:HasPrimaryWeapon() then
+	if self:GetPrimaryWeapon() then
 		self:GiveWeapon(self:GetPrimaryWeapon())
 		self:SetPrimaryWeaponGiven(true)
 		
-		if self:HasSecondaryWeapon() then
+		if self:GetSecondaryWeapon() then
 			self:GiveWeapon(self:GetSecondaryWeapon())
 			self:SetSecondaryWeaponGiven(true)
+
+			if self:GetMeleeWeapon() then
+				self:GiveWeapon(self:GetMeleeWeapon())
+				self:SetMeleeWeaponGiven(true)
+			else
+				Weapon:OpenMeleeWeaponMenu()
+			end
 		else
 			WeaponManager:OpenSecondaryWeaponMenu(self)
 		end

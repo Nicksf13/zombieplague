@@ -11,3 +11,7 @@ function ZPClass:WeaponGive(ply)
 	ply:Give(ZOMBIE_KNIFE)
 	ply:Give(INFECTION_BOMB)
 end
+
+if(ZPClass:ShouldBeEnabled()) then
+	ClassManager:AddZPClass("BomberZombie", ZPClass, TEAM_ZOMBIES)
+end

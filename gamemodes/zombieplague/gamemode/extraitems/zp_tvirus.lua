@@ -1,3 +1,4 @@
+ExtraItem.ID = "ZPTVirus"
 ExtraItem.Name = "ExtraItemTVirusName"
 ExtraItem.Price = 50
 function ExtraItem:OnBuy(ply)

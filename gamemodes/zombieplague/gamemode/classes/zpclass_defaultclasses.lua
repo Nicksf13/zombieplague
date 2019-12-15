@@ -1,6 +1,8 @@
-ClassManager:AddHumanClass(ClassManager:NewHumanClass())
-
 local ZPClass = ClassManager:NewHumanClass()
+ZPClass.Order = 0
+ClassManager:AddZPClass("DefaultHuman", ZPClass, TEAM_HUMANS)
+
+ZPClass = ClassManager:NewHumanClass()
 ZPClass.Name = "HumanHeavyClassName"
 ZPClass.Description = "HumanHeavyClassDescription"
 ZPClass.MaxHealth = 150
@@ -12,7 +14,7 @@ ZPClass.CrouchSpeed = 0.3
 ZPClass.Gravity = 1.2
 ZPClass.Battery = 200
 ZPClass.Breath = 150
-ClassManager:AddHumanClass(ZPClass)
+ClassManager:AddZPClass("HeavyHuman", ZPClass, TEAM_HUMANS)
 
 ZPClass = ClassManager:NewHumanClass()
 ZPClass.Name = "HumanSpeedClassName"
@@ -25,7 +27,7 @@ ZPClass.CrouchSpeed = 0.4
 ZPClass.Gravity = 1
 ZPClass.Battery = 50
 ZPClass.Breath = 150
-ClassManager:AddHumanClass(ZPClass)
+ClassManager:AddZPClass("SpeedHuman", ZPClass, TEAM_HUMANS)
 
 ZPClass = ClassManager:NewHumanClass()
 ZPClass.Name = "HumanCrouchClassName"
@@ -35,7 +37,7 @@ ZPClass.PModel = "models/player/swat.mdl"
 ZPClass.Speed = 210
 ZPClass.RunSpeed = 230
 ZPClass.CrouchSpeed = 1.5
-ClassManager:AddHumanClass(ZPClass)
+ClassManager:AddZPClass("CrouchHuman", ZPClass, TEAM_HUMANS)
 
 ZPClass = ClassManager:NewHumanClass()
 ZPClass.Name = "HumanLightClassName"
@@ -46,10 +48,12 @@ ZPClass.Gravity = 0.5
 ZPClass.Battery = 50
 ZPClass.Breath = 50
 ZPClass.FallFunction = function()return false end
-ClassManager:AddHumanClass(ZPClass)
+ClassManager:AddZPClass("LightHuman", ZPClass, TEAM_HUMANS)
 
 -------------------------------------------Zombies-------------------------------------------
-ClassManager:AddZombieClass(ClassManager:NewZombieClass())
+ZPClass = ClassManager:NewZombieClass()
+ZPClass.Order = 0
+ClassManager:AddZPClass("DefaultZombie", ZPClass, TEAM_ZOMBIES)
 
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieHeavyClassName"
@@ -62,7 +66,7 @@ ZPClass.CrouchSpeed = 0.6
 ZPClass.Gravity = 1.2
 ZPClass.Breath = 200
 ZPClass.FallFunction = function()return true end
-ClassManager:AddZombieClass(ZPClass)
+ClassManager:AddZPClass("HeavyZombie", ZPClass, TEAM_ZOMBIES)
 
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieSpeedClassName"
@@ -74,7 +78,7 @@ ZPClass.RunSpeed = 290
 ZPClass.CrouchSpeed = 0.5
 ZPClass.Gravity = 0.9
 ZPClass.Breath = 250
-ClassManager:AddZombieClass(ZPClass)
+ClassManager:AddZPClass("SpeedZombie", ZPClass, TEAM_ZOMBIES)
 
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieCrouchClassName"
@@ -86,7 +90,7 @@ ZPClass.RunSpeed = 220
 ZPClass.CrouchSpeed = 1.5
 ZPClass.Gravity = 1
 ZPClass.Breath = 50
-ClassManager:AddZombieClass(ZPClass)
+ClassManager:AddZPClass("CrouchZombie", ZPClass, TEAM_ZOMBIES)
 
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieLightClassName"
@@ -98,7 +102,7 @@ ZPClass.RunSpeed = 230
 ZPClass.CrouchSpeed = 0.4
 ZPClass.Gravity = 0.5
 ZPClass.Breath = 50
-ClassManager:AddZombieClass(ZPClass)
+ClassManager:AddZPClass("LightZombie", ZPClass, TEAM_ZOMBIES)
 
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieLeechClassName"
@@ -109,4 +113,4 @@ ZPClass.CrouchSpeed = 0.5
 function ZPClass:InfectionFunction(Attacker)
 	Attacker:SetHealth(Attacker:Health() + 250)
 end
-ClassManager:AddZombieClass(ZPClass)
+ClassManager:AddZPClass("LeechZombie", ZPClass, TEAM_ZOMBIES)

@@ -3,9 +3,10 @@ ITEM_HUMAN = 0
 ITEM_ZOMBIE = 1
 function ExtraItemsManager:Search()
 	local Files = file.Find("zombieplague/gamemode/extraitems/*.lua", "LUA")
-	if Files != nil then
+	if Files then
 		for k, File in pairs(Files) do
 			ExtraItem = {}
+			ExtraItem.Order = 100
 			function ExtraItem:CanBuy(ply)
 				return ply:Alive()
 			end
@@ -15,7 +16,7 @@ function ExtraItemsManager:Search()
 			include("zombieplague/gamemode/extraitems/" .. File)
 			
 			if ExtraItem:ShouldBeEnabled() then
-				if !ExtraItem.Name || !ExtraItem.Price || !ExtraItem.OnBuy then
+				if !ExtraItem.ID || !ExtraItem.Name || !ExtraItem.Price || !ExtraItem.OnBuy then
 					print("Invalid Extra Item: '" .. File .. "'")
 				elseif ExtraItem.Type == ITEM_ZOMBIE then
 					self:AddZombieExtraItem(ExtraItem)
@@ -38,33 +39,42 @@ end
 function ExtraItemsManager:GetHumansExtraItems()
 	return ExtraItemsManager.HumansExtraItems
 end
-function ExtraItemsManager:GetPrettyZombiesExtraItems(ply)
+function ExtraItemsManager:GetAvailableExtraItems(ply)
+	local ExtraItems = (ply:Team() == TEAM_HUMANS) and ExtraItemsManager.HumansExtraItems or ExtraItemsManager.ZombiesExtraItems
 	local PrettyItems = {}
-	for k, ExtraItem in pairs(ExtraItemsManager.ZombiesExtraItems) do
-		table.insert(PrettyItems, Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price)
-	end
-	return PrettyItems
-end
-function ExtraItemsManager:GetPrettyHumansExtraItems(ply)
-	local PrettyItems = {}
-	for k, ExtraItem in pairs(ExtraItemsManager.HumansExtraItems) do
-		table.insert(PrettyItems, Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price)
+	for k, ExtraItem in pairs(ExtraItems) do
+		if ExtraItem:CanBuy(ply) then
+			PrettyItems[ExtraItem.ID] = {
+				Description = Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price,
+				Order = ExtraItem.Order
+			}
+		end
 	end
 	return PrettyItems
 end
 function ExtraItemsManager:OpenExtraItemMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("BuyExtraItem")
-		net.WriteTable(ply:Team() == TEAM_ZOMBIES and ExtraItemsManager:GetPrettyZombiesExtraItems(ply) or ExtraItemsManager:GetPrettyHumansExtraItems(ply))
+		net.WriteTable(ExtraItemsManager:GetAvailableExtraItems(ply))
 	net.Send(ply)
 end
 function ExtraItemsManager:AddRemoveFunction(RemoveFunction)
 	table.insert(ExtraItemsManager.PostRoundEvents, RemoveFunction)
 end
+function ExtraItemsManager:GetItemById(Team, ID)
+	local ExtraItems = (Team == TEAM_HUMANS) and ExtraItemsManager.HumansExtraItems or ExtraItemsManager.ZombiesExtraItems
+	for k, ExtraItem in pairs(ExtraItems) do
+		if ExtraItem.ID == ID then
+			return ExtraItem
+		end
+	end
+
+	return nil
+end
 function ExtraItemsManager:BuyItem(ply, ExtraItem)
 	if ExtraItem then
-		if ply:GetAmmoPacks() >= ExtraItem.Price then
-			if ExtraItem:CanBuy(ply) then
+		if ExtraItem:CanBuy(ply) then
+			if ply:GetAmmoPacks() >= ExtraItem.Price then
 				ExtraItem:OnBuy(ply)
 				if ExtraItem.RemoveFunction then
 					table.insert(ExtraItemsManager.PostRoundEvents, ExtraItem.RemoveFunction)
@@ -72,10 +82,10 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 				ply:TakeAmmoPacks(ExtraItem.Price)
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), Dictionary:GetPhrase(ExtraItem.Name, ply)))
 			else
-				SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantBuy", ply))
+				SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemEnought", ply))
 			end
 		else
-			SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemEnought", ply))
+			SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantBuy", ply))
 		end
 	else
 		SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemChoose", ply))
@@ -83,7 +93,7 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 end
 net.Receive("BuyExtraItem", function(len, ply)
 	if !(ply:IsNemesis() || ply:IsSurvivor()) then
-		ExtraItemsManager:BuyItem(ply, (ply:Team() == TEAM_ZOMBIES and ExtraItemsManager:GetZombiesExtraItems() or ExtraItemsManager:GetHumansExtraItems())[net.ReadInt(16)])
+		ExtraItemsManager:BuyItem(ply, ExtraItemsManager:GetItemById(ply:Team(), net.ReadString()))
 	end
 end)
 hook.Add("ZPRoundEnd", "ZPExtraItemsRemove", function()
