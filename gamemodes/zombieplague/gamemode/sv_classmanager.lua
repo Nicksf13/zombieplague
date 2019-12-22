@@ -108,10 +108,10 @@ function ClassManager:OpenZPClassMenu(ply, IsHuman)
 end
 
 net.Receive("SendHumanClass", function(len, ply)
-	ply:SetNextHumanClass(net.ReadString())
+	ply:SetNextHumanClass(ClassManager:GetZPClass(net.ReadString(), TEAM_HUMANS))
 end)
 net.Receive("SendZombieClass", function(len, ply)
-	ply:SetNextZombieClass(net.ReadString())
+	ply:SetNextZombieClass(ClassManager:GetZPClass(net.ReadString(), TEAM_ZOMBIES))
 end)
 Commands:AddCommand("zombies", "Open zombie class menu.", function(ply, args)
 	ClassManager:OpenZPClassMenu(ply, false)

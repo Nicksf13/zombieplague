@@ -377,7 +377,7 @@ end
 function PLAYER:Infect()
 	local ZombieClass = self:GetNextZombieClass()
 	if ZombieClass != nil then
-		ClassManager:SetUserZombieClass(self, ZombieClass)
+		self:SetZombieClass(ZombieClass)
 	end
 
 	local HoldingWeapon = self:GetActiveWeapon()
@@ -412,7 +412,7 @@ end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
 	if HumanClass != nil then
-		ClassManager:SetUserHumanClass(self, HumanClass)
+		self:SetHumanClass(HumanClass)
 	end
 	
 	self:SetTeam(TEAM_HUMANS)
