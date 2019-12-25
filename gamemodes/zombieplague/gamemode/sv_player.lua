@@ -364,6 +364,7 @@ end
 function PLAYER:MoveSpectateID(Move, Players)
 	self.SpectateID = ((self:GetSpectateID() + Move + #Players) % #Players)
 	self:SpectateEntity(Players[self:GetSpectateID() + 1])
+	self:SetupHands(Players[self:GetSpectateID() + 1])
 end
 function PLAYER:GetSpectateID()
 	return self.SpectateID or 1
