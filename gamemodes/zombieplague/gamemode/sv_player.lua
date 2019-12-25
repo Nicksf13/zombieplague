@@ -56,7 +56,9 @@ function PLAYER:GetNextAbilityUse()
 	return self.NextAbilityUse or 0
 end
 function PLAYER:CanUseAbility()
-	return CurTime() - self:GetNextAbilityUse() > 0
+	local Class = self:GetZPClass()
+	
+	return (!Class.CanUseAbility || Class:CanUseAbility()) && CurTime() - self:GetNextAbilityUse() > 0
 end
 function PLAYER:GiveZombieAllowedWeapon(Weap)
 	self:AddZombieAllowedWeapon(Weap)
