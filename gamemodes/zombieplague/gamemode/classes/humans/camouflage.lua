@@ -15,6 +15,7 @@ function ZPClass:Ability(ply)
 	ply:SetRunSpeed(AuxClass.RunSpeed)
 	ply:SetCrouchedWalkSpeed(AuxClass.CrouchSpeed)
 	ply:SetModel(AuxClass.PModel)
+	ply:SetupHands()
 	ply:SetAuxGravity(AuxClass.Gravity)
 	ply:Give(ZOMBIE_KNIFE)
 	timer.Create("Camouflage" .. ply:SteamID64(), 30, 1, function()
@@ -25,9 +26,13 @@ function ZPClass:Ability(ply)
 			ply:SetRunSpeed(ZPClass.RunSpeed)
 			ply:SetCrouchedWalkSpeed(ZPClass.CrouchSpeed)
 			ply:SetModel(ZPClass.PModel)
+			ply:SetupHands()
 			ply:SetAuxGravity(ZPClass.Gravity)
 		end
 	end)
+end
+function ZPClass:CanUseAbility()
+	return RoundManager:GetRoundState() == ROUND_PLAYING && RoundManager:CountZombiesAlive() > 0
 end
 
 if(ZPClass:ShouldBeEnabled()) then
