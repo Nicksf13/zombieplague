@@ -453,7 +453,7 @@ function PLAYER:MakeHuman()
 				self:GiveWeapon(self:GetMeleeWeapon())
 				self:SetMeleeWeaponGiven(true)
 			else
-				Weapon:OpenMeleeWeaponMenu()
+				WeaponManager:OpenMeleeWeaponMenu()
 			end
 		else
 			WeaponManager:OpenSecondaryWeaponMenu(self)
