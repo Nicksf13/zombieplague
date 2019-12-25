@@ -379,7 +379,7 @@ end
 -------------------------Infection--------------------------
 function PLAYER:Infect()
 	local ZombieClass = self:GetNextZombieClass()
-	if ZombieClass != nil then
+	if ZombieClass then
 		self:SetZombieClass(ZombieClass)
 	end
 
@@ -414,7 +414,7 @@ function PLAYER:Infect()
 end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
-	if HumanClass != nil then
+	if HumanClass then
 		self:SetHumanClass(HumanClass)
 	end
 	
@@ -423,7 +423,7 @@ function PLAYER:MakeHuman()
 	
 	local HumanClass = self:GetHumanClass()
 	self:SetMaxHealth(HumanClass.MaxHealth)
-	if HumanClass.Armor != nil then
+	if HumanClass.Armor then
 		self:SetArmor(HumanClass.Armor)
 	end
 	self:SetHealth(HumanClass.MaxHealth)
