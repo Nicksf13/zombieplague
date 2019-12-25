@@ -220,6 +220,7 @@ function CalculateSpectator(ply)
 		elseif ply:KeyPressed(IN_ATTACK2) then
 			ply:MoveSpectateID(-1, PlayersToObserve)
 		end
+		ply:SetupHands(PlayersToObserve)
 	elseif ply:GetObserverMode() != OBS_MODE_ROAMING then
 		ply:Spectate(OBS_MODE_ROAMING)
 	end
