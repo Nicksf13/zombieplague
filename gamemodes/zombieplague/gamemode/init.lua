@@ -25,6 +25,8 @@ AddCSLuaFile("cl_player.lua")
 AddCSLuaFile("cl_roundmanager.lua")
 AddCSLuaFile("cl_menu.lua")
 
+ConvarManager:CreateConVar("zp_debug_mod", 0, 8, "cvar used to enable debug mod in zombie plague")
+
 function SafeTableRandom(Table)
 	local Result = table.Random(Table)
 	return Result

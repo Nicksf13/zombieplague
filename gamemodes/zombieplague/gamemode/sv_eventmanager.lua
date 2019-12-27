@@ -175,11 +175,8 @@ end
 function GM:PlayerSpawn(ply)
 	if ply.FirstSpawn then
 		if ply:Team() != TEAM_SPECTATOR then
-			if !PlayerCanSpawn(ply) then
-				return true
-			end
 			ply:UnSpectate()
-			
+
 			hook.Call("PlayerSetModel", GAMEMODE, ply)
 			hook.Call("PlayerLoadout", GAMEMODE, ply)
 		end
@@ -284,7 +281,7 @@ function PlayerCanSpawn(ply)
 end
 function GM:PlayerLoadout(ply)
 	if ply:Team() == TEAM_ZOMBIES then
-		ply:Infect()
+		ply:Infect(true)
 		if ply:IsNemesis() then
 			ply:MakeNemesis()
 		end

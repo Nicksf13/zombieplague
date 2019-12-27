@@ -377,7 +377,7 @@ function PLAYER:GetAuxGravity()
 end
 ---------------------------Move-----------------------------
 -------------------------Infection--------------------------
-function PLAYER:Infect()
+function PLAYER:Infect(SilentInfection)
 	local ZombieClass = self:GetNextZombieClass()
 	if ZombieClass != nil then
 		self:SetZombieClass(ZombieClass)
@@ -410,7 +410,10 @@ function PLAYER:Infect()
 	self:SetupHands()
 	
 	ZombieClass:WeaponGive(self)
-	self:EmitSound(SafeTableRandom(InfectionSounds))
+
+	if(!SilentInfection) then
+		self:EmitSound(SafeTableRandom(InfectionSounds))
+	end
 end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
