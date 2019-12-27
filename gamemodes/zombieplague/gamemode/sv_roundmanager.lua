@@ -39,10 +39,12 @@ function RoundManager:AddRoundType(RoundType)
 	end
 end
 function RoundManager:GetServerStatus(Requester)
-	local ServerStatus = {Timer = RoundManager:GetTime(),
+	local ServerStatus = {
+		Timer = RoundManager:GetTime(),
 		RoundState = RoundManager:GetRoundState(),
 		Round = RoundManager:GetRound(),
-		Players = {}}
+		Players = {}
+	}
 
 	for k, ply in pairs(RoundManager:GetPlayersToPlay()) do
 		table.insert(ServerStatus.Players, {SteamID = ply:SteamID(),

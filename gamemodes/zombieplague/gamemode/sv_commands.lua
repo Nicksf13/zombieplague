@@ -18,26 +18,27 @@ Commands:AddCommand("commands", "Print the server's commands.", function(ply, ar
 	end
 	SendConsoleMessage(ply, StringCommands .. "------------------------------------------------------------")
 end)
---Commands:AddCommand("bot", "Print the server's commands.", function(ply, args)
---	RunConsoleCommand("sv_cheats", "1")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot")
---	RunConsoleCommand("bot_zombie", "1")
---
---	timer.Create("bot", 1, 1, function()
---		for k, Bot in pairs(player.GetBots()) do
---			RoundManager:AddPlayerToPlay(Bot)
---		end
---	end)
---
---end)
+if !cvars.Bool("zp_debug_mode", false) then
+	Commands:AddCommand("bot", "Print the server's commands.", function(ply, args)
+		RunConsoleCommand("sv_cheats", "1")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot")
+		RunConsoleCommand("bot_zombie", "1")
+
+		timer.Create("bot", 1, 1, function()
+			for k, Bot in pairs(player.GetBots()) do
+				RoundManager:AddPlayerToPlay(Bot)
+			end
+		end)
+	end)
+end
 hook.Add("PlayerSay", "Commands", function(ply, txt)
 	local args = string.Explode(" ", string.lower(txt))
 	if string.sub(args[1], 1, 1) == "/" || string.sub(args[1], 1, 1) == "!" then
