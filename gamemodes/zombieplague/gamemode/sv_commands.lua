@@ -18,9 +18,8 @@ Commands:AddCommand("commands", "Print the server's commands.", function(ply, ar
 	end
 	SendConsoleMessage(ply, StringCommands .. "------------------------------------------------------------")
 end)
-if !cvars.Bool("zp_debug_mode", false) then
+if DEBUG_MODE then
 	Commands:AddCommand("bot", "Print the server's commands.", function(ply, args)
-		RunConsoleCommand("sv_cheats", "1")
 		RunConsoleCommand("bot")
 		RunConsoleCommand("bot")
 		RunConsoleCommand("bot")

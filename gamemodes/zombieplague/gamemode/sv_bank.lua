@@ -6,39 +6,51 @@ Bank = {BankStorageType = "text"}
 include("zombieplague/gamemode/bankstorage/" .. Bank.BankStorageType .. ".lua")
 Bank.BankStorageSource:Init()
 
-function Bank:Withdraw(ply, Amount)
-	local PlyAmm = Bank.BankStorageSource:GetPlayerAmmopacks(ply)
-	
-	if PlyAmm then
-		if PlyAmm == 0 then
-			return -2
+if DEBUG_MODE then
+	function Bank:Withdraw(ply, Amount)
+		ply:GiveAmmoPacks(999999)
+		return 999999, 999999
+	end
+	function Bank:Deposit(ply, Amount)
+		ply:TakeAmmoPacks(0)
+		return 999999, 999999
+	end
+else
+	function Bank:Withdraw(ply, Amount)
+		local PlyAmm = Bank.BankStorageSource:GetPlayerAmmopacks(ply)
+		
+		if PlyAmm then
+			if PlyAmm == 0 then
+				return -2
+			end
+			if Amount == "*" then
+				Amount = PlyAmm
+			end
+			Amount = tonumber(Amount)
+			if Amount && PlyAmm >= Amount then
+				ply:GiveAmmoPacks(Amount)
+				Bank.BankStorageSource:Withdraw(ply, Amount)
+				
+				return Amount, PlyAmm - Amount
+			end
 		end
+		return -1
+	end
+	function Bank:Deposit(ply, Amount)
 		if Amount == "*" then
-			Amount = PlyAmm
+			Amount = ply:GetAmmoPacks()
 		end
 		Amount = tonumber(Amount)
-		if Amount && PlyAmm >= Amount then
-			ply:GiveAmmoPacks(Amount)
-			Bank.BankStorageSource:Withdraw(ply, Amount)
+		if Amount && ply:GetAmmoPacks() >= Amount then
+			ply:TakeAmmoPacks(Amount)
+			Bank.BankStorageSource:Deposit(ply, Amount)
 			
-			return Amount, PlyAmm - Amount
+			return Amount, Bank.BankStorageSource:GetPlayerAmmopacks(ply)
 		end
+		return -1
 	end
-	return -1
 end
-function Bank:Deposit(ply, Amount)
-	if Amount == "*" then
-		Amount = ply:GetAmmoPacks()
-	end
-	Amount = tonumber(Amount)
-	if Amount && ply:GetAmmoPacks() >= Amount then
-		ply:TakeAmmoPacks(Amount)
-		Bank.BankStorageSource:Deposit(ply, Amount)
-		
-		return Amount, Bank.BankStorageSource:GetPlayerAmmopacks(ply)
-	end
-	return -1
-end
+
 function Bank:GiveTakeAmmoPacks(Requester, Target, GiveTake, Amount)
 	if Requester:IsSuperAdmin() then
 		if Target then

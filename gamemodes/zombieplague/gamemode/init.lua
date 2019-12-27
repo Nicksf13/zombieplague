@@ -1,3 +1,5 @@
+DEBUG_MODE = true -- ONLY USE THIS FOR DEBUG/TEST PROPOSES
+
 include("shared.lua")
 include("sv_commands.lua")
 include("sv_convar.lua")
@@ -24,8 +26,6 @@ AddCSLuaFile("cl_message.lua")
 AddCSLuaFile("cl_player.lua")
 AddCSLuaFile("cl_roundmanager.lua")
 AddCSLuaFile("cl_menu.lua")
-
-ConvarManager:CreateConVar("zp_debug_mod", 0, 8, "cvar used to enable debug mod in zombie plague")
 
 function SafeTableRandom(Table)
 	local Result = table.Random(Table)
