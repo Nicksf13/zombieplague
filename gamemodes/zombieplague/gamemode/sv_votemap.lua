@@ -9,15 +9,18 @@ function ZPVoteMap:StartVotemap(Prefixes)
 		Map = table.remove(Maps, math.random(1, #Maps))
 		for k, Prefix in pairs(Prefixes) do
 			if string.StartWith(Map, Prefix) then
-				table.insert(MapsToVote, {Name = string.Replace(Map, ".bsp", ""), Votes = 0})
+				MapsToVote[string.Replace(Map, ".bsp", "")] = 0
 				i = i + 1
 				break
 			end
 		end
 	end
 	local AuxVotemap = {}
-	for k, v in pairs(MapsToVote) do
-		table.insert(AuxVotemap, v.Name)
+	for MapName, Votes in pairs(MapsToVote) do
+		AuxVotemap[MapName] = {
+			Description = MapName,
+			Order = 0
+		}
 	end
 	net.Start("OpenBackMenu")
 		net.WriteString("SendVotemap")
@@ -31,8 +34,13 @@ function ZPVoteMap:StartVotemap(Prefixes)
 end
 function ZPVoteMap:EndVotemap()
 	ZPVoteMap.Voting = false
-	table.sort(ZPVoteMap.MapsToVote, function(a, b) return a.Votes > b.Votes end)
-	local WinningMap = ZPVoteMap.MapsToVote[1].Name
+
+	local MapsToVote = {}
+	for Map, Votes in pairs(ZPVoteMap.MapsToVote) do
+		table.insert(MapsToVote, {Map = Map, Votes = Votes})
+	end
+	table.sort(MapsToVote, function(a, b) return a.Votes > b.Votes end)
+	local WinningMap = MapsToVote[1].Map
 	
 	for k, ply in pairs(player.GetAll()) do
 		SendColorMessage(ply, string.format(Dictionary:GetPhrase("NoticeVotemapEnded", ply), WinningMap), Color(0, 255, 0))
@@ -45,8 +53,8 @@ function ZPVoteMap:EndVotemap()
 end
 net.Receive("SendVotemap", function(len, ply)
 	if ZPVoteMap.Voting then
-		local Vote = net.ReadInt(16)
-		ZPVoteMap.MapsToVote[Vote].Votes = ZPVoteMap.MapsToVote[Vote].Votes + 1
+		local Vote = net.ReadString()
+		ZPVoteMap.MapsToVote[Vote] = ZPVoteMap.MapsToVote[Vote] + 1
 	end
 end)
 
