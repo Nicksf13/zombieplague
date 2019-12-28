@@ -18,6 +18,7 @@ include("sv_mapmanager.lua")
 include("sv_bank.lua")
 
 AddCSLuaFile("shared.lua")
+AddCSLuaFile("sh_bank.lua")
 AddCSLuaFile("sh_roundmanager.lua")
 AddCSLuaFile("sh_player.lua")
 AddCSLuaFile("cl_hud.lua")

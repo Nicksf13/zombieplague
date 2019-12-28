@@ -175,17 +175,60 @@ function OpenZPMenu()
 			end
 		})
 	end
-	
+	table.insert(Options, {
+		Name = Dictionary:GetPhrase("MenuCredit"),
+		Function = function()
+			local CreditsOptions = {}
+			table.insert(CreditsOptions, GenerateMenuOption(
+				Dictionary:GetPhrase("MenuCreditMeRcyLeZZ"),
+				function()
+					gui.OpenURL("https://forums.alliedmods.net/member.php?u=33273")
+				end,
+				0
+			))
+			table.insert(CreditsOptions, GenerateMenuOption(
+				Dictionary:GetPhrase("MenuCreditZombiePlague"),
+				function()
+					gui.OpenURL("https://forums.alliedmods.net/showthread.php?t=72505")
+				end,
+				1
+			))
+			table.insert(CreditsOptions, GenerateMenuOption(
+				Dictionary:GetPhrase("MenuCreditTheFireFuchs"),
+				function()
+					gui.OpenURL("https://steamcommunity.com/id/thefirefuchs")
+				end,
+				2
+			))
+			table.insert(CreditsOptions, GenerateMenuOption(
+				Dictionary:GetPhrase("MenuCreditErickMaksimets"),
+				function()
+					gui.OpenURL("https://github.com/ErickMaksimets")
+				end,
+				3
+			))
+			table.insert(CreditsOptions, GenerateMenuOption(
+				Dictionary:GetPhrase("MenuCreditBlueberryy"),
+				function()
+					gui.OpenURL("https://github.com/Blueberryy")
+				end,
+				4
+			))
+			MMenu:UpdateOptions(CreditsOptions)
+		end,
+		Order = 1000
+	})
 	MMenu:UpdateOptions(Options)
 end
-function GenerateMenuOption(Name, Function)
+function GenerateMenuOption(Name, Function, Order)
 	return {
 		Name = Name,
 		Function = function(ID)
 			Function(ID)
 			hook.Remove("SetupMove", "ZPMenuKeyListener")
 			hook.Remove("HUDPaint", "ChooseMenu")
-		end
+		end,
+		Order = Order
 	}
 end
 net.Receive("OpenZPMenu", OpenZPMenu)
