@@ -177,7 +177,13 @@ function Dictionary:Init()
 				MenuNoOptionsAvailableNow = "No options available for this menu right now!",
 				MenuBack = "Back",
 				MenuNext = "Next",
-				MenuClose = "Close"
+				MenuClose = "Close",
+				MenuCredit = "Credit menu",
+				MenuCreditMeRcyLeZZ = "MeRcyLeZZ - Creator of this gamemode on CS 1.6",
+				MenuCreditZombiePlague = "Zombie Plague - Original Post",
+				MenuCreditTheFireFuchs = "The Fire Fuchs - Creator of this gamemode in Garry's mod",
+				MenuCreditErickMaksimets = "Erick Maksimets - Helped with bug reporting, russian and ukrainian translation and also give a lot of ideas",
+				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project"
 			}
 		},
 		Order = 0
