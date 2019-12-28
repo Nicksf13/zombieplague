@@ -91,12 +91,6 @@ end
 function PLAYER:GetFootstep()
 	return self.Footstep
 end
-function PLAYER:ShouldEmitFootStep()
-	if self:IsZombie() then
-		return (RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && self:GetFootstep()
-	end
-	return self:GetFootstep()
-end
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
