@@ -8,7 +8,7 @@ include("cl_language.lua")
 include("cl_menu.lua")
 
 function GM:PlayerFootstep(ply)
-	return !ply:ShouldEmitFootStep() -- Since true = no footsteps, false = footsteps
+	return !ply:GetFootstep() -- Since true = no footsteps, false = footsteps
 end
 net.Receive("SendServerStatus", function()
 	local Info = net.ReadTable()
