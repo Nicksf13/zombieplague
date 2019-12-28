@@ -120,7 +120,13 @@ local Language = {PrettyName = "Русский",
 			MenuNoOptionsAvailableNow = "Нет вариации для данного меню сейчас!",
 			MenuBack = "Назад",
 			MenuNext = "Вперед",
-			MenuClose = "Закрыть"
+			MenuClose = "Закрыть",
+			MenuCredit = "кредиты",
+			MenuCreditMeRcyLeZZ = "MeRcyLeZZ - Создатель игрового режима в CS 1.6",
+			MenuCreditZombiePlague = "Zombie Plague - Оригинальный Пост",
+			MenuCreditTheFireFuchs = "The Fire Fuchs - Создатель игрового режима в Garry's mod",
+			MenuCreditErickMaksimets = "Erick Maksimets - Помощь в обнаружении багов, создатель русской и украинской локализации и так же дал мне множество идей для режима.",
+			MenuCreditBlueberryy = "Blueberryy - Обновил READ.ME на github проекте"
 		}
 	}
 }
