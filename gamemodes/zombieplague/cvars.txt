@@ -12,10 +12,11 @@ zp_health_regen_time_delay - cvar used to set the delay time after last damage t
 zp_ap_zombies - cvar used to set if Zombies should earn ammo packs when infected players.
 zp_ap_total - cvar used to set how many ammo packs humans will win after cause x damage.
 zp_newround_delay - cvar used to define new round time delay.
-zp_nemesis_health - cvar used to the health of nemesis.
 zp_auto_deposit_when_disconnect - cvar used to set if server will auto withdraw player's ammo packs
-zp_min_players - cvar used to define minimun players to start the round.
+zp_nemesis_health - cvar used to the health of nemesis.
 zp_auto_withdraw - cvar used to set if server will auto withdraw player's ammo packs
+zp_min_players - cvar used to define minimun players to start the round.
+zp_spectate_team_ony - cvar used to define if the spectator can only see his teammates
 zp_health_regen - cvar used to set how much health zombies will regen.
 zp_clip_mode - cvar used to set the clip mode of the weapons.
 zp_zombie_should_run - cvar used to enable zombies to run
