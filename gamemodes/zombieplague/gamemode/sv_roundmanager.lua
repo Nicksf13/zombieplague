@@ -300,7 +300,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Chance = 100
 	ROUND.SpecialRound = false
 	ROUND.Deathmatch = false
-	function ROUND:StartFunction(ply)
+	ROUND.StartFunction = function(ply)
 		local FirstZombie = (ply and ply or table.Random(RoundManager:GetPlayersToPlay(true)))
 		FirstZombie:Infect()
 		for k, ply in pairs(player.GetAll()) do
@@ -314,7 +314,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Name = "RoundMultiInfectionName"
 	ROUND.Chance = 15
 	ROUND.MinPlayers = 4
-	function ROUND:StartFunction()
+	ROUND.StartFunction = function(ply)
 		local ValidPlayers = RoundManager:GetPlayersToPlay(true)
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
@@ -331,7 +331,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 5
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
-	function ROUND:StartFunction()
+	ROUND.StartFunction = function(ply)
 		local Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
 		while(Nemesis:IsBot()) do
 			Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
@@ -351,7 +351,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 3
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/survivor1.mp3", "zombieplague/survivor2.mp3"}
-	function ROUND:StartFunction()
+	ROUND.StartFunction = function(ply)
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local Survivor = table.Random(Players)
 		table.RemoveByValue(Players, Survivor)
@@ -369,7 +369,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/swarmmode.mp3"}
-	function ROUND:StartFunction()
+	ROUND.StartFunction = function(ply)
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local i = 1
 		while(table.Count(Players) > 0) do
@@ -392,7 +392,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/plaguemode.mp3"}
-	function ROUND:StartFunction()
+	ROUND.StartFunction = function(ply)
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local i = 1
 		while(table.Count(Players) > 0) do
