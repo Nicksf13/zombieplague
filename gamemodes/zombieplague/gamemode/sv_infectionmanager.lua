@@ -21,7 +21,7 @@ function InfectionManager:Infect(Infected, Attacker)
 			if Infected != Attacker then
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeInfect", ply), Infected:Name(), Attacker:Name()))
 			else
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeSelfInfect", ply), Infected:Name(), Attacker:Name()))
+				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeSelfInfect", ply), Infected:Name()))
 			end
 		end
 	end
