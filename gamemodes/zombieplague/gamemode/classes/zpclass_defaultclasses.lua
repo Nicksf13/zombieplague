@@ -110,7 +110,7 @@ ZPClass.Description = "ZombieLeechClassDescription"
 ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/soldier_stripped.mdl"
 ZPClass.CrouchSpeed = 0.5
-function ZPClass:InfectionFunction(Attacker)
+ZPClass.InfectionFunction = function(Attacker, Infected)
 	Attacker:SetHealth(Attacker:Health() + 250)
 end
 ClassManager:AddZPClass("LeechZombie", ZPClass, TEAM_ZOMBIES)
