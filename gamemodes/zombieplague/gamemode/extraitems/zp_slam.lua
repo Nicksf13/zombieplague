@@ -10,4 +10,5 @@ function ExtraItem:OnBuy(ply)
 	end
 end
 
-WeaponManager:AddWeaponMultiplier("weapon_slam", 4)
+WeaponManager:AddWeaponMultiplier("npc_tripmine", 4)
+WeaponManager:AddWeaponMultiplier("npc_satchel", 4)

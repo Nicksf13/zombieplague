@@ -52,9 +52,14 @@ local MoveKeys = {IN_ATTACK,
 function GM:EntityTakeDamage(target, dmginfo)
 	local Attacker = dmginfo:GetAttacker()
 	if Attacker:IsPlayer() then
-		dmginfo:ScaleDamage(WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass()))
+		local Multiplier = WeaponManager:GetWeaponMultiplier(dmginfo:GetInflictor():GetClass())
+		if !Multiplier && Attacker:Alive() then
+			Multiplier = WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass())
+		end
+		dmginfo:ScaleDamage(Multiplier and Multiplier or 1)
 		dmginfo:ScaleDamage(Attacker:GetDamageAmplifier())
 	end
+
 	if target:IsPlayer() then
 		if !RoundManager:IsRealisticMod() && RoundManager:GetRoundState() != ROUND_PLAYING then
 			return true
