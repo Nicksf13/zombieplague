@@ -126,7 +126,9 @@ local Language = {PrettyName = "Українська",
 			MenuCreditZombiePlague = "Zombie Plague - Оригінальний Пост",
 			MenuCreditTheFireFuchs = "The Fire Fuchs - Створювач режиму в Garry's mod",
 			MenuCreditErickMaksimets = "Erick Maksimets - Допомога в пошуку багів, створювач російської та української локалізації і також дав мені багато ідей для режиму.",
-			MenuCreditBlueberryy = "Blueberryy - Обновив READ.ME на github проєкті"
+			MenuCreditBlueberryy = "Blueberryy - Обновив READ.ME на github проєкті",
+			Nemesis = "Немесіда",
+			Survivor = "Вцілілий"
 		}
 	}
 }

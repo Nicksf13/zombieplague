@@ -122,7 +122,9 @@ local Language = {PrettyName = "Português Brasileiro",
 			MenuCreditZombiePlague = "Zombie Plague - Post Original",
 			MenuCreditTheFireFuchs = "The Fire Fuchs - Criador desse gamemode no Garry's mod",
 			MenuCreditErickMaksimets = "Erick Maksimets - Ajudou reportando bugs, com a tradução em russo e ucraniano e também deu um monte de ideias",
-			MenuCreditBlueberryy = "Blueberryy - Atualizou o READ.ME no projeto do Github"
+			MenuCreditBlueberryy = "Blueberryy - Atualizou o READ.ME no projeto do Github",
+			Nemesis = "Nemesis",
+			Survivor = "Sobrevivente"
 		}
 	}
 }

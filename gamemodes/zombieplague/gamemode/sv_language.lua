@@ -183,7 +183,9 @@ function Dictionary:Init()
 				MenuCreditZombiePlague = "Zombie Plague - Original Post",
 				MenuCreditTheFireFuchs = "The Fire Fuchs - Creator of this gamemode in Garry's mod",
 				MenuCreditErickMaksimets = "Erick Maksimets - Helped with bug reporting, russian and ukrainian translation and also give a lot of ideas",
-				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project"
+				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project",
+				Nemesis = "Nemesis",
+				Survivor = "Survivor"
 			}
 		},
 		Order = 0
