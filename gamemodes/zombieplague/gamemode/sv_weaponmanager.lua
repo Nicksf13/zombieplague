@@ -35,7 +35,7 @@ function WeaponManager:CreateNewWeapon()
 	Weapon.DamageMultiplier = 1
 	Weapon.Order = 100
 	function Weapon:GiveWeapon(ply)
-		Weap = ply:Give(self.WeaponID)
+		local Weap = ply:Give(self.WeaponID)
 		if Weap:GetMaxClip1() then
 			ply:GiveAmmo(Weap:GetMaxClip1() * 10, Weap:GetPrimaryAmmoType(), true) 
 		else
@@ -49,7 +49,7 @@ function WeaponManager:CreateNewWeapon()
 	return Weapon
 end
 function WeaponManager:GetWeaponMultiplier(Weapon)
-	return self.WeaponsMultiplier[Weapon] and self.WeaponsMultiplier[Weapon] or 1
+	return self.WeaponsMultiplier[Weapon]
 end
 function WeaponManager:AddWeaponMultiplier(WeaponID, DamageMultiplier)
 	self.WeaponsMultiplier[WeaponID] = DamageMultiplier
@@ -57,7 +57,7 @@ end
 function WeaponManager:AddWeapon(Weapon, WeaponType)
 	table.insert(self:GetWeaponsTableByWeaponType(WeaponType), Weapon)
 
-	WeaponManager:AddWeaponMultiplier(Weapon.WeaponID, Weapon.DamageMultiplier)
+	WeaponManager:AddWeaponMultiplier(Weapon.ProjectileID and Weapon.ProjectileID or Weapon.WeaponID, Weapon.DamageMultiplier)
 end
 function WeaponManager:GetPrimaryWeapons()
 	return self.PrimaryWeapons

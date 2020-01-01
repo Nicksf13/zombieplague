@@ -10,4 +10,4 @@ function ExtraItem:OnBuy(ply)
 	end
 end
 
-WeaponManager:AddWeaponMultiplier("weapon_frag", 5)
+WeaponManager:AddWeaponMultiplier("npc_grenade_frag", 5)
