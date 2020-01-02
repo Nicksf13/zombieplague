@@ -22,7 +22,7 @@ NIGHTVISION_COLOR = Color(0, 255, 0)
 NEMESIS_COLOR = Color(255, 0, 0)
 SURVIVOR_COLOR = Color(0, 0, 255)
 
-ZombieKnifeSound = {"zombieplague/knife_slash1.mp3", "zombieplague/knife_slash2.mp3"}
+ZombieKnifeSound = {}
 
 function GM:CreateTeams()
 	team.SetUp(TEAM_HUMANS, "Humans", Color(71, 141, 255, 255), false)
