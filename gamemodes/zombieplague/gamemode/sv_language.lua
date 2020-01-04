@@ -84,6 +84,7 @@ function Dictionary:Init()
 				NoticePlague = "Plague Mode!",
 				NoticeMultiInfection = "Multi Infection Mode!!!",
 				NoticeVotemapEnded = "Votemap has ended! %s will be the next map!",
+				NoticeVotemapProlong = "The current map will be prolonged for more %s round(s)!",
 				NoticeNotAllowed = "You're not allowed to do this right now!",
 				NoticeHasHability = "Your class has an special ability! Type: zp_ability in console to use!",
 				NoticeForceRound = "%s has started %s",

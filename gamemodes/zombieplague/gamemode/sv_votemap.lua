@@ -1,15 +1,24 @@
+ConvarManager:CreateConVar("zp_can_repeat_map", 1, 8, "cvar used to set if it's possible to prolong the current map (0 = false, 1 = true)")
+ConvarManager:CreateConVar("zp_rounds_to_add", 5, 8, "cvar used to set how many rounds will be increased to the current map")
 ZPVoteMap = {MapsToVote = {}, Voting = false}
 
 function ZPVoteMap:StartVotemap(Prefixes)
 	local MapsToVote = {}
 	local Maps = file.Find("maps/*.bsp", "GAME")
+	local CurrentMap = game.GetMap()
 	local i = 0
-	local Map
+
+	table.RemoveByValue(Maps, CurrentMap .. ".bsp")
+	if cvars.Bool("zp_can_repeat_map", true) then
+		MapsToVote[CurrentMap] = 0
+		i = 1
+	end
+	
 	while(#Maps > 0 && i < cvars.Number("zp_maps_to_vote", 7)) do
-		Map = table.remove(Maps, math.random(1, #Maps))
+		local Map = string.Replace(table.remove(Maps, math.random(1, #Maps)), ".bsp", "")
 		for k, Prefix in pairs(Prefixes) do
 			if string.StartWith(Map, Prefix) then
-				MapsToVote[string.Replace(Map, ".bsp", "")] = 0
+				MapsToVote[Map] = 0
 				i = i + 1
 				break
 			end
@@ -41,15 +50,27 @@ function ZPVoteMap:EndVotemap()
 	end
 	table.sort(MapsToVote, function(a, b) return a.Votes > b.Votes end)
 	local WinningMap = MapsToVote[1].Map
-	
-	for k, ply in pairs(player.GetAll()) do
-		SendColorMessage(ply, string.format(Dictionary:GetPhrase("NoticeVotemapEnded", ply), WinningMap), Color(0, 255, 0))
-	end
-	
-	RoundManager:SetRoundState(ROUND_CHANGING_MAP)
-	RoundManager:SetTimer(5, function()
+	local Phrase = "NoticeVotemapEnded"
+	local Replace = WinningMap
+	local EndVoteFunction = function()
 		RunConsoleCommand("changelevel", WinningMap)
-	end)
+	end
+
+	if WinningMap == string.Replace(game.GetMap(), ".bsp", "") then
+		Phrase = "NoticeVotemapProlong"
+		Replace = cvars.String("zp_rounds_to_add", "5")
+		EndVoteFunction = RoundManager.TryNewRound
+
+		RoundManager:AddExtraRounds(cvars.Number("zp_rounds_to_add", 5))
+	else
+		RoundManager:SetRoundState(ROUND_CHANGING_MAP)
+	end
+
+	RoundManager:SetTimer(5, EndVoteFunction)
+
+	for k, ply in pairs(player.GetAll()) do
+		SendColorMessage(ply, string.format(Dictionary:GetPhrase(Phrase, ply), Replace), Color(0, 255, 0))
+	end
 end
 net.Receive("SendVotemap", function(len, ply)
 	if ZPVoteMap.Voting then
