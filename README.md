@@ -1,8 +1,3 @@
-# zombieplague
-This is a remake of the original CS1.6.
-All credits to the original author. I just created the .lua files.
-
-
 ## Addon description<br> 
 -----------------------Introduction-----------------------<br> 
 This is an old gamemode (AMX Modx) that I played a lot, so I decided to make a GMOD version.<br> 
@@ -45,13 +40,12 @@ So you can make a custom Zombie/Human class as your will.<br>
 Single Infection round - One random player will be infected and He should infect other players.<br> 
 Multi Infection Round - Same thing as Single Infection Round, the difference is there are more<br>  zombies.<br> 
 Swarm Mod Round - Half of players are zombies, Half of players are humans. There's no infection,<br>  only deaths.<br> 
-Plague Mod - Same as Swarm Mod, the difference is that there is one nemesis and one survivor.<br> 
-Deathmatch Plague Mod - Same as Plague mode, but with respawn.<br> 
+Plague Mod - Same as Swarm Mod, the difference is that there is one nemesis and one survivor.<br>
 Nemesis Round - Everybody except one random player (that is going to be the nemesis) will be<br>  human. Nemesis should kill every human  (Nemesis cause more damage).<br> 
 Survivor Round - Everybody except one random player (that is going to be the survivor) will be<br>  zombie. Survivor should kill every zombie (Survivor cause more damage).<br> 
 
 -----------------------Multi Language support-----------------------<br> 
-By default this gamemode support Brazilian Portuguese, Korean, Russian and US English.<br> 
+By default this gamemode support Brazilian Portuguese, Russian, Ukrainian and US English.<br> 
 But You can add more languages on languages folder.<br> 
 
 -----------------------Extra items-----------------------<br> 
@@ -67,11 +61,9 @@ You can also set a damage amplifier to a Zombie Plague class.<br>
 
 -----------------------Commands-----------------------<br> 
 Zombie Plague has some default commands and keys:<br> 
-
 Keys:<br> 
 showspare1 (F3) - Open Zombie Plague menu.<br> 
 showspare2 (F4) - Enable/disable nightvision.<br> 
-
 Commands:<br>
 /zombies - Open Zombie Class menu.<br> 
 /humans - Open Human Class menu.<br> 
@@ -79,7 +71,7 @@ Commands:<br>
 /menu - Open Zombie Plague menu.<br> 
 /withdraw <amount> - Withdraw your ammo packs.<br> 
 /deposit <amount> - Deposit your ammo packs.<br> 
-/commands - List all commands.<br> 
+/commands - List all commands.<br>
 
 -----------------------Things to do-----------------------<br> 
 Enable admin menu.<br> 
@@ -90,3 +82,7 @@ More maps.<br>
 Find more effect sounds.<br> 
 Round type soundtrack (Like in the old one).<br> 
 Create a zombie knife.<br> 
+
+----------------------Special thanks to----------------------<br>
+The Fire Fuchs (Me)<br>
+Erick Maksimets (Helped me with russian and ukrainian translations and gave me a lot of ideas for the gamemode. Also gave me a weapon balance list)
