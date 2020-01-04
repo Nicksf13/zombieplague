@@ -4,8 +4,9 @@ ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define inf
 ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
 ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 
-RoundManager["Rounds"] = {}
-RoundManager["PlayersToPlay"] = {}
+RoundManager.Rounds = {}
+RoundManager.PlayersToPlay = {}
+RoundManager.ExtraRounds = 0
 function RoundManager:SearchRounds()
 	RoundManager:AddDefaultRounds() -- Cleanest way to do this
 
@@ -29,6 +30,9 @@ function RoundManager:SearchRounds()
 			end
 		end
 	end
+end
+function RoundManager:AddExtraRounds(ExtraRounds)
+	self.ExtraRounds = self.ExtraRounds + ExtraRounds
 end
 function RoundManager:AddRoundType(RoundType)
 	table.insert(RoundManager.Rounds, RoundType)
@@ -160,7 +164,7 @@ function RoundManager:EndRound(Reason)
 		end
 	end
 
-	if RoundManager:GetRound() < cvars.Number("zp_max_rounds", 10) then
+	if RoundManager:GetRound() < (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) then
 		RoundManager:SetRoundState(ROUND_ENDING)
 		RoundManager:SetTimer(cvars.Number("zp_newround_delay",  10), RoundManager.TryNewRound)
 	else
