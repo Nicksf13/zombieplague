@@ -4,8 +4,9 @@ ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define inf
 ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
 ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 
-RoundManager["Rounds"] = {}
-RoundManager["PlayersToPlay"] = {}
+RoundManager.Rounds = {}
+RoundManager.PlayersToPlay = {}
+RoundManager.ExtraRounds = 0
 function RoundManager:SearchRounds()
 	RoundManager:AddDefaultRounds() -- Cleanest way to do this
 
@@ -30,6 +31,9 @@ function RoundManager:SearchRounds()
 		end
 	end
 end
+function RoundManager:AddExtraRounds(ExtraRounds)
+	self.ExtraRounds = self.ExtraRounds + ExtraRounds
+end
 function RoundManager:AddRoundType(RoundType)
 	table.insert(RoundManager.Rounds, RoundType)
 	if RoundType.StartSound then
@@ -50,8 +54,8 @@ function RoundManager:GetServerStatus(Requester)
 		table.insert(ServerStatus.Players, {SteamID = ply:SteamID(),
 			AmmoPacks = ply:GetAmmoPacks(),
 			Battery = ply:GetMaxBatteryCharge(),
-			ZombieClass = ply:IsNemesis() and "Nemesis" or Dictionary:GetPhrase(ply:GetZombieClass().Name, Requester),
-			HumanClass = ply:IsSurvivor() and "Survivor" or Dictionary:GetPhrase(ply:GetHumanClass().Name, Requester),
+			ZombieClass = Dictionary:GetPhrase(ply:GetZombieClass().Name, Requester),
+			HumanClass = Dictionary:GetPhrase(ply:GetHumanClass().Name, Requester),
 			Light = ply:GetLight(),
 			Footstep = ply:GetFootstep()
 		})
@@ -160,7 +164,7 @@ function RoundManager:EndRound(Reason)
 		end
 	end
 
-	if RoundManager:GetRound() < cvars.Number("zp_max_rounds", 10) then
+	if RoundManager:GetRound() < (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) then
 		RoundManager:SetRoundState(ROUND_ENDING)
 		RoundManager:SetTimer(cvars.Number("zp_newround_delay",  10), RoundManager.TryNewRound)
 	else
@@ -314,7 +318,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Name = "RoundMultiInfectionName"
 	ROUND.Chance = 15
 	ROUND.MinPlayers = 4
-	ROUND.StartFunction = function(ply)
+	ROUND.StartFunction = function()
 		local ValidPlayers = RoundManager:GetPlayersToPlay(true)
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
@@ -331,7 +335,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 5
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
-	ROUND.StartFunction = function(ply)
+	ROUND.StartFunction = function()
 		local Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
 		while(Nemesis:IsBot()) do
 			Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
@@ -351,7 +355,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 3
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/survivor1.mp3", "zombieplague/survivor2.mp3"}
-	ROUND.StartFunction = function(ply)
+	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local Survivor = table.Random(Players)
 		table.RemoveByValue(Players, Survivor)
@@ -369,7 +373,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/swarmmode.mp3"}
-	ROUND.StartFunction = function(ply)
+	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local i = 1
 		while(table.Count(Players) > 0) do
@@ -392,7 +396,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/plaguemode.mp3"}
-	ROUND.StartFunction = function(ply)
+	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local i = 1
 		while(table.Count(Players) > 0) do

@@ -23,6 +23,7 @@ local Language = {PrettyName = "Português Brasileiro",
 			NoticePlague = "Modo Plague!",
 			NoticeMultiInfection = "Modo de infecção múltipla!!!",
 			NoticeVotemapEnded = "Votação de mapa acabou! %s será o próximo mapa!",
+			NoticeVotemapProlong = "O próximo mapa será prolongado por mais %s rodada(s)!",
 			NoticeNotAllowed = "Você não pode fazer isso agora!",
 			NoticeHasHability = "Sua classe tem uma habilidade! Digite: zp_ability no console para usá-la!",
 			NoticeForceRound = "%s começou %s",
@@ -122,7 +123,10 @@ local Language = {PrettyName = "Português Brasileiro",
 			MenuCreditZombiePlague = "Zombie Plague - Post Original",
 			MenuCreditTheFireFuchs = "The Fire Fuchs - Criador desse gamemode no Garry's mod",
 			MenuCreditErickMaksimets = "Erick Maksimets - Ajudou reportando bugs, com a tradução em russo e ucraniano e também deu um monte de ideias",
-			MenuCreditBlueberryy = "Blueberryy - Atualizou o READ.ME no projeto do Github"
+			MenuCreditBlueberryy = "Blueberryy - Atualizou o READ.ME no projeto do Github",
+			Nemesis = "Nemesis",
+			Survivor = "Sobrevivente",
+			NoticeVotemapProlong = "Prolongar o mapa por mais {RoundsToExtend} round(s)!"
 		}
 	}
 }

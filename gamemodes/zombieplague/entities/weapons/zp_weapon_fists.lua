@@ -65,7 +65,9 @@ function SWEP:PrimaryAttack( right )
 	vm:SendViewModelMatchingSequence( vm:LookupSequence( anim ) )
 
 	local Snd = table.Random(ZombieKnifeSound)
-	self:EmitSound(Snd)
+	if Snd then
+		self:EmitSound(Snd)
+	end
 
 	self:UpdateNextIdle()
 	self:SetNextMeleeAttack( CurTime() + 0.2 )

@@ -22,6 +22,7 @@ ConvarManager:CreateConVar("zp_health_regen_time_delay", 20, 8, "cvar used to se
 ConvarManager:CreateConVar("zp_health_regen", 10, 8, "cvar used to set how much health zombies will regen.")
 ConvarManager:CreateConVar("zp_clip_mode", 0, 8, "cvar used to set the clip mode of the weapons.")
 ConvarManager:CreateConVar("zp_zombie_should_run", 1, 8, "cvar used to enable zombies to run")
+ConvarManager:CreateConVar("zp_spectate_team_ony", 1, 8, "cvar used to define if the spectator can only see his teammates")
 
 FALL_DMG_NONE = 0
 FALL_DMG_ZOMBIES = 1
@@ -51,9 +52,14 @@ local MoveKeys = {IN_ATTACK,
 function GM:EntityTakeDamage(target, dmginfo)
 	local Attacker = dmginfo:GetAttacker()
 	if Attacker:IsPlayer() then
-		dmginfo:ScaleDamage(WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass()))
+		local Multiplier = WeaponManager:GetWeaponMultiplier(dmginfo:GetInflictor():GetClass())
+		if !Multiplier && Attacker:Alive() then
+			Multiplier = WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass())
+		end
+		dmginfo:ScaleDamage(Multiplier and Multiplier or 1)
 		dmginfo:ScaleDamage(Attacker:GetDamageAmplifier())
 	end
+
 	if target:IsPlayer() then
 		if !RoundManager:IsRealisticMod() && RoundManager:GetRoundState() != ROUND_PLAYING then
 			return true
@@ -198,7 +204,7 @@ function GM:PlayerDeathThink(ply)
 end
 function CalculateSpectator(ply)
 	local PlayersToObserve
-	if RoundManager:IsRealisticMod() then
+	if RoundManager:IsRealisticMod() || cvars.Bool("zp_spectate_team_ony", true) then
 		if ply:IsZombie() then
 			PlayersToObserve = RoundManager:GetAliveZombies()
 		else
