@@ -125,7 +125,8 @@ local Language = {PrettyName = "Português Brasileiro",
 			MenuCreditErickMaksimets = "Erick Maksimets - Ajudou reportando bugs, com a tradução em russo e ucraniano e também deu um monte de ideias",
 			MenuCreditBlueberryy = "Blueberryy - Atualizou o READ.ME no projeto do Github",
 			Nemesis = "Nemesis",
-			Survivor = "Sobrevivente"
+			Survivor = "Sobrevivente",
+			NoticeVotemapProlong = "Prolongar o mapa por mais {RoundsToExtend} round(s)!"
 		}
 	}
 }

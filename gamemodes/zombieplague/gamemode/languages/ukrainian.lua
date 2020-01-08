@@ -122,14 +122,15 @@ local Language = {PrettyName = "Українська",
 			MenuBack = "Назад",
 			MenuNext = "Вперед",
 			MenuClose = "Закрити",
-			MenuCredit = "Кредити",
+			MenuCredit = "Подяки",
 			MenuCreditMeRcyLeZZ = "MeRcyLeZZ - Створювач режиму в CS 1.6",
 			MenuCreditZombiePlague = "Zombie Plague - Оригінальний Пост",
 			MenuCreditTheFireFuchs = "The Fire Fuchs - Створювач режиму в Garry's mod",
 			MenuCreditErickMaksimets = "Erick Maksimets - Допомога в пошуку багів, створювач російської та української локалізації і також дав мені багато ідей для режиму.",
-			MenuCreditBlueberryy = "Blueberryy - Обновив READ.ME на github проєкті",
-			Nemesis = "Немесіда",
-			Survivor = "Вцілілий"
+			MenuCreditBlueberryy = "Blueberryy - Оновив READ.ME на github проєкті",
+			Nemesis = "Немезид",
+			Survivor = "Врятований",
+			NoticeVotemapProlong = "Теперішня мапа буде продовжена на {RoundsToExtend} раундів!"
 		}
 	}
 }

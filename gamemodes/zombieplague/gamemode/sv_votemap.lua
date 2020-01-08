@@ -1,5 +1,5 @@
 ConvarManager:CreateConVar("zp_can_repeat_map", 1, 8, "cvar used to set if it's possible to prolong the current map (0 = false, 1 = true)")
-ConvarManager:CreateConVar("zp_rounds_to_add", 5, 8, "cvar used to set how many rounds will be increased to the current map")
+ConvarManager:CreateConVar("zp_rounds_to_extend", 10, 8, "cvar used to set how many rounds will be increased to the current map")
 ZPVoteMap = {MapsToVote = {}, Voting = false}
 
 function ZPVoteMap:StartVotemap(Prefixes)
@@ -26,10 +26,17 @@ function ZPVoteMap:StartVotemap(Prefixes)
 	end
 	local AuxVotemap = {}
 	for MapName, Votes in pairs(MapsToVote) do
-		AuxVotemap[MapName] = {
-			Description = MapName,
-			Order = 0
-		}
+		AuxVotemap[MapName] = {}
+		if MapName == CurrentMap then
+			AuxVotemap[MapName].Phrase = "NoticeVotemapProlong"
+			AuxVotemap[MapName].PhraseValues = {
+				RoundsToExtend = cvars.String("zp_rounds_to_extend", "5")
+			}
+			AuxVotemap[MapName].Order = 0
+		else
+			AuxVotemap[MapName].Description = MapName
+			AuxVotemap[MapName].Order = 100
+		end
 	end
 	net.Start("OpenBackMenu")
 		net.WriteString("SendVotemap")
@@ -51,17 +58,17 @@ function ZPVoteMap:EndVotemap()
 	table.sort(MapsToVote, function(a, b) return a.Votes > b.Votes end)
 	local WinningMap = MapsToVote[1].Map
 	local Phrase = "NoticeVotemapEnded"
-	local Replace = WinningMap
+	local Replace = "" .. WinningMap -- Copy the winning map
 	local EndVoteFunction = function()
 		RunConsoleCommand("changelevel", WinningMap)
 	end
 
-	if WinningMap == string.Replace(game.GetMap(), ".bsp", "") then
+	if WinningMap == game.GetMap() then
 		Phrase = "NoticeVotemapProlong"
-		Replace = cvars.String("zp_rounds_to_add", "5")
+		Replace = cvars.String("zp_rounds_to_extend", "5")
 		EndVoteFunction = RoundManager.TryNewRound
 
-		RoundManager:AddExtraRounds(cvars.Number("zp_rounds_to_add", 5))
+		RoundManager:AddExtraRounds(cvars.Number("zp_rounds_to_extend", 5))
 	else
 		RoundManager:SetRoundState(ROUND_CHANGING_MAP)
 	end

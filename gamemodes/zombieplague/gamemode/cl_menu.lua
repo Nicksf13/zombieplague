@@ -235,10 +235,22 @@ net.Receive("OpenZPMenu", OpenZPMenu)
 net.Receive("OpenBackMenu", function()
 	MMenu.NetworkString = net.ReadString()
 	local ReceivedOptions = net.ReadTable()
+	for k, Option in pairs(ReceivedOptions) do
+		if Option.Translations then
+		end
+	end
 	local MenuOptions = {}
 
 	for ID, ReceivedOption in pairs(ReceivedOptions) do
-		table.insert(MenuOptions, {Name = ReceivedOption.Description, Order = ReceivedOption.Order, Function = function()
+		local Description = ReceivedOption.Phrase and Dictionary:GetPhrase(ReceivedOption.Phrase) or ReceivedOption.Description
+
+		if ReceivedOption.PhraseValues then
+			for ValueToReplace, Value in pairs(ReceivedOption.PhraseValues) do
+				Description = string.Replace(Description, "{" .. ValueToReplace .. "}", Value)
+			end
+		end
+
+		table.insert(MenuOptions, {Name = Description, Order = ReceivedOption.Order, Function = function()
 			hook.Remove("SetupMove", "ZPMenuKeyListener")
 			hook.Remove("HUDPaint", "ChooseMenu")
 			net.Start(MMenu.NetworkString)
