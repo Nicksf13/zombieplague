@@ -186,7 +186,8 @@ function Dictionary:Init()
 				MenuCreditErickMaksimets = "Erick Maksimets - Helped with bug reporting, russian and ukrainian translation and also give a lot of ideas",
 				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project",
 				Nemesis = "Nemesis",
-				Survivor = "Survivor"
+				Survivor = "Survivor",
+				NoticeVotemapProlong = "Prolong current map for more {RoundsToExtend} round(s)!"
 			}
 		},
 		Order = 0

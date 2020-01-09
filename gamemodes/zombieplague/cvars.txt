@@ -3,7 +3,7 @@ zp_zombie_footstep - cvar used to set if zombies will emit footstep sounds.
 zp_admin_human_model - cvar used to set if admin will receive a special human player model.
 zp_battery_charge - cvar used to set battery recharge
 zp_water_drain - cvar used to set if water will drain player's breath.
-zp_rounds_to_add - cvar used to set how many rounds will be increased to the current map
+zp_rounds_to_extend - cvar used to set how many rounds will be increased to the current map
 zp_last_human_reward_mode - cvar used to set last human reward
 zp_can_hear_death - cvar used to set if players will hear death players
 zp_falldamage - cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)
