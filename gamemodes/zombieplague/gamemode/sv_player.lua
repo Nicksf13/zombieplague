@@ -4,7 +4,7 @@ function PLAYER:SetZombieClass(ZombieClass)
 	self.ZombieClass = ZombieClass
 	net.Start("SendZombieClass")
 		net.WriteString(self:SteamID())
-		net.WriteString(Dictionary:GetPhrase(ZombieClass.Name, self))
+		net.WriteString(ZombieClass.Name)
 	net.Broadcast()
 end
 function PLAYER:GetZombieClass()
@@ -25,7 +25,7 @@ function PLAYER:SetHumanClass(HumanClass)
 	self.HumanClass = HumanClass
 	net.Start("SendHumanClass")
 		net.WriteString(self:SteamID())
-		net.WriteString(Dictionary:GetPhrase(HumanClass.Name, self))
+		net.WriteString(HumanClass.Name)
 	net.Broadcast()
 end
 function PLAYER:GetHumanClass()
