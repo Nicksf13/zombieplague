@@ -28,7 +28,8 @@ function ZPVoteMap:StartVotemap(Prefixes)
 	for MapName, Votes in pairs(MapsToVote) do
 		AuxVotemap[MapName] = {}
 		if MapName == CurrentMap then
-			AuxVotemap[MapName].Phrase = "NoticeVotemapProlong"
+			AuxVotemap[MapName].Description = "NoticeVotemapProlong"
+			AuxVotemap[MapName].PhraseKeys = {"NoticeVotemapProlong"}
 			AuxVotemap[MapName].PhraseValues = {
 				RoundsToExtend = cvars.String("zp_rounds_to_extend", "5")
 			}

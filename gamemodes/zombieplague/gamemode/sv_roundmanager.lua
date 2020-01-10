@@ -54,8 +54,8 @@ function RoundManager:GetServerStatus(Requester)
 		table.insert(ServerStatus.Players, {SteamID = ply:SteamID(),
 			AmmoPacks = ply:GetAmmoPacks(),
 			Battery = ply:GetMaxBatteryCharge(),
-			ZombieClass = Dictionary:GetPhrase(ply:GetZombieClass().Name, Requester),
-			HumanClass = Dictionary:GetPhrase(ply:GetHumanClass().Name, Requester),
+			ZombieClass = ply:GetZombieClass().Name,
+			HumanClass = ply:GetHumanClass().Name,
 			Light = ply:GetLight(),
 			Footstep = ply:GetFootstep()
 		})
