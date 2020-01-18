@@ -10,4 +10,4 @@ function ExtraItem:OnBuy(ply)
 	end
 end
 
-WeaponManager:AddWeaponMultiplier("weapon_rpg", 2)
+WeaponManager:AddWeaponMultiplier("rpg_missile", 2)

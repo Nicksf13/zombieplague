@@ -50,10 +50,10 @@ function PLAYER:IsHuman()
 end
 function PLAYER:GetZPClass()
 	if self:IsNemesis() then
-		return "Nemesis"
+		return Dictionary:GetPhrase("Nemesis")
 	end
 	if self:IsSurvivor() then
-		return "Survivor"
+		return Dictionary:GetPhrase("Survivor")
 	end
 	if self:Team() == TEAM_ZOMBIES then
 		return self:GetZombieClass()

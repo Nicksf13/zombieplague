@@ -84,6 +84,7 @@ function Dictionary:Init()
 				NoticePlague = "Plague Mode!",
 				NoticeMultiInfection = "Multi Infection Mode!!!",
 				NoticeVotemapEnded = "Votemap has ended! %s will be the next map!",
+				NoticeVotemapProlong = "The current map will be prolonged for more %s round(s)!",
 				NoticeNotAllowed = "You're not allowed to do this right now!",
 				NoticeHasHability = "Your class has an special ability! Type: zp_ability in console to use!",
 				NoticeForceRound = "%s has started %s",
@@ -183,7 +184,10 @@ function Dictionary:Init()
 				MenuCreditZombiePlague = "Zombie Plague - Original Post",
 				MenuCreditTheFireFuchs = "The Fire Fuchs - Creator of this gamemode in Garry's mod",
 				MenuCreditErickMaksimets = "Erick Maksimets - Helped with bug reporting, russian and ukrainian translation and also give a lot of ideas",
-				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project"
+				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project",
+				Nemesis = "Nemesis",
+				Survivor = "Survivor",
+				NoticeVotemapProlong = "Prolong current map for more {RoundsToExtend} round(s)!"
 			}
 		},
 		Order = 0
