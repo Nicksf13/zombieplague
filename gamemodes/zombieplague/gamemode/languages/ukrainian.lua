@@ -74,7 +74,9 @@ local Language = {PrettyName = "Українська",
 			ExtraItemSlamName = "С.Л.А.М",
 			ExtraItemTVirusName = "Т-Вірус",
 			ExtraItemZombieMadnessName = "Шаленість зомбі",
-			ExtraItemRPGName = "RPG"
+			ExtraItemRPGName = "RPG",
+			RoundsLeft = "%d круги вліво!",
+			FinalRound = "Фінальний раунд!"
 		},
 		Client = {
 			ClassClass = "Клас",

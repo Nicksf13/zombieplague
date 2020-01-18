@@ -1,5 +1,6 @@
 ConvarManager:CreateConVar("zp_can_repeat_map", 1, 8, "cvar used to set if it's possible to prolong the current map (0 = false, 1 = true)")
 ConvarManager:CreateConVar("zp_rounds_to_extend", 10, 8, "cvar used to set how many rounds will be increased to the current map")
+ConvarManager:CreateConVar("zp_notify_rounds_left", 1, 8, "cvar used to set if players should be notified about how many rounds are left")
 ZPVoteMap = {MapsToVote = {}, Voting = false}
 
 function ZPVoteMap:StartVotemap(Prefixes)
@@ -80,6 +81,26 @@ function ZPVoteMap:EndVotemap()
 		SendColorMessage(ply, string.format(Dictionary:GetPhrase(Phrase, ply), Replace), Color(0, 255, 0))
 	end
 end
+Commands:AddCommand({"rounds_left", "rodadas_restantes"}, "Check how many rounds are left.", function(ply)
+	local RoundsLeft = RoundManager:RoundsLeft()
+	if RoundsLeft > 1 then
+		SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
+	else
+		SendColorMessage(ply, Dictionary:GetPhrase("FinalRound", ply), Color(255, 0, 0))
+	end
+end)
+hook.Add("ZPNewRound", "zp_round_start_notify_rounds_left", function()
+	if cvars.Bool("zp_notify_rounds_left", true) then
+		local RoundsLeft = RoundManager:RoundsLeft()
+		for k, ply in pairs(player.GetAll()) do
+			if RoundsLeft > 1 then
+				SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
+			else
+				SendColorMessage(ply, Dictionary:GetPhrase("FinalRound", ply), Color(255, 0, 0))
+			end
+		end
+	end
+end)
 net.Receive("SendVotemap", function(len, ply)
 	if ZPVoteMap.Voting then
 		local Vote = net.ReadString()

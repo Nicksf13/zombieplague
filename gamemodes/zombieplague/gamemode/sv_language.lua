@@ -118,7 +118,9 @@ function Dictionary:Init()
 				ExtraItemSlamName = "S.L.A.M",
 				ExtraItemTVirusName = "T-Virus",
 				ExtraItemZombieMadnessName = "Zombie Madness",
-				ExtraItemRPGName = "RPG"
+				ExtraItemRPGName = "RPG",
+				RoundsLeft = "%d round(s) left!",
+				FinalRound = "Final round!"
 			},
 			Client = {
 				ClassClass = "Class",

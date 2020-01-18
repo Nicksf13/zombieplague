@@ -60,7 +60,9 @@ local Language = {PrettyName = "Русский",
 			ExtraItemSlamName = "С.Л.А.М",
 			ExtraItemTVirusName = "Т-Вирус",
 			ExtraItemZombieMadnessName = "Безумство зомби",
-			ExtraItemRPGName = "RPG"
+			ExtraItemRPGName = "RPG",
+			RoundsLeft = "%d осталось раундов!",
+			FinalRound = "Последний раунд!"
 		},
 		Client = {
 			ClassClass = "Класс",
