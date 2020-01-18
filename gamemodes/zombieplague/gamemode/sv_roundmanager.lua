@@ -113,7 +113,7 @@ function RoundManager:TryNewRound()
 	end
 
 	for k, ply in pairs(player.GetAll()) do
-		hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE, ply)
+		hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 	end
 end
 function RoundManager:NewRound()
@@ -268,7 +268,7 @@ function RoundManager:RemovePlayerToPlay(ply)
 		RoundManager:CheckRoundEnd()
 	end
 
-	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE, ply)
+	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end
 function RoundManager:CountPlayersToPlay(Alive)
 	if !Alive then
