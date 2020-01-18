@@ -10,7 +10,6 @@ ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 60
 function ZPClass:Ability(ply)
 	local AuxClass = table.Random(RoundManager:GetAliveZombies()):GetZombieClass()
-	ply:SetHealth(AuxClass.MaxHealth)
 	ply:SetWalkSpeed(AuxClass.Speed)
 	ply:SetRunSpeed(AuxClass.RunSpeed)
 	ply:SetCrouchedWalkSpeed(AuxClass.CrouchSpeed)
