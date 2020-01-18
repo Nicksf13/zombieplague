@@ -278,6 +278,8 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 			ply:SpectateEntity(killer)
 		end
 	end
+
+	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end)
 function PlayerCanSpawn(ply)
 	if table.HasValue(RoundManager:GetPlayersToPlay(), ply) then

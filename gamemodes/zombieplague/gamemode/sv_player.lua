@@ -101,6 +101,27 @@ end
 function PLAYER:GetFootstep()
 	return self.Footstep
 end
+function PLAYER:ZombieMadness(ZombieMadnessTime)
+	self:SetLight(Color(255, 0, 0))
+	self:GodEnable()
+	self:ZPEmitSound(SafeTableRandom(ZombieMadnessSounds), 5, true)
+
+	local ZombieMadnessIdentifier = "ZPZombieMadness" .. self:SteamID64()
+	local ZombieMadnessDuration = ZombieMadnessTime and ZombieMadnessTime or 5
+	if timer.Exists(ZombieMadnessIdentifier) then
+		ZombieMadnessDuration = ZombieMadnessDuration + timer.TimeLeft(ZombieMadnessIdentifier)
+		timer.Destroy(ZombieMadnessIdentifier)
+	end
+
+	timer.Create(ZombieMadnessIdentifier, ZombieMadnessDuration, 1, function()
+		if IsValid(self) then
+			self:SetLight(nil)
+			self:GodDisable()
+		end
+	end)
+
+	return ZombieMadnessIdentifier
+end
 ---------------------------Damage---------------------------
 function PLAYER:TakeLastDamage()
 	self:SetLastDamage(CurTime())
