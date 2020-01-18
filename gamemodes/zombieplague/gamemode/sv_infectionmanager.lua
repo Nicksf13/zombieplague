@@ -27,26 +27,28 @@ function InfectionManager:Infect(Infected, Attacker)
 	end
 	
 	hook.Call("ZPInfectionEvent", GAMEMODE, Infected, Attacker)
+	hook.Call("ZPResetAbilityEvent" .. Infected:SteamID64(), GAMEMODE)
 	
 	if RoundManager:LastHuman() then
 		hook.Call("ZPLastHumanEvent")
 	end
 end
 --Main function to cure a player, ZPCureEvent are called here
-function InfectionManager:Cure(Infected, Attacker)
-	Infected:Cure()
+function InfectionManager:Cure(Cured, Attacker)
+	Cured:Cure()
 	Attacker:AddFrags(1)
 	if !RoundManager:IsRealisticMod() then
 		for k, ply in pairs(player.GetAll()) do
-			if Infected != Attacker then
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeGetCured", ply), Infected:Name(), Attacker:Name()))
+			if Cured != Attacker then
+				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeGetCured", ply), Cured:Name(), Attacker:Name()))
 			else
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeAntidote", ply), Infected:Name()))
+				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeAntidote", ply), Cured:Name()))
 			end
 		end
 	end
 	
-	hook.Call("ZPCureEvent", GAMEMODE, Infected, Attacker)
+	hook.Call("ZPCureEvent", GAMEMODE, Cured, Attacker)
+	hook.Call("ZPResetAbilityEvent" .. Cured:SteamID64(), GAMEMODE)
 	
 	if RoundManager:LastZombie() then
 		hook.Call("ZPLastZombieEvent")

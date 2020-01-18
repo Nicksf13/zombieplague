@@ -12,10 +12,17 @@ function ZPClass:Ability(ply)
 	local OldJumpPower = ply:GetJumpPower()
 	ply:SetJumpPower(400)
 	
-	timer.Create("JumpPower" .. ply:SteamID64(), 10, 1, function()
-		if IsValid(ply) then
-			ply:SetJumpPower(OldJumpPower)
-		end
+	local TimerName = "JumpPower" .. ply:SteamID64()
+	timer.Create(TimerName, 10, 1, function()
+		ply:SetJumpPower(OldJumpPower)
+	end)
+
+	local EventName = "ZPResetAbilityEvent" .. ply:SteamID64()
+	hook.Add(EventName, TimerName, function()
+		ply:SetNextAbilityUse(0)
+
+		timer.Destroy(TimerName)
+		hook.Remove(EventName, TimerName)
 	end)
 end
 

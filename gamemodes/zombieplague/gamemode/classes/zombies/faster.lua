@@ -9,21 +9,28 @@ ZPClass.Gravity = 1
 ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 60
 function ZPClass:Ability(ply)
-	ply.OldHealth = ply:Health()
-	ply.OldMaxHealth = ply:GetMaxHealth()
-	ply.OldSpeed = ply:GetWalkSpeed()
-	ply.OldRunSpeed = ply:GetRunSpeed()
+	local OldHealth = ply:Health()
+	local OldMaxHealth = ply:GetMaxHealth()
+	local OldSpeed = ply:GetWalkSpeed()
+	local OldRunSpeed = ply:GetRunSpeed()
 	ply:SetHealth(50)
 	ply:SetMaxHealth(50)
 	ply:SetWalkSpeed(500)
 	ply:SetRunSpeed(600)
-	timer.Create("Faster" .. ply:SteamID64(), 30, 1, function()
-		if IsValid(ply) && ply:IsZombie() then
-			ply:SetHealth(ply.OldHealth)
-			ply:SetMaxHealth(ply.OldMaxHealth)
-			ply:SetWalkSpeed(ply.OldSpeed)
-			ply:SetRunSpeed(ply.OldRunSpeed)
-		end
+	local TimerName = "Faster" .. ply:SteamID64()
+	timer.Create(TimerName, 30, 1, function()
+		ply:SetHealth(OldHealth)
+		ply:SetMaxHealth(OldMaxHealth)
+		ply:SetWalkSpeed(OldSpeed)
+		ply:SetRunSpeed(OldRunSpeed)
+	end)
+
+	local EventName = "ZPResetAbilityEvent" .. ply:SteamID64()
+	hook.Add(EventName, TimerName, function()
+		ply:SetNextAbilityUse(0)
+
+		timer.Destroy(TimerName)
+		hook.Remove(EventName, TimerName)
 	end)
 end
 
