@@ -54,8 +54,8 @@ function RoundManager:GetServerStatus(Requester)
 		table.insert(ServerStatus.Players, {SteamID = ply:SteamID(),
 			AmmoPacks = ply:GetAmmoPacks(),
 			Battery = ply:GetMaxBatteryCharge(),
-			ZombieClass = Dictionary:GetPhrase(ply:GetZombieClass().Name, Requester),
-			HumanClass = Dictionary:GetPhrase(ply:GetHumanClass().Name, Requester),
+			ZombieClass = ply:GetZombieClass().Name,
+			HumanClass = ply:GetHumanClass().Name,
 			Light = ply:GetLight(),
 			Footstep = ply:GetFootstep()
 		})
@@ -110,6 +110,10 @@ function RoundManager:TryNewRound()
 		RoundManager:SetTimer(cvars.Number("zp_infection_delay",  10), RoundManager.NewRound)
 	else
 		RoundManager:WaitPlayers()
+	end
+
+	for k, ply in pairs(player.GetAll()) do
+		hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 	end
 end
 function RoundManager:NewRound()
@@ -171,6 +175,9 @@ function RoundManager:EndRound(Reason)
 		ZPVoteMap:StartVotemap(ALLOWED_PREFIX)
 	end
 	hook.Call("ZPEndRound", GAMEMODE, Reason)
+end
+function RoundManager:RoundsLeft()
+	return (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) - RoundManager:GetRound()
 end
 function RoundManager:StartRound(RoundToStart, ply)
 	hook.Call("ZPPreNewRound", GAMEMODE, RoundToStart)
@@ -260,6 +267,8 @@ function RoundManager:RemovePlayerToPlay(ply)
 	if RoundManager:GetRoundState() == ROUND_PLAYING then
 		RoundManager:CheckRoundEnd()
 	end
+
+	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end
 function RoundManager:CountPlayersToPlay(Alive)
 	if !Alive then

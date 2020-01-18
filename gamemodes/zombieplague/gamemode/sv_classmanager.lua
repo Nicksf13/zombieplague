@@ -96,7 +96,8 @@ function ClassManager:OpenZPClassMenu(ply, IsHuman)
 
 	for ZPClassID, ZPClass in pairs(ZPClasses) do
 		Pretty[ZPClassID] = {
-			Description = Dictionary:GetPhrase(ZPClass.Name, ply) .. " - " .. Dictionary:GetPhrase(ZPClass.Description, ply),
+			Description = ZPClass.Name .. " - " .. ZPClass.Description,
+			PhraseKeys = {ZPClass.Name, ZPClass.Description},
 			Order = ZPClass.Order
 		}
 	end

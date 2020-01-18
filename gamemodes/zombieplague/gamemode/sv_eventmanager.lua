@@ -204,7 +204,8 @@ function GM:PlayerDeathThink(ply)
 end
 function CalculateSpectator(ply)
 	local PlayersToObserve
-	if RoundManager:IsRealisticMod() || cvars.Bool("zp_spectate_team_ony", true) then
+	local SpectateTeamOnly = cvars.Bool("zp_spectate_team_ony", true)
+	if RoundManager:IsRealisticMod() || SpectateTeamOnly then
 		if ply:IsZombie() then
 			PlayersToObserve = RoundManager:GetAliveZombies()
 		else
@@ -214,7 +215,8 @@ function CalculateSpectator(ply)
 		PlayersToObserve = RoundManager:GetPlayersToPlay(true)
 	end
 	if #PlayersToObserve > 0 then
-		if !ply:GetObserverTarget() || !ply:GetObserverTarget():IsPlayer() || !ply:GetObserverTarget():Alive() then
+		local Observed = ply:GetObserverTarget()
+		if (!Observed || !ply:GetObserverTarget():IsPlayer() || !ply:GetObserverTarget():Alive() || (SpectateTeamOnly && Observed:Team() != ply:Team())) && ply:GetObserverMode() != OBS_MODE_ROAMING then
 			ply:MoveSpectateID(0, PlayersToObserve)
 		elseif ply:KeyPressed(IN_JUMP) then
 			ply:Spectate(((ply:GetObserverMode() + 1) % 3) + 4)
@@ -261,6 +263,9 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 		end
 		if killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
+
+			ply:Spectate(OBS_MODE_CHASE)
+			ply:SpectateEntity(killer)
 		end
 	else
 		if RoundManager:LastHuman() then
@@ -268,11 +273,13 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 		end
 		if killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
+
+			ply:Spectate(OBS_MODE_CHASE)
+			ply:SpectateEntity(killer)
 		end
 	end
-	
-	ply:Spectate(OBS_MODE_CHASE)
-	ply:SpectateEntity(killer)
+
+	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end)
 function PlayerCanSpawn(ply)
 	if table.HasValue(RoundManager:GetPlayersToPlay(), ply) then

@@ -9,12 +9,7 @@ ZPClass.Gravity = 1.5
 ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 45
 function ZPClass:Ability(ply)
-	ply:GodEnable()
-	timer.Create("GodMode" .. ply:SteamID64(), 10, 1, function()
-		if IsValid(ply) then
-			ply:GodDisable()
-		end
-	end)
+	ply:ZombieMadness()
 end
 
 if(ZPClass:ShouldBeEnabled()) then
