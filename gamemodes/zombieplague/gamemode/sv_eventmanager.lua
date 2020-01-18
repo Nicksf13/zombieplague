@@ -216,7 +216,7 @@ function CalculateSpectator(ply)
 	end
 	if #PlayersToObserve > 0 then
 		local Observed = ply:GetObserverTarget()
-		if !Observed || !ply:GetObserverTarget():IsPlayer() || !ply:GetObserverTarget():Alive() || (SpectateTeamOnly && Observed:Team() != ply:Team()) then
+		if (!Observed || !ply:GetObserverTarget():IsPlayer() || !ply:GetObserverTarget():Alive() || (SpectateTeamOnly && Observed:Team() != ply:Team())) && ply:GetObserverMode() != OBS_MODE_ROAMING then
 			ply:MoveSpectateID(0, PlayersToObserve)
 		elseif ply:KeyPressed(IN_JUMP) then
 			ply:Spectate(((ply:GetObserverMode() + 1) % 3) + 4)
