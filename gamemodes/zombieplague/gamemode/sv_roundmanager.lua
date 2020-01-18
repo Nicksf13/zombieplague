@@ -172,6 +172,9 @@ function RoundManager:EndRound(Reason)
 	end
 	hook.Call("ZPEndRound", GAMEMODE, Reason)
 end
+function RoundManager:RoundsLeft()
+	return (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) - RoundManager:GetRound()
+end
 function RoundManager:StartRound(RoundToStart, ply)
 	hook.Call("ZPPreNewRound", GAMEMODE, RoundToStart)
 	RoundToStart.StartFunction(ply)

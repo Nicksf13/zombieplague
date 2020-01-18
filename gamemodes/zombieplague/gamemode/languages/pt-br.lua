@@ -57,7 +57,9 @@ local Language = {PrettyName = "Português Brasileiro",
 			ExtraItemSlamName = "S.L.A.M",
 			ExtraItemTVirusName = "T-Virus",
 			ExtraItemZombieMadnessName = "Loucura Zombie",
-			ExtraItemRPGName = "RPG"
+			ExtraItemRPGName = "RPG",
+			RoundsLeft = "%d rodada(s) restante(s)!",
+			FinalRound = "Rodada final!"
 		},
 		Client = {
 			ClassClass = "Classe",
