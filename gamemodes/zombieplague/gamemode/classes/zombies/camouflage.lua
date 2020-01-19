@@ -1,11 +1,11 @@
 ZPClass.Name = "ZombieCamouflageClassName"
 ZPClass.Description = "ZombieCamouflageClassDescription"
-ZPClass.MaxHealth = 300
+ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/zombie_classic.mdl"
-ZPClass.Speed = 230
-ZPClass.RunSpeed = 250
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 260
 ZPClass.CrouchSpeed = 0.4
-ZPClass.Gravity = 1
+ZPClass.Gravity = 0.8
 ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 45
 function ZPClass:Ability(ply)

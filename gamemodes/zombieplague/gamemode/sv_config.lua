@@ -7,14 +7,14 @@ ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
 AdminHumanPlayerModel = ""
 AdminZombiePlayerModel = ""
 
-NemesisClass = {Health = 3000,
-		Speed = 250,
+NemesisClass = {Health = 5000,
+		Speed = 270,
 		RunSpeed = 270,
-		CrouchedSpeed = 0.5,
-		Gravity = 0.8
+		CrouchedSpeed = 1,
+		Gravity = 0.5
 	}
 SurvivorClass = {Health = 250,
-		Speed = 250,
+		Speed = 230,
 		RunSpeed = 270,
 		CrouchedSpeed = 0.5,
 		Gravity = 0.8

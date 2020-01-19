@@ -1,11 +1,11 @@
 ZPClass.Name = "ZombieBomberClassName"
 ZPClass.Description = "ZombieBomberClassDescription"
-ZPClass.MaxHealth = 100
+ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/zombie_classic.mdl"
-ZPClass.Speed = 240
-ZPClass.RunSpeed = 250
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 260
 ZPClass.CrouchSpeed = 0.4
-ZPClass.Gravity = 0.85
+ZPClass.Gravity = 0.7
 ZPClass.Breath = 50
 function ZPClass:WeaponGive(ply)
 	ply:Give(ZOMBIE_KNIFE)

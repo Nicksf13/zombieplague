@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPArmor"
 ExtraItem.Name = "ExtraItemArmorName"
-ExtraItem.Price = 10
+ExtraItem.Price = 15
 function ExtraItem:OnBuy(ply)
 	ply:SetArmor(ply:Armor() + 100)
 end

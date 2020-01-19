@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPAntidote"
 ExtraItem.Name = "ExtraItemAntidoteName"
-ExtraItem.Price = 40
+ExtraItem.Price = 20
 ExtraItem.Type = ITEM_ZOMBIE
 function ExtraItem:OnBuy(ply)
 	InfectionManager:Cure(ply, ply)
