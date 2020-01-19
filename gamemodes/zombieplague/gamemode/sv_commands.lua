@@ -11,8 +11,13 @@ end
 Commands:AddCommand("commands", "Print the server's commands.", function(ply, args)
 	SendColorMessage(ply, "Server's command list has been printed!", Color(255, 255, 0))
 	local StringCommands = "--------------------------Commands--------------------------\n"
+	PrintTable(Commands.CommandList)
 	for k, v in pairs(Commands.CommandList) do
-		if v.Private == ply:IsSuperAdmin() then
+		if v.Private then
+			if ply:IsSuperAdmin() then
+				StringCommands = StringCommands .. k .. " - Sintax: /" .. k .. " " .. v['Description'] .. "\n"
+			end
+		else
 			StringCommands = StringCommands .. k .. " - Sintax: /" .. k .. " " .. v['Description'] .. "\n"
 		end
 	end
