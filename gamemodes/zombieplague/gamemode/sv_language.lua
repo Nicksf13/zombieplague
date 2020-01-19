@@ -151,6 +151,7 @@ function Dictionary:Init()
 				MenuCreditTheFireFuchs = "The Fire Fuchs - Creator of this gamemode in Garry's mod",
 				MenuCreditErickMaksimets = "Erick Maksimets - Helped with bug reporting, russian and ukrainian translation and also give a lot of ideas",
 				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project",
+				MenuCreditPac = "PacUGC3 - Made the spanish translation",
 				Nemesis = "Nemesis",
 				Survivor = "Survivor",
 				NoticeVotemapProlong = "Prolong current map for more {RoundsToExtend} round(s)!",
