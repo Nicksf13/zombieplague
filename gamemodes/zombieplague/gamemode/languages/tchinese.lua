@@ -1,7 +1,8 @@
-	local Language = {PrettyName = "繁體中文",
-		Values = 
-		{
-			Server = {
+--Traditional Chinese translation by 辣鸡 | LaGi (https://steamcommunity.com/id/LaGi1569/)
+local Language = {PrettyName = "繁體中文",
+	Values = 
+	{
+		Server = {
 				ZombiesWin = "殭屍統治了世界!",
 				HumansWin = "人類戰勝了瘟疫!",
 				RoundDraw = "沒有人勝利!",
