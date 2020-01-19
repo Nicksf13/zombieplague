@@ -214,6 +214,13 @@ function OpenZPMenu()
 				end,
 				4
 			))
+			table.insert(CreditsOptions, GenerateMenuOption(
+				Dictionary:GetPhrase("MenuCreditPac"),
+				function()
+					gui.OpenURL("https://github.com/PacUGC3")
+				end,
+				5
+			))
 			MMenu:UpdateOptions(CreditsOptions)
 		end,
 		Order = 1000
