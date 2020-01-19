@@ -55,14 +55,12 @@ function Bank:GiveTakeAmmoPacks(Requester, Target, GiveTake, Amount)
 	if Requester:IsSuperAdmin() then
 		if Target then
 			if Amount && Amount > 0 then
-				if GiveTake == "give" then
+				if GiveTake then
 					Target:GiveAmmoPacks(Amount)
 					SendPopupMessage(Target, string.format(Dictionary:GetPhrase("AmmoPackGiveName", Target), Requester:Name(), Amount))
-				elseif GiveTake == "take" then
+				else
 					Target:TakeAmmoPacks(Amount)
 					SendPopupMessage(Target, string.format(Dictionary:GetPhrase("AmmoPackTakeName", Target), Requester:Name(), Amount))
-				else
-					SendPopupMessage(Requester, Dictionary:GetPhrase("CommandInvalidArgument", Requester))
 				end
 			else
 				SendPopupMessage(Requester, Dictionary:GetPhrase("AmmoPackGiveInvalidAmount", Requester))
@@ -146,21 +144,10 @@ Commands:AddCommand("give", "Donate your ammo packs to another player.", functio
 		SendPopupMessage(ply, Dictionary:GetPhrase("CommandInvalidArgument", ply))
 	end
 end, "<Player> <Amount>")
-Commands:AddCommand({"balance", "saldo"}, "Check your account balance.", function(ply)
+
+Commands:AddCommand("balance", "Check your account balance.", function(ply)
 	SendPopupMessage(ply, string.format(Dictionary:GetPhrase("AmmoPackBalance", ply), tonumber(file.Read("zombie_plague/" .. ply:SteamID64() .. ".txt", "DATA") or "0")))
 end)
-Commands:AddCommand("ammopacks", "Give ammo packs to the specified player.", function(ply, args)
-	local Target
-	for k, v in pairs(player.GetAll()) do
-		if string.find(string.lower(v:Name()), args[2]) then
-			Target = v
-			break
-		end
-	end
-	local Amount = tonumber(args[3] or "")
-
-	Bank:GiveTakeAmmoPacks(ply, Target, args[1], Amount)
-end, "<Player>", true)
 
 net.Receive("GiveTakeAmmoPack", function(len, ply)
 	local Target
