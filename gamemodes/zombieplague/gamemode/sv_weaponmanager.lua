@@ -2,16 +2,30 @@ WEAPON_PRIMARY = 1
 WEAPON_SECONDARY = 2
 WEAPON_MELEE = 3
 
-WeaponManager = {PrimaryWeapons = {}, SecondaryWeapons = {}, MeleeWeapons = {}, WeaponsMultiplier = {}}
+NATIVE_WEAPONS = {
+	"weapon_357",
+	"weapon_ar2",
+	"weapon_crossbow",
+	"weapon_pistol",
+	"weapon_smg1",
+	"weapon_shotgun",
+	"weapon_crowbar",
+	"weapon_stunstick"
+}
+
+WeaponManager = {PrimaryWeapons = {}, SecondaryWeapons = {}, MeleeWeapons = {}, WeaponsMultiplier = {}, ServerWeapons = NATIVE_WEAPONS}
 
 function WeaponManager:SearchWeapons()
+	for k, Weapon in pairs(weapons.GetList()) do
+		table.insert(self.ServerWeapons, Weapon.ClassName)
+	end
 	local Files = file.Find("zombieplague/gamemode/weapons/*.lua", "LUA")
 	for k, File in pairs(Files) do
 		Weapon = WeaponManager:CreateNewWeapon()
 
 		include("zombieplague/gamemode/weapons/" .. File)
 		
-		if Weapon:ShouldBeEnabled() then
+		if Weapon:ShouldBeEnabled() && WeaponManager:ServerHasWeapon(Weapon.WeaponID) then
 			if !Weapon.PrettyName then
 				print("Cannot load: '" .. File .. "', unknown 'Pretty Name'!")
 			elseif !Weapon.WeaponID then
@@ -23,6 +37,15 @@ function WeaponManager:SearchWeapons()
 			end
 		end
 	end
+end
+function WeaponManager:ServerHasWeapon(WeaponClass)
+	for k, Weapon in pairs(self.ServerWeapons) do
+		if Weapon == WeaponClass then
+			return true
+		end
+	end
+
+	return false
 end
 function WeaponManager:IsValidWeaponType(WeaponType)
 	return WeaponType == WEAPON_PRIMARY ||
