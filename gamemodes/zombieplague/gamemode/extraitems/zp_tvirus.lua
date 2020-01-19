@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPTVirus"
 ExtraItem.Name = "ExtraItemTVirusName"
-ExtraItem.Price = 50
+ExtraItem.Price = 30
 function ExtraItem:OnBuy(ply)
 	if RoundManager:GetRoundState() == ROUND_PLAYING then
 		InfectionManager:Infect(ply, ply)
