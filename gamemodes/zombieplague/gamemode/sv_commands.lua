@@ -4,21 +4,20 @@ function Commands:AddCommand(Command, Description, Function, Help, Private)
 	if (type(Command) != "table") then Command = {Command} end
 	for k, Com in pairs(Command) do
 		if !Commands.CommandList[Com] then
-			Commands.CommandList[Com] = {Description = Description, Function = Function, Help = (Help and Help or "<NO ARGS>"), Private = Private}
+			Commands.CommandList[Com] = {Description = Description, Function = Function, Help = (Help and Help or ""), Private = Private}
 		end
 	end
 end
 Commands:AddCommand("commands", "Print the server's commands.", function(ply, args)
 	SendColorMessage(ply, "Server's command list has been printed!", Color(255, 255, 0))
 	local StringCommands = "--------------------------Commands--------------------------\n"
-	PrintTable(Commands.CommandList)
 	for k, v in pairs(Commands.CommandList) do
 		if v.Private then
 			if ply:IsSuperAdmin() then
-				StringCommands = StringCommands .. k .. " - Sintax: /" .. k .. " " .. v['Description'] .. "\n"
+				StringCommands = StringCommands .. k .. " - Description: " .. v.Description .. " - Sintax: /" .. k .. " " .. v.Help .. "\n"
 			end
 		else
-			StringCommands = StringCommands .. k .. " - Sintax: /" .. k .. " " .. v['Description'] .. "\n"
+			StringCommands = StringCommands .. k .. " - Description: " .. v.Description .. " - Sintax: /" .. k .. " " .. v.Help .. "\n"
 		end
 	end
 	SendConsoleMessage(ply, StringCommands .. "------------------------------------------------------------")
