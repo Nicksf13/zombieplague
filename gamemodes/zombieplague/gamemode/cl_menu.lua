@@ -242,7 +242,13 @@ net.Receive("OpenBackMenu", function()
 	local MenuOptions = {}
 
 	for ID, ReceivedOption in pairs(ReceivedOptions) do
-		local Description = ReceivedOption.Phrase and Dictionary:GetPhrase(ReceivedOption.Phrase) or ReceivedOption.Description
+		local Description = ReceivedOption.Description
+		
+		if ReceivedOption.PhraseKeys then
+			for k, PhraseKey in pairs(ReceivedOption.PhraseKeys) do
+				Description = string.Replace(Description, PhraseKey, Dictionary:GetPhrase(PhraseKey))
+			end
+		end
 
 		if ReceivedOption.PhraseValues then
 			for ValueToReplace, Value in pairs(ReceivedOption.PhraseValues) do

@@ -4,7 +4,7 @@ function PLAYER:SetZombieClass(ZombieClass)
 	self.ZombieClass = ZombieClass
 	net.Start("SendZombieClass")
 		net.WriteString(self:SteamID())
-		net.WriteString(Dictionary:GetPhrase(ZombieClass.Name, self))
+		net.WriteString(ZombieClass.Name)
 	net.Broadcast()
 end
 function PLAYER:GetZombieClass()
@@ -25,7 +25,7 @@ function PLAYER:SetHumanClass(HumanClass)
 	self.HumanClass = HumanClass
 	net.Start("SendHumanClass")
 		net.WriteString(self:SteamID())
-		net.WriteString(Dictionary:GetPhrase(HumanClass.Name, self))
+		net.WriteString(HumanClass.Name)
 	net.Broadcast()
 end
 function PLAYER:GetHumanClass()
@@ -100,6 +100,27 @@ function PLAYER:SetFootstep(Footstep)
 end
 function PLAYER:GetFootstep()
 	return self.Footstep
+end
+function PLAYER:ZombieMadness(ZombieMadnessTime)
+	self:SetLight(Color(255, 0, 0))
+	self:GodEnable()
+	self:ZPEmitSound(SafeTableRandom(ZombieMadnessSounds), 5, true)
+
+	local ZombieMadnessIdentifier = "ZPZombieMadness" .. self:SteamID64()
+	local ZombieMadnessDuration = ZombieMadnessTime and ZombieMadnessTime or 5
+	if timer.Exists(ZombieMadnessIdentifier) then
+		ZombieMadnessDuration = ZombieMadnessDuration + timer.TimeLeft(ZombieMadnessIdentifier)
+		timer.Destroy(ZombieMadnessIdentifier)
+	end
+
+	timer.Create(ZombieMadnessIdentifier, ZombieMadnessDuration, 1, function()
+		if IsValid(self) then
+			self:SetLight(nil)
+			self:GodDisable()
+		end
+	end)
+
+	return ZombieMadnessIdentifier
 end
 ---------------------------Damage---------------------------
 function PLAYER:TakeLastDamage()

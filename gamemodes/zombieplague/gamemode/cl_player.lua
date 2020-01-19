@@ -56,10 +56,10 @@ function PLAYER:GetZPClass()
 		return Dictionary:GetPhrase("Survivor")
 	end
 	if self:Team() == TEAM_ZOMBIES then
-		return self:GetZombieClass()
+		return Dictionary:GetPhrase(self:GetZombieClass())
 	end
 	if self:Team() == TEAM_HUMANS then
-		return self:GetHumanClass()
+		return Dictionary:GetPhrase(self:GetHumanClass())
 	end
 	return ""
 end
