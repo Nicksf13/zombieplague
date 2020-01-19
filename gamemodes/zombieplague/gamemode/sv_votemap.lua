@@ -81,7 +81,7 @@ function ZPVoteMap:EndVotemap()
 		SendColorMessage(ply, string.format(Dictionary:GetPhrase(Phrase, ply), Replace), Color(0, 255, 0))
 	end
 end
-Commands:AddCommand({"rounds_left", "rodadas_restantes"}, "Check how many rounds are left.", function(ply)
+Commands:AddCommand("rounds_left", "Check how many rounds are left.", function(ply)
 	local RoundsLeft = RoundManager:RoundsLeft()
 	if RoundsLeft > 1 then
 		SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
