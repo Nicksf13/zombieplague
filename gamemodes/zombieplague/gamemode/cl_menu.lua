@@ -178,50 +178,7 @@ function OpenZPMenu()
 	table.insert(Options, {
 		Name = Dictionary:GetPhrase("MenuCredit"),
 		Function = function()
-			local CreditsOptions = {}
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditMeRcyLeZZ"),
-				function()
-					gui.OpenURL("https://forums.alliedmods.net/member.php?u=33273")
-				end,
-				0
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditZombiePlague"),
-				function()
-					gui.OpenURL("https://forums.alliedmods.net/showthread.php?t=72505")
-				end,
-				1
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditTheFireFuchs"),
-				function()
-					gui.OpenURL("https://steamcommunity.com/id/thefirefuchs")
-				end,
-				2
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditErickMaksimets"),
-				function()
-					gui.OpenURL("https://github.com/ErickMaksimets")
-				end,
-				3
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditBlueberryy"),
-				function()
-					gui.OpenURL("https://github.com/Blueberryy")
-				end,
-				4
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditPac"),
-				function()
-					gui.OpenURL("https://github.com/PacUGC3")
-				end,
-				5
-			))
-			MMenu:UpdateOptions(CreditsOptions)
+			gui.OpenURL("https://github.com/Nicholas-Fuchs/zombieplague/blob/develop/credits.md")
 		end,
 		Order = 1000
 	})

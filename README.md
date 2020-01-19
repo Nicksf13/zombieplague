@@ -17,7 +17,7 @@ This gamemode is a easy customization mod.<br>
 
 By default, zombie plague has:
 - Zombie and Human classes. *
-- 7 round types. *
+- 6 round types. *
 - Multi language support. *
 - Extra Items support. *
 - Bank system (To storage your ammo packs).
@@ -25,7 +25,7 @@ By default, zombie plague has:
 - Votemap *
 - Map manager (To custom cvars for a map/prefix type (zp_*))
 - GMOD weapons *
-- Custom weapons support (So you can add workshop weapons) *
+- Custom weapons support (So you can add workshop weapons like M9K weapons) *
 - "Plug" and play (You don't need custom maps to play Zombie Plague).
 - Zombie Escape support. *
 - Huge API for developers.
@@ -33,7 +33,7 @@ By default, zombie plague has:
 (*) All items You can create new ones and modify.<br> 
 
 -----------------------Zombie Plague Classes-----------------------<br> 
-Every Zombie Plague class has It's own characteristic (More health/speed/gravity).<br> 
+Every Zombie Plague class has it's own characteristic (More health/speed/gravity).<br> 
 So you can make a custom Zombie/Human class as your will.<br> 
 
 -----------------------Round Types-----------------------<br> 
@@ -45,7 +45,7 @@ Nemesis Round - Everybody except one random player (that is going to be the neme
 Survivor Round - Everybody except one random player (that is going to be the survivor) will be<br>  zombie. Survivor should kill every zombie (Survivor cause more damage).<br> 
 
 -----------------------Multi Language support-----------------------<br> 
-By default this gamemode support Brazilian Portuguese, Russian, Ukrainian and US English.<br> 
+By default this gamemode supports US English, Brazilian Portuguese, Argentine Spanish, Russia, Ukrainian and Traditional Chinese.<br> 
 But You can add more languages on languages folder.<br> 
 
 -----------------------Extra items-----------------------<br> 
@@ -53,7 +53,8 @@ Extra items are a good way to spend your ammo packs.<br>
 You can use them to obtain advantage against your oppenent.<br> 
 
 -----------------------Bank System-----------------------<br> 
-By default Zombie Plague has a bank system. So you can storage your ammopacks during the round.<br> 
+By default Zombie Plague has a bank system. So you can storage your ammopacks during the round.<br>
+You can create your own storage mod. So you can use databases (Like MySQL) to store player's ammopacks
 
 -----------------------Custom Weapon Damage-----------------------<br> 
 You can set to a specific weapon a damage amplifier.<br> 
@@ -82,7 +83,3 @@ More maps.<br>
 Find more effect sounds.<br> 
 Round type soundtrack (Like in the old one).<br> 
 Create a zombie knife.<br> 
-
-----------------------Special thanks to----------------------<br>
-The Fire Fuchs (Me)<br>
-Erick Maksimets (Helped me with russian and ukrainian translations and gave me a lot of ideas for the gamemode. Also gave me a weapon balance list)
