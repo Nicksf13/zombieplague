@@ -100,7 +100,7 @@ local Language = {PrettyName = "Русский",
 			HumanDefaultClassName = "Человек",
 			HumanDefaultClassDescription = "Человек, ничего особенного.",
 			HumanHeavyClassName = "Тяжелый человек",
-			HumanHeavyClassDescription = "Оставайтесь с защитой от зомби и с помощью брони.",
+			HumanHeavyClassDescription = "Оставайтесь под защитой от зомби с помощью тяжелой брони.",
 			HumanSpeedClassName = "Скоростной человек",
 			HumanSpeedClassDescription = "Имеет повышенную скорость.",
 			HumanCrouchClassName = "Выносливый человек",
@@ -132,7 +132,7 @@ local Language = {PrettyName = "Русский",
 			ZombieJumperClassName = "Прыгун зомби",
 			ZombieJumperClassDescription = "Его специальная способность - высокий прыжок.",
 			ZombieTankClassName = "Танк зомби",
-			ZombieTankClassDescription = "Может включить режим бессмертия что бы спасти себя.",
+			ZombieTankClassDescription = "Может включить режим бессмертия, чтобы спасти себя.",
 		}
 	}
 }
