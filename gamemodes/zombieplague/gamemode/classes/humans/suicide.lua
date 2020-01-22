@@ -2,9 +2,9 @@ ZPClass.Name = "HumanSuicideClassName"
 ZPClass.Description = "HumanSuicideClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/guerilla.mdl"
-ZPClass.Speed = 230
-ZPClass.RunSpeed = 240
-ZPClass.CrouchSpeed = 0.4
+ZPClass.Speed = 180
+ZPClass.RunSpeed = 220
+ZPClass.CrouchSpeed = 0.5
 ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 60
 function ZPClass:Ability(ply)
