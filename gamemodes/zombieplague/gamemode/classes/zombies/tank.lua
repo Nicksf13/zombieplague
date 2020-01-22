@@ -1,11 +1,11 @@
 ZPClass.Name = "ZombieTankClassName"
 ZPClass.Description = "ZombieTankClassDescription"
-ZPClass.MaxHealth = 4000
+ZPClass.MaxHealth = 3000
 ZPClass.PModel = "models/player/zombie_classic.mdl"
-ZPClass.Speed = 170
-ZPClass.RunSpeed = 170
+ZPClass.Speed = 230
+ZPClass.RunSpeed = 230
 ZPClass.CrouchSpeed = 0.4
-ZPClass.Gravity = 1.5
+ZPClass.Gravity = 0.8
 ZPClass.Breath = 50
 ZPClass.AbilityRecharge = 45
 function ZPClass:Ability(ply)
