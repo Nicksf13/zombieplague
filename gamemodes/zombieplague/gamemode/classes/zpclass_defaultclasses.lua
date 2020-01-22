@@ -111,7 +111,7 @@ ClassManager:AddZPClass("LightZombie", ZPClass, TEAM_ZOMBIES)
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieLeechClassName"
 ZPClass.Description = "ZombieLeechClassDescription"
-ZPClass.MaxHealth = 500
+ZPClass.MaxHealth = 1000
 ZPClass.PModel = "models/player/soldier_stripped.mdl"
 ZPClass.Speed = 260
 ZPClass.RunSpeed = 260
