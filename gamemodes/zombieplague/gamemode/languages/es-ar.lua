@@ -124,6 +124,14 @@ local Language = {PrettyName = "Español Latino-america",
 			ZombieJumperClassDescription = "Usa su habilidad para saltar bien alto.",
 			ZombieTankClassName = "Zombie Tanque ",
 			ZombieTankClassDescription = "Podes usar DIOS Y MATARLOS A TODOS.",
+			HUDCustomizerTitle = "Personalizador de HUD",
+			HUDCustomizerComboMenu = "Menu",
+			HUDCustomizerComboStatusBar = "Barra de estado",
+			HUDCustomizerComboRoundTimer = "Temporizador de ronda",
+			HUDCustomizerTabTitleBody = "Cuerpo",
+			HUDCustomizerTabTitleBorder = "Borde",
+			HUDCustomizerTabTitleText = "Texto",
+			HUDCustomizerApplyButton = "Aplicar"
 		}
 	}
 }

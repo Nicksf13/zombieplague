@@ -124,6 +124,14 @@ local Language = {PrettyName = "Українська",
 			ZombieJumperClassDescription = "Його спеціальна можливість - довгий стрибок",
 			ZombieTankClassName = "Танк зомбі",
 			ZombieTankClassDescription = "Може включити режим безсмертя для свого збереження",
+			HUDCustomizerTitle = "Кастомізація HUD",
+			HUDCustomizerComboMenu = "Меню",
+			HUDCustomizerComboStatusBar = "Поле Статусу",
+			HUDCustomizerComboRoundTimer = "Таймер Раунду",
+			HUDCustomizerTabTitleBody = "Заповнення",
+			HUDCustomizerTabTitleBorder = "Межі",
+			HUDCustomizerTabTitleText = "Текст",
+			HUDCustomizerApplyButton = "Застосувати"
 		}
 	}
 }

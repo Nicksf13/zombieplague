@@ -124,6 +124,14 @@ local Language = {PrettyName = "Русский",
 			ZombieJumperClassDescription = "Его специальная способность - высокий прыжок.",
 			ZombieTankClassName = "Танк зомби",
 			ZombieTankClassDescription = "Может включить режим бессмертия что бы спасти себя.",
+			HUDCustomizerTitle = "Кастомизация HUD",
+			HUDCustomizerComboMenu = "Меню",
+			HUDCustomizerComboStatusBar = "Поле Статуса",
+			HUDCustomizerComboRoundTimer = "Таймер Раунда",
+			HUDCustomizerTabTitleBody = "Заполнение",
+			HUDCustomizerTabTitleBorder = "Границы",
+			HUDCustomizerTabTitleText = "Текст",
+			HUDCustomizerApplyButton = "Применить"
 		}
 	}
 }
