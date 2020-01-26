@@ -199,10 +199,6 @@ net.Receive("OpenZPMenu", OpenZPMenu)
 net.Receive("OpenBackMenu", function()
 	MMenu.NetworkString = net.ReadString()
 	local ReceivedOptions = net.ReadTable()
-	for k, Option in pairs(ReceivedOptions) do
-		if Option.Translations then
-		end
-	end
 	local MenuOptions = {}
 
 	for ID, ReceivedOption in pairs(ReceivedOptions) do

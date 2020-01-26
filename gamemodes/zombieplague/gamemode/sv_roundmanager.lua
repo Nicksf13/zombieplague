@@ -19,6 +19,7 @@ function RoundManager:SearchRounds()
 			RoundToAdd.SpecialRound = false
 			RoundToAdd.Deathmatch = false
 			RoundToAdd.ShouldBeEnabled = function()return true end
+			RoundToAdd.Order = 100
 			include("zombieplague/gamemode/rounds/" .. File)
 			
 			if RoundToAdd:ShouldBeEnabled() then
@@ -34,8 +35,8 @@ end
 function RoundManager:AddExtraRounds(ExtraRounds)
 	self.ExtraRounds = self.ExtraRounds + ExtraRounds
 end
-function RoundManager:AddRoundType(RoundType)
-	table.insert(RoundManager.Rounds, RoundType)
+function RoundManager:AddRoundType(RoundID, RoundType)
+	RoundManager.Rounds[RoundID] = RoundType
 	if RoundType.StartSound then
 		for k, SoundPath in pairs(RoundType.StartSound) do
 			resource.AddFile("sound/" .. SoundPath)
@@ -203,19 +204,7 @@ function RoundManager:GetGoodRounds()
 	local TotalPlayers = RoundManager:CountPlayerToPlayAlive()
 	for k, Round in pairs(RoundManager:GetRounds()) do
 		if TotalPlayers >= Round.MinPlayers then
-			table.insert(GoodRounds, Round)
-		end
-	end
-
-	return GoodRounds
-end
-function RoundManager:GetGoodRoundsName(ply)
-	local GoodRounds = {}
-	local TotalPlayers = RoundManager:CountPlayerToPlayAlive()
-
-	for k, Round in pairs(RoundManager:GetRounds()) do
-		if TotalPlayers >= Round.MinPlayers then
-			table.insert(GoodRounds, Dictionary:GetPhrase(Round.Name, ply))
+			GoodRounds[k] = Round
 		end
 	end
 
@@ -231,9 +220,19 @@ function RoundManager:ShouldRoundEnd()
 	return RoundManager:CountHumansAlive() == 0 || RoundManager:CountZombiesAlive() == 0
 end
 function RoundManager:OpenRoundsMenu(ply)
+	local Pretty = {}
+	local GoodRounds = RoundManager:GetGoodRounds()
+
+	for RoundID, Round in pairs(GoodRounds) do
+		Pretty[RoundID] = {
+			Description = Dictionary:GetPhrase(Round.Name, ply),
+			Order = Round.Order
+		}
+	end
+	
 	net.Start("OpenBackMenu")
 		net.WriteString("SendRounds")
-		net.WriteTable(RoundManager:GetGoodRoundsName(ply))
+		net.WriteTable(Pretty)
 	net.Send(ply)
 end
 function RoundManager:AddPlayerToPlay(ply)
@@ -313,6 +312,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Chance = 100
 	ROUND.SpecialRound = false
 	ROUND.Deathmatch = false
+	ROUND.Order = 1
 	ROUND.StartFunction = function(ply)
 		local FirstZombie = (ply and ply or table.Random(RoundManager:GetPlayersToPlay(true)))
 		FirstZombie:Infect()
@@ -321,12 +321,13 @@ function RoundManager:AddDefaultRounds()
 			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeFirstZombie", ply), FirstZombie:Name()))
 		end
 	end
-	RoundManager:AddRoundType(ROUND)
+	RoundManager:AddRoundType("SimpleRound", ROUND)
 	
 	ROUND = {}
 	ROUND.Name = "RoundMultiInfectionName"
 	ROUND.Chance = 15
 	ROUND.MinPlayers = 4
+	ROUND.Order = 2
 	ROUND.StartFunction = function()
 		local ValidPlayers = RoundManager:GetPlayersToPlay(true)
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
@@ -336,7 +337,7 @@ function RoundManager:AddDefaultRounds()
 			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeMultiInfection", ply), 5, Color(0, 255, 0))
 		end
 	end
-	RoundManager:AddRoundType(ROUND)
+	RoundManager:AddRoundType("MultiInfectionRound", ROUND)
 	
 	ROUND = {}
 	ROUND.Name = "RoundNemesisName"
@@ -344,6 +345,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 5
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
+	ROUND.Order = 3
 	ROUND.StartFunction = function()
 		local Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
 		while(Nemesis:IsBot()) do
@@ -356,7 +358,7 @@ function RoundManager:AddDefaultRounds()
 			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeNemesis", ply), Nemesis:Name()))
 		end
 	end
-	RoundManager:AddRoundType(ROUND)
+	RoundManager:AddRoundType("NemesisRound", ROUND)
 	
 	ROUND = {}
 	ROUND.Name = "RoundSurvivorName"
@@ -364,6 +366,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 3
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/survivor1.mp3", "zombieplague/survivor2.mp3"}
+	ROUND.Order = 4
 	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local Survivor = table.Random(Players)
@@ -374,7 +377,7 @@ function RoundManager:AddDefaultRounds()
 		end
 		Survivor:MakeSurvivor()
 	end
-	RoundManager:AddRoundType(ROUND)
+	RoundManager:AddRoundType("SurvivalRound", ROUND)
 	
 	ROUND = {}
 	ROUND.Name = "RoundSwarmName"
@@ -382,6 +385,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/swarmmode.mp3"}
+	ROUND.Order = 5
 	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local i = 1
@@ -397,7 +401,7 @@ function RoundManager:AddDefaultRounds()
 			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeSwarm", ply), 5, Color(0, 255, 0))
 		end
 	end
-	RoundManager:AddRoundType(ROUND)
+	RoundManager:AddRoundType("SwarmRound", ROUND)
 	
 	ROUND = {}
 	ROUND.Name = "RoundPlagueName"
@@ -405,6 +409,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/plaguemode.mp3"}
+	ROUND.Order = 6
 	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
 		local i = 1
@@ -423,7 +428,7 @@ function RoundManager:AddDefaultRounds()
 			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticePlague", ply), 5, team.GetColor(ply:Team()))
 		end
 	end
-	RoundManager:AddRoundType(ROUND)
+	RoundManager:AddRoundType("PlagueRound", ROUND)
 end
 hook.Add("PostPlayerDeath", "RoundEndCheck", function()
 	if RoundManager:GetRoundState() == ROUND_PLAYING then
@@ -432,10 +437,14 @@ hook.Add("PostPlayerDeath", "RoundEndCheck", function()
 end)
 net.Receive("SendRounds", function(len, ply)
 	if (ply:IsAdmin() || ply:IsSuperAdmin()) && RoundManager:GetRoundState() == ROUND_STARTING_NEW_ROUND then
-		local Round = RoundManager:GetGoodRounds()[net.ReadInt(16)]
-		RoundManager:StartRound(Round)
-		for k, Play in pairs(player.GetAll()) do
-			SendPopupMessage(Play, string.format(Dictionary:GetPhrase("NoticeForceRound", Play), ply:Name(), Dictionary:GetPhrase(Round.Name, ply)))
+		local Round = RoundManager:GetGoodRounds()[net.ReadString()]
+		if Round then
+			RoundManager:StartRound(Round)
+			for k, Play in pairs(player.GetAll()) do
+				SendPopupMessage(Play, string.format(Dictionary:GetPhrase("NoticeForceRound", Play), ply:Name(), Dictionary:GetPhrase(Round.Name, ply)))
+			end
+		else
+			SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
 		end
 	else
 		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))

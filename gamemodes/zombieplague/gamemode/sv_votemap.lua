@@ -83,7 +83,7 @@ function ZPVoteMap:EndVotemap()
 end
 Commands:AddCommand("rounds_left", "Check how many rounds are left.", function(ply)
 	local RoundsLeft = RoundManager:RoundsLeft()
-	if RoundsLeft > 1 then
+	if RoundsLeft > 0 then
 		SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
 	else
 		SendColorMessage(ply, Dictionary:GetPhrase("FinalRound", ply), Color(255, 0, 0))
@@ -93,7 +93,7 @@ hook.Add("ZPNewRound", "zp_round_start_notify_rounds_left", function()
 	if cvars.Bool("zp_notify_rounds_left", true) then
 		local RoundsLeft = RoundManager:RoundsLeft()
 		for k, ply in pairs(player.GetAll()) do
-			if RoundsLeft > 1 then
+			if RoundsLeft > 0 then
 				SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
 			else
 				SendColorMessage(ply, Dictionary:GetPhrase("FinalRound", ply), Color(255, 0, 0))
