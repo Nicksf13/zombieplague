@@ -20,7 +20,7 @@ function ExtraItem:OnBuy(ply)
 		}
 
 		local ShouldIgnore = false
-		for k, DmgType in pairs(DmgList) do
+		for k, DmgType in pairs(DmgListToIgnore) do
 			if DmgInfo:IsDamageType(DmgType) then
 				ShouldIgnore = true
 				break
