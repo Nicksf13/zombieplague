@@ -6,9 +6,6 @@ function Dictionary:GetPhrase(PhraseID)
 end
 function Dictionary:SetLanguageBook(LanguageID, Language, ShouldSave)
 	if ShouldSave then
-		if !file.Exists("zombieplague", "DATA") then
-			file.CreateDir("zombieplague")
-		end
 		file.Write("zombieplague/language.txt", LanguageID)
 	end
 	

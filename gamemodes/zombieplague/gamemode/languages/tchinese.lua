@@ -123,7 +123,15 @@ local Language = {PrettyName = "繁體中文",
 				ZombieJumperClassName = "跳躍殭屍",
 				ZombieJumperClassDescription = "特殊能力使他跳得很高",
 				ZombieTankClassName = "坦克殭屍",
-				ZombieTankClassDescription = "可以啟動無敵模式保護自己"
+				ZombieTankClassDescription = "可以啟動無敵模式保護自己",
+				HUDCustomizerTitle = "HUD 定制器",
+				HUDCustomizerComboMenu = "菜單",
+				HUDCustomizerComboStatusBar = "狀態欄",
+				HUDCustomizerComboRoundTimer = "循環計時器",
+				HUDCustomizerTabTitleBody = "身體",
+				HUDCustomizerTabTitleBorder = "邊境",
+				HUDCustomizerTabTitleText = "文本",
+				HUDCustomizerApplyButton = "應用"
 		}
 	}
 }

@@ -59,7 +59,7 @@ function Dictionary:OpenLanguageMenu(ply)
 	net.Send(ply)
 end
 function Dictionary:Init()
-	local Language = {PrettyName = "English",
+	local Language = {PrettyName = "US English",
 		Values = 
 		{
 			Server = {
@@ -184,7 +184,15 @@ function Dictionary:Init()
 				ZombieJumperClassName = "Jumper Zombie",
 				ZombieJumperClassDescription = "His special ability allows him to jump very high.",
 				ZombieTankClassName = "Tank Zombie",
-				ZombieTankClassDescription = "Can enable god mode to protect himself."
+				ZombieTankClassDescription = "Can enable god mode to protect himself.",
+				HUDCustomizerTitle = "HUD Customizer",
+				HUDCustomizerComboMenu = "Menu",
+				HUDCustomizerComboStatusBar = "Status Bar",
+				HUDCustomizerComboRoundTimer = "Round Timer",
+				HUDCustomizerTabTitleBody = "Body",
+				HUDCustomizerTabTitleBorder = "Border",
+				HUDCustomizerTabTitleText = "Text",
+				HUDCustomizerApplyButton = "Apply"
 			}
 		},
 		Order = 0
