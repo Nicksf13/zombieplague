@@ -5,7 +5,7 @@ function ExtraItem:OnBuy(ply)
 	if RoundManager:GetRoundState() == ROUND_PLAYING then
 		InfectionManager:Infect(ply, ply)
 	elseif RoundManager:GetRoundState() == ROUND_STARTING_NEW_ROUND then
-		RoundManager:StartRound(RoundManager:GetRounds()[1], ply) -- Simple Infection Round
+		RoundManager:StartRound(RoundManager:GetRounds().SimpleRound, ply) -- Simple Infection Round
 	end
 end
 function ExtraItem:CanBuy(ply)
