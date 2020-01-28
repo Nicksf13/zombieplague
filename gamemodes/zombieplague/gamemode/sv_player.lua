@@ -95,7 +95,7 @@ function PLAYER:SetFootstep(Footstep)
 	self.Footstep = Footstep
 	net.Start("SendFoostep")
 		net.WriteString(self:SteamID())
-		net.WriteBool(Footstep != false)
+		net.WriteBool(Footstep)
 	net.Broadcast()
 end
 function PLAYER:GetFootstep()
@@ -422,7 +422,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetMaxBreath(ZombieClass.Breath)
 	self:SetJumpPower(ZombieClass.JumpPower)
 	self:SetDamageAmplifier(ZombieClass.DamageAmplifier)
-	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && self:GetFootstep())
+	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && ZombieClass.Footstep)
 	if self:FlashlightIsOn() then
 		self:Flashlight(false)
 	end
@@ -524,6 +524,7 @@ function PLAYER:MakeNemesis()
 		self:SetCrouchedWalkSpeed(NemesisClass.CrouchedSpeed)
 		self:SetAuxGravity(NemesisClass.Gravity)
 	end
+	self:SetFootstep(true)
 	self:SetDamageAmplifier(cvars.Number("zp_nemesis_damage", 10))
 	self:SetLight(NEMESIS_COLOR)
 	self:SetNemesis(true)
@@ -554,6 +555,7 @@ function PLAYER:MakeSurvivor()
 		self:SetCrouchedWalkSpeed(SurvivorClass.CrouchedSpeed)
 		self:SetAuxGravity(SurvivorClass.Gravity)
 	end
+	self:SetFootstep(false)
 	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 1.5))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
