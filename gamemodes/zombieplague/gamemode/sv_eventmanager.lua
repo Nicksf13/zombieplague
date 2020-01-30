@@ -230,20 +230,20 @@ function CalculateSpectator(ply)
 	end
 	PlayersToObserve = nil
 end
-hook.Add("HalfSecondTickManager", "ZPReloadManager", function()
-	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE_CLIP then
-		for k, ply in pairs(player.GetAll()) do
-			if ply:Alive() then
-				if WeaponManager:IsChosenWeapon(ply:GetActiveWeapon():GetClass()) then
-					local Weapon = ply:GetActiveWeapon()
-					if Weapon:GetPrimaryAmmoType() != -1 && ply:GetAmmoCount(Weapon:GetPrimaryAmmoType()) != (Weapon:GetMaxClip1() * 2) then
-						ply:SetAmmo(Weapon:GetMaxClip1() * 2, Weapon:GetPrimaryAmmoType())
-					end
-				end
-			end
-		end
-	end
-end)
+--hook.Add("HalfSecondTickManager", "ZPReloadManager", function()
+--	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE_CLIP then
+--		for k, ply in pairs(player.GetAll()) do
+--			if ply:Alive() then
+--				if WeaponManager:IsChosenWeapon(ply:GetActiveWeapon():GetClass()) then
+--					local Weapon = ply:GetActiveWeapon()
+--					if Weapon:GetPrimaryAmmoType() != -1 && ply:GetAmmoCount(Weapon:GetPrimaryAmmoType()) != (Weapon:GetMaxClip1() * 2) then
+--						ply:SetAmmo(Weapon:GetMaxClip1() * 2, Weapon:GetPrimaryAmmoType())
+--					end
+--				end
+--			end
+--		end
+--	end
+--end)
 hook.Add("EntityFireBullets", "ZPReloadManager", function(Attacker)
 	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE && WeaponManager:IsChosenWeapon(Attacker:GetActiveWeapon():GetClass()) then
 		local Weapon = Attacker:GetActiveWeapon()
@@ -359,9 +359,9 @@ end
 timer.Create("TickManager", 0.1, 0, function()
 	hook.Call("TickManager")
 end)
-timer.Create("HalfSecondTickManager", 0.5, 0, function()
-	hook.Call("HalfSecondTickManager")
-end)
+--timer.Create("HalfSecondTickManager", 0.5, 0, function()
+--	hook.Call("HalfSecondTickManager")
+--end)
 timer.Create("SecondTickManager", 1, 0, function()
 	hook.Call("SecondTickManager")
 end)
@@ -372,17 +372,6 @@ net.Receive("RequestSpectator", function(len, ply)
 		ply:Spectate(OBS_MODE_ROAMING)
 	else
 		RoundManager:AddPlayerToPlay(ply)
-	end
-end)
-net.Receive("RequestAbility", function(len, ply)
-	if ply:CanUseAbility() && !(ply:IsNemesis() || ply:IsSurvivor()) then
-		local Class = ply:GetZPClass()
-		if Class.Ability then
-			Class:Ability(ply)
-			ply:SetNextAbilityUse(CurTime() + (Class.AbilityRecharge or 15))
-		end
-	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
 	end
 end)
 Commands:AddCommand("zp", "Open Zombie Plague's menu.", function(ply, args)
@@ -443,9 +432,6 @@ hook.Add("TickManager", "GravityManager", function()
 			ply:SetGravity(ply:GetAuxGravity())
 		end
 	end
-end)
-hook.Add("ZPInfectionEvent", "GetInfectedEffect", function(ply)
-	ply:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
 end)
 hook.Add("ZPCureEvent", "GetCuredEffect", function(ply)
 	ply:ScreenFade(SCREENFADE.IN, Color(0, 0, 255, 128), 0.3, 0)
@@ -510,4 +496,3 @@ hook.Add("ZPLastZombieEvent", "LastZombieHealth", function()
 end)
 
 util.AddNetworkString("RequestSpectator")
-util.AddNetworkString("RequestAbility")

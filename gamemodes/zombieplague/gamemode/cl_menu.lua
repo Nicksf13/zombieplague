@@ -36,19 +36,23 @@ function CreateMenu()
 	end
 
 	function MMenu:UpdateOptions(Options)
-		MMenu.Options = Options
-		
-		MMenu:SetPage(1)
-		
-		hook.Add("SetupMove", "ZPMenuKeyListener", function(ply, mvd)
-			for k, Option in pairs(MMenu.ZPOptions.Options) do
-				if input.WasKeyPressed(Option.PressKey) && MMenu.LastPress < CurTime() then
-					Option:PressFunction(7 * (MMenu.Page - 1) + k)
-					MMenu.LastPress = CurTime() + 0.1
-					break
+		if table.Count(Options) > 0 then
+			MMenu.Options = Options
+			
+			MMenu:SetPage(1)
+			
+			hook.Add("SetupMove", "ZPMenuKeyListener", function(ply, mvd)
+				for k, Option in pairs(MMenu.ZPOptions.Options) do
+					if input.WasKeyPressed(Option.PressKey) && MMenu.LastPress < CurTime() then
+						Option:PressFunction(7 * (MMenu.Page - 1) + k)
+						MMenu.LastPress = CurTime() + 0.1
+						break
+					end
 				end
-			end
-		end)
+			end)
+		else
+			notification.AddLegacy(Dictionary:GetPhrase("MenuNoOptionsAvailableNow"), NOTIFY_GENERIC, 5)
+		end
 	end
 
 	function MMenu:SetPage(Page)
@@ -193,11 +197,7 @@ function OpenZPMenu()
 				--	)
 				--end
 
-				if(table.Count(AdminOptions) > 0) then
-					MMenu:UpdateOptions(AdminOptions)
-				else
-					notification.AddLegacy(Dictionary:GetPhrase("MenuNoOptionsAvailableNow"), NOTIFY_GENERIC, 5)
-				end
+				MMenu:UpdateOptions(AdminOptions)
 			end
 		})
 	end
