@@ -12,12 +12,14 @@ hook.Add("HUDPaint", "HUDZombiePlague", function()
 			ply = LocalPlayer():GetObserverTarget() 
 		end
 		if IsValid(ply) then
-			local StringHUD = ""
-			if ply:IsZombie() then	
-				StringHUD = Dictionary:GetPhrase("ClassClass") .. " " .. ply:GetZPClass() .. " - " .. Dictionary:GetPhrase("ClassHealth") .. " " .. ply:Health() .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks()
-			else
-				StringHUD = Dictionary:GetPhrase("ClassClass") .. " " .. ply:GetZPClass() .. " - " .. Dictionary:GetPhrase("ClassHealth") .. " " .. ply:Health() .. " - " .. Dictionary:GetPhrase("ClassArmor") .. " " .. ply:Armor() .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks() .. " - " .. Dictionary:GetPhrase("ClassBattery") .. " " .. string.format("%.2f", (ply:GetBattery() / ply:GetMaxBatteryCharge()) * 100) .. "%"
+			local StringHUD = Dictionary:GetPhrase("ClassClass") .. " " .. ply:GetZPClass() .. " - " .. Dictionary:GetPhrase("ClassHealth") .. " " .. ply:Health() 
+			if ply:IsHuman() then	
+				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassArmor") .. " " .. ply:Armor() .. " - " .. Dictionary:GetPhrase("ClassBattery") .. " " .. string.format("%.2f", (ply:GetBattery() / ply:GetMaxBatteryCharge()) * 100) .. "%"
 			end
+			if ply:GetMaxAbilityPower() > 0 then
+				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassAbilityPower") .. " " .. string.format("%.2f", (ply:GetAbilityPower() / ply:GetMaxAbilityPower()) * 100) .. "%"
+			end
+			StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks()
 			local HUDProperties = {
 				Text = StringHUD,
 				TextFont = "Trebuchet18",

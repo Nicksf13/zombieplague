@@ -28,6 +28,29 @@ function ClassManager:GetHumanClasses()
 	return ClassManager.HumanClasses
 end
 
+function ClassManager:CreateClassAbility(DrainOnActivation, ActivationAction, ResetAction, ResetDelay)
+	local Ability = {
+		DrainOnActivation = DrainOnActivation,
+		Drain = 60,
+		MaxAbilityPower = 60
+	}
+	function Ability:UseAction(ply)
+		ActivationAction(ply)
+
+		if ResetAction then
+			local ResetTime = ResetDelay or (Ability.Drain - 10)
+			ply:SetAbilityTimer("ZPClassAbility", ResetTime, function()
+				ResetAction(ply)
+			end)
+		end
+	end
+	function Ability:CanUseAbility()
+		return true
+	end
+
+	return Ability
+end
+
 function ClassManager:AddZPClass(ClassID, ZPClass, TeamID)
 	if ZombieClass || (TeamID == TEAM_HUMANS || TeamID == TEAM_ZOMBIES) then
 		local ZPTeamClasses = (TeamID == TEAM_HUMANS) and ClassManager.HumanClasses or ClassManager.ZombieClasses
@@ -107,7 +130,33 @@ function ClassManager:OpenZPClassMenu(ply, IsHuman)
 		net.WriteTable(Pretty)
 	net.Send(ply)
 end
-
+net.Receive("RequestAbility", function(len, ply)
+	if ply:Alive() && ply:Team() != TEAM_SPECTATOR then
+		local Ability = ply:GetZPClass().Ability
+		if Ability then
+			if !(ply:IsNemesis() || ply:IsSurvivor()) then
+				if Ability:CanUseAbility() then
+					if ply:GetAbilityPower() >= Ability.Drain then
+						if Ability.DrainOnActivation then
+							ply:DrainAbilityPower(Ability.Drain)
+						end
+						Ability:UseAction(ply)
+					else
+						SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotEnoughAbilityPower", ply))
+					end
+				else
+					SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
+				end
+			else
+				SendPopupMessage(ply, Dictionary:GetPhrase("NoticeSpecialClassNotAllowed", ply))
+			end
+		else
+			SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNoAbility", ply))
+		end
+	else
+		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeIsNotAlive", ply))
+	end
+end)
 net.Receive("SendHumanClass", function(len, ply)
 	ply:SetNextHumanClass(ClassManager:GetZPClass(net.ReadString(), TEAM_HUMANS))
 end)
@@ -129,5 +178,6 @@ end)
 
 util.AddNetworkString("RequestZombieMenu")
 util.AddNetworkString("RequestHumanMenu")
+util.AddNetworkString("RequestAbility")
 util.AddNetworkString("SendHumanClass")
 util.AddNetworkString("SendZombieClass")

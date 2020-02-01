@@ -68,7 +68,7 @@ function SetNightvision(TNightvision)
 	Nightvision = TNightvision
 end
 function IsNightvisionOn()
-	return Nightvision or false
+	return Nightvision
 end
 function PLAYER:GetNightvisionColor()
 	if self:IsNemesis() then
@@ -91,6 +91,21 @@ end
 function PLAYER:GetFootstep()
 	return self.Footstep
 end
+
+function PLAYER:SetAbilityPower(AbilityPower)
+	self.AbilityPower = AbilityPower
+end
+function PLAYER:GetAbilityPower()
+	return self.AbilityPower or -1
+end
+
+function PLAYER:SetMaxAbilityPower(MaxAbilityPower)
+	self.MaxAbilityPower = MaxAbilityPower
+end
+function PLAYER:GetMaxAbilityPower()
+	return self.MaxAbilityPower or -1
+end
+
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
@@ -165,5 +180,17 @@ net.Receive("SendLight", function()
 		else
 			ply:SetLight(nil)
 		end
+	end
+end)
+net.Receive("SendAbilityPower", function()
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetAbilityPower(net.ReadInt(16))
+	end
+end)
+net.Receive("SendMaxAbilityPower", function()
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetMaxAbilityPower(net.ReadInt(16))
 	end
 end)
