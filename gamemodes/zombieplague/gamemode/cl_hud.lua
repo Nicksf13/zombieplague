@@ -1,3 +1,9 @@
+HUD_TOP = 1
+HUD_CENTER = 2
+HUD_BOTTOM = 3
+HUD_LEFT = 4
+HUD_RIGHT = 5
+
 local hide = {
 	CHudHealth = true,
 	CHudBattery = true,
@@ -20,24 +26,26 @@ hook.Add("HUDPaint", "HUDZombiePlague", function()
 				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassAbilityPower") .. " " .. string.format("%.2f", (ply:GetAbilityPower() / ply:GetMaxAbilityPower()) * 100) .. "%"
 			end
 			StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks()
+			local StatusConfig = HudManager:GetComponentConfig("Status")
 			local HUDProperties = {
 				Text = StringHUD,
-				TextFont = "Trebuchet18",
-				TextColor = HudManager:GetColor("Status", "Text"),
+				TextFont = StatusConfig.Font,
+				TextColor = StatusConfig.Text,
 				TextMargin = 6
 			}
-			HudManager:CreateTextDisplayBox(HUDProperties, 1, 10, HudManager:GetColor("Status", "Border"), HudManager:GetColor("Status", "Body"), 20, ScrH() - 40)
+			HudManager:CreateTextDisplayBox(HUDProperties, 1, 10, StatusConfig.Border, StatusConfig.Body, StatusConfig.XPos, StatusConfig.YPos)
 		end
 	end
 
+	local TimerConfig = HudManager:GetComponentConfig("Timer")
 	local TimerProperties = {
 		Text = string.FormattedTime(RoundManager:GetTimer(), "%02i:%02i" ),
-		TextFont = "Trebuchet24",
-		TextColor = HudManager:GetColor("Timer", "Text"),
+		TextFont = TimerConfig.Font,
+		TextColor = TimerConfig.Text,
 		TextMargin = 6
 	}
 
-	HudManager:CreateTextDisplayBox(TimerProperties, 1, 10, HudManager:GetColor("Timer", "Border"), HudManager:GetColor("Timer", "Body"), nil, ScrH() - 40)
+	HudManager:CreateTextDisplayBox(TimerProperties, 1, 10, TimerConfig.Border, TimerConfig.Body, TimerConfig.XPos, TimerConfig.YPos)
 end)
 hook.Add("Think", "ZPSpecialLights", function()
 	if IsNightvisionOn() then
@@ -73,92 +81,9 @@ hook.Add("Think", "ZPSpecialLights", function()
 	end
 end)
 
-HudManager = {Colors = {}, SaveFileName = "zombieplague/hudcolors.json"}
+HudManager = {HUDConfig = {}, SaveFileName = "zombieplague/hudconfig.json"}
 
-function HudManager:CreateHudCustomizerMenu()
-		local FrameWidth = 400
-		local FrameHeight = 415
-		local Border = 20
-		local FullScreenWidth = FrameWidth - (Border * 2)
-		local SelectedComponent = "Menu"
-
-		local HudCustomizerMenu = vgui.Create("DFrame")
-		HudCustomizerMenu:SetDraggable(true)
-		HudCustomizerMenu:SetSize(FrameWidth, FrameHeight)
-		HudCustomizerMenu:SetTitle("Zombie Plague - " .. Dictionary:GetPhrase("HUDCustomizerTitle"))
-		HudCustomizerMenu:Center()
-
-		local Y = 30
-
-		local DSheet = vgui.Create("DPropertySheet", HudCustomizerMenu)
-
-		local ColorPickerBorder = HudManager:CreateColorMixer(false)
-		local ColorPickerComponent = HudManager:CreateColorMixer(true)
-		local ColorPickerText = HudManager:CreateColorMixer(false)
-
-		ColorPickerBorder:SetColor(HudManager:GetColor(SelectedComponent, "Border"))
-		ColorPickerComponent:SetColor(HudManager:GetColor(SelectedComponent, "Body"))
-		ColorPickerText:SetColor(HudManager:GetColor(SelectedComponent, "Text"))
-
-		local DComboBox = vgui.Create("DComboBox", HudCustomizerMenu)
-		DComboBox:SetPos(Border, Y)
-		DComboBox:SetSize(FullScreenWidth, 20)
-		DComboBox:AddChoice(Dictionary:GetPhrase("HUDCustomizerComboMenu"), "Menu")
-		DComboBox:AddChoice(Dictionary:GetPhrase("HUDCustomizerComboStatusBar"), "Status")
-		DComboBox:AddChoice(Dictionary:GetPhrase("HUDCustomizerComboRoundTimer"), "Timer")
-		DComboBox:ChooseOptionID(1)
-		function DComboBox:OnSelect(Self, Index, Value)
-			SelectedComponent = Value
-
-			ColorPickerBorder:SetColor(HudManager:GetColor(SelectedComponent, "Border"))
-			ColorPickerComponent:SetColor(HudManager:GetColor(SelectedComponent, "Body"))
-			ColorPickerText:SetColor(HudManager:GetColor(SelectedComponent, "Text"))
-
-			DSheet:SetActiveTab(DSheet:GetItems()[1].Tab)
-		end
-
-		Y = Y + 30
-
-		DSheet:SetPos(Border, Y)
-		DSheet:SetSize(FullScreenWidth, 300)
-		
-		DSheet:AddSheet(Dictionary:GetPhrase("HUDCustomizerTabTitleBody"), ColorPickerComponent, "icon16/color_wheel.png")
-		DSheet:AddSheet(Dictionary:GetPhrase("HUDCustomizerTabTitleBorder"), ColorPickerBorder, "icon16/color_wheel.png")
-		DSheet:AddSheet(Dictionary:GetPhrase("HUDCustomizerTabTitleText"), ColorPickerText, "icon16/color_wheel.png")
-
-		Y = Y + 310
-
-		local DermaButton = vgui.Create("DButton", HudCustomizerMenu)
-		DermaButton:SetText(Dictionary:GetPhrase("HUDCustomizerApplyButton"))
-		DermaButton:SetPos(Border, Y)
-		DermaButton:SetSize(FullScreenWidth, 25)
-		function DermaButton:DoClick()
-			local Component = HudManager:GetComponentColors(SelectedComponent)
-			Component.Body = ColorPickerComponent:GetColor()
-			Component.Border = ColorPickerBorder:GetColor()
-			Component.Text = ColorPickerText:GetColor()
-
-			Component.Border.a = Component.Body.a
-
-			HudManager:SaveColor()
-		end
-
-		HudCustomizerMenu:MakePopup()
-end
-
-function HudManager:CreateColorMixer(AlphaBarEnabled)
-	local ColorMixer = vgui.Create("DColorMixer")
-
-	ColorMixer:Dock(FILL)
-	ColorMixer:DockMargin(10, 10, 10, 10)
-	ColorMixer:SetPalette(true)
-	ColorMixer:SetAlphaBar(AlphaBarEnabled)
-	ColorMixer:SetWangs(true)
-
-	return ColorMixer
-end
-
-function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadius, BorderColor, BodyColor, XPosition, YPosition)
+function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadius, BorderColor, BodyColor, XPosEnum, YPosEnum)
 	local Text = TextProperties.Text
 	local TextFont = TextProperties.TextFont
 	local TextColor = TextProperties.TextColor
@@ -166,6 +91,7 @@ function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadiu
 	surface.SetFont(TextFont)
 
 	local Width, Height = surface.GetTextSize(Text)
+	local XPosition, YPosition = self:CalculatePos(XPosEnum, YPosEnum, Width, Height, 20, 20)
 	local DrawXPosition = (XPosition or (ScrW() / 2  - (Width / 2) - TextMargin))
 	local DrawYPosition = (YPosition or (ScrH() / 2 - (Height / 2) - TextMargin))
 	local ExtraMarginSize = TextMargin * 2
@@ -188,37 +114,61 @@ function HudManager:CreateBox(BorderSize, CornerRadius, BorderColor, BodyColor, 
 	if BodyColor.a > 0 then
 		draw.RoundedBox(CornerRadius, XPosition, YPosition, Width, Height, BodyColor)
 	end
-
 end
 
-function HudManager:GetColor(Component, Name)
-	return self.Colors[Component][Name]
+function HudManager:CalculatePos(XPosENum, YPosEnum, Width, Height, BorderX, BorderY)
+	local BorderX = BorderX or 0
+	local BorderY = BorderY or 0
+
+	local XPos = BorderX
+	local YPos = BorderY
+
+	if XPosENum == HUD_CENTER then
+		XPos = (ScrW() / 2) - (Width / 2)
+	elseif XPosENum == HUD_RIGHT then
+		XPos = ScrW() - Width - BorderX
+	end
+
+	if YPosEnum == HUD_CENTER then
+		YPos = (ScrH() / 2) - (Height / 2)
+	elseif YPosEnum == HUD_BOTTOM then
+		YPos = ScrH() - Height - BorderY
+	end
+
+	return XPos, YPos
 end
-function HudManager:GetComponentColors(Component)
-	return self.Colors[Component]
+
+function HudManager:GetConfig(Component, Name)
+	return self.HUDConfig[Component][Name]
+end
+function HudManager:GetComponentConfig(Component)
+	return self.HUDConfig[Component]
 end
 
 function HudManager:LoadHudInformation()
 	if file.Exists(self.SaveFileName, "DATA") then
-		self.Colors = util.JSONToTable(file.Read(self.SaveFileName, "DATA"))
+		self.HUDConfig = util.JSONToTable(file.Read(self.SaveFileName, "DATA"))
 	else
-		self.Colors.Menu = self:CreateHudComponentInfo()
-		self.Colors.Status = self:CreateHudComponentInfo()
-		self.Colors.Timer = self:CreateHudComponentInfo()
+		self.HUDConfig.Menu = self:CreateHudComponentInfo(HUD_LEFT, HUD_CENTER)
+		self.HUDConfig.Status = self:CreateHudComponentInfo(HUD_LEFT, HUD_BOTTOM)
+		self.HUDConfig.Timer = self:CreateHudComponentInfo(HUD_CENTER, HUD_BOTTOM)
 
-		self:SaveColor()
+		self:Save()
 	end
 end
 
-function HudManager:SaveColor()
-	file.Write(self.SaveFileName, util.TableToJSON(self.Colors, true))
+function HudManager:Save()
+	file.Write(self.SaveFileName, util.TableToJSON(self.HUDConfig, true))
 end
 
-function HudManager:CreateHudComponentInfo()
+function HudManager:CreateHudComponentInfo(XPos, YPos)
 	return {
 		Border = Color(255, 255, 255, 0),
 		Body = Color(255, 255, 255, 0),
-		Text = Color(255, 255, 255, 255)
+		Text = Color(255, 255, 255, 255),
+		Font = "Trebuchet18",
+		XPos = XPos,
+		YPos = YPos
 	}
 end
 
