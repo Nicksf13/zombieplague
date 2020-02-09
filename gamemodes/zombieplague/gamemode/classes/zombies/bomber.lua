@@ -16,7 +16,7 @@ ZPClass.Ability = ClassManager:CreateClassAbility(true, function(ply)
 	if IsValid(Weap) then
 		ply:GiveAmmo(1, Weap:GetPrimaryAmmoType(), true) 
 	else
-		ply:Give("weapon_frag")
+		ply:GiveZombieAllowedWeapon("weapon_frag")
 	end
 end)
 ZPClass.Ability.Drain = 120
