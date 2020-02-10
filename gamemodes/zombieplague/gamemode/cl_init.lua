@@ -26,6 +26,8 @@ net.Receive("SendServerStatus", function()
 			ply:SetHumanClass(TempPly.HumanClass)
 			ply:SetLight(TempPly.Light)
 			ply:SetFootstep(TempPly.Footstep)
+			ply:SetAbilityPower(TempPly.AbilityPower)
+			ply:SetMaxAbilityPower(TempPly.MaxAbilityPower)
 		end
 	end
 end)

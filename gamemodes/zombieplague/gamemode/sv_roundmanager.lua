@@ -58,7 +58,9 @@ function RoundManager:GetServerStatus(Requester)
 			ZombieClass = ply:GetZombieClass().Name,
 			HumanClass = ply:GetHumanClass().Name,
 			Light = ply:GetLight(),
-			Footstep = ply:GetFootstep()
+			Footstep = ply:GetFootstep(),
+			AbilityPower = ply:GetAbilityPower(),
+			MaxAbilityPower = ply:GetMaxAbilityPower()
 		})
 	end
 
