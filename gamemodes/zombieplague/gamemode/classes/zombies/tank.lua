@@ -7,10 +7,12 @@ ZPClass.RunSpeed = 170
 ZPClass.CrouchSpeed = 0.4
 ZPClass.Gravity = 1.5
 ZPClass.Breath = 50
-ZPClass.AbilityRecharge = 45
-function ZPClass:Ability(ply)
+
+ZPClass.Ability = ClassManager:CreateClassAbility(true, function(ply)
 	ply:ZombieMadness()
-end
+end)
+ZPClass.Ability.Drain = 45
+ZPClass.Ability.MaxAbilityPower = 45
 
 if(ZPClass:ShouldBeEnabled()) then
 	ClassManager:AddZPClass("TankZombie", ZPClass, TEAM_ZOMBIES)

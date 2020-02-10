@@ -7,32 +7,29 @@ ZPClass.RunSpeed = 250
 ZPClass.CrouchSpeed = 0.6
 ZPClass.Gravity = 1
 ZPClass.Breath = 50
-ZPClass.AbilityRecharge = 60
-function ZPClass:Ability(ply)
-	local OldHealth = ply:Health()
-	local OldMaxHealth = ply:GetMaxHealth()
-	local OldSpeed = ply:GetWalkSpeed()
-	local OldRunSpeed = ply:GetRunSpeed()
+
+local ActivationAction = function(ply)
+	ply.OldHealth = ply:Health()
+	ply.OldMaxHealth = ply:GetMaxHealth()
+	ply.OldSpeed = ply:GetWalkSpeed()
+	ply.OldRunSpeed = ply:GetRunSpeed()
 	ply:SetHealth(50)
 	ply:SetMaxHealth(50)
 	ply:SetWalkSpeed(500)
 	ply:SetRunSpeed(600)
-	local TimerName = "Faster" .. ply:SteamID64()
-	timer.Create(TimerName, 30, 1, function()
-		ply:SetHealth(OldHealth)
-		ply:SetMaxHealth(OldMaxHealth)
-		ply:SetWalkSpeed(OldSpeed)
-		ply:SetRunSpeed(OldRunSpeed)
-	end)
-
-	local EventName = "ZPResetAbilityEvent" .. ply:SteamID64()
-	hook.Add(EventName, TimerName, function()
-		ply:SetNextAbilityUse(0)
-
-		timer.Destroy(TimerName)
-		hook.Remove(EventName, TimerName)
-	end)
 end
+local ResetAction = function(ply)
+	ply:SetHealth(ply.OldHealth)
+	ply:SetMaxHealth(ply.OldMaxHealth)
+	ply:SetWalkSpeed(ply.OldSpeed)
+	ply:SetRunSpeed(ply.OldRunSpeed)
+
+	ply.OldHealth = nil
+	ply.OldMaxHealth = nil
+	ply.OldSpeed = nil
+	ply.OldRunSpeed = nil
+end
+ZPClass.Ability = ClassManager:CreateClassAbility(true, ActivationAction, ResetAction, 30)
 
 if(ZPClass:ShouldBeEnabled()) then
 	ClassManager:AddZPClass("FasterZombie", ZPClass, TEAM_ZOMBIES)

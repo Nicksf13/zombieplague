@@ -15,84 +15,114 @@ MMenu = {Options = {}, Page = 1, NetworkString = "", LastPress = 0}
 function CreateMenu()
 	MMenu.ZPOptions = {Options = {}}
 	
-	function MMenu.ZPOptions:AddLine(Text)
-		table.insert(MMenu.ZPOptions.Options, Text)
+	function MMenu.ZPOptions:AddLine(Description, PressFunction, PressKey)
+		local Option = {
+			Description = Description,
+			PressFunction = PressFunction,
+			PressKey = PressKey
+		}
+		table.insert(MMenu.ZPOptions.Options, Option)
+
+		surface.SetFont("DermaDefault")
+		local Width = surface.GetTextSize(Option.Description)
+		
+		if Width > MMenu.ZPOptions.BiggestTextSize then
+			MMenu.ZPOptions.BiggestTextSize = Width
+		end
 	end
 	function MMenu.ZPOptions:Clear()
 		MMenu.ZPOptions.Options = {}
+		MMenu.ZPOptions.BiggestTextSize = 0
 	end
 
 	function MMenu:UpdateOptions(Options)
-		MMenu.Options = Options
-		
-		MMenu:SetPage(1)
-		
-		hook.Add("SetupMove", "ZPMenuKeyListener", function(ply, mvd)
-			for k, PressFunction in pairs(MMenu.ZPOptions.PressFunctions) do
-				if input.WasKeyPressed(NumpadKeys[k]) && MMenu.LastPress < CurTime() then
-					PressFunction(7 * (MMenu.Page - 1) + k)
-					MMenu.LastPress = CurTime() + 0.1
-					break
+		if table.Count(Options) > 0 then
+			MMenu.Options = Options
+			
+			MMenu:SetPage(1)
+			
+			hook.Add("SetupMove", "ZPMenuKeyListener", function(ply, mvd)
+				for k, Option in pairs(MMenu.ZPOptions.Options) do
+					if input.WasKeyPressed(Option.PressKey) && MMenu.LastPress < CurTime() then
+						Option:PressFunction(7 * (MMenu.Page - 1) + k)
+						MMenu.LastPress = CurTime() + 0.1
+						break
+					end
 				end
-			end
-		end)
+			end)
+		else
+			notification.AddLegacy(Dictionary:GetPhrase("MenuNoOptionsAvailableNow"), NOTIFY_GENERIC, 5)
+		end
 	end
 
 	function MMenu:SetPage(Page)
 		hook.Remove("HUDPaint", "ChooseMenu")
 		MMenu.Page = Page
-		MMenu.ZPOptions.PressFunctions = {}
 		MMenu.ZPOptions:Clear()
 		
 		local PgJump = 7 * (MMenu.Page - 1)
 		local i = 1
 		while(i < 8 && MMenu.Options[PgJump + i]) do
-			MMenu.ZPOptions:AddLine(i .. " - " .. MMenu.Options[PgJump + i].Name)
-			MMenu.ZPOptions.PressFunctions[i] = MMenu.Options[PgJump + i].Function
+			MMenu.ZPOptions:AddLine(i .. " - " .. MMenu.Options[PgJump + i].Name, MMenu.Options[PgJump + i].Function, NumpadKeys[i])
 			i = i + 1
 		end
 		
 		if MMenu.Page > 1 then
-			MMenu.ZPOptions.Options[8] = "8 - " .. Dictionary:GetPhrase("MenuBack")
-			MMenu.ZPOptions.PressFunctions[8] = function()
-				MMenu:SetPage(MMenu.Page - 1)
-			end
+			MMenu.ZPOptions:AddLine(
+				"8 - " .. Dictionary:GetPhrase("MenuBack"), 
+				function()
+					MMenu:SetPage(MMenu.Page - 1)
+				end,
+				NumpadKeys[8]
+			)
 		end
 		
 		if MMenu.Page < table.Count(MMenu.Options) / 7 then
-			MMenu.ZPOptions.Options[9] = "9 - " .. Dictionary:GetPhrase("MenuNext")
-			MMenu.ZPOptions.PressFunctions[9] = function()
-				MMenu:SetPage(MMenu.Page + 1)
-			end
+			MMenu.ZPOptions:AddLine(
+				"9 - " .. Dictionary:GetPhrase("MenuNext"), 
+				function()
+					MMenu:SetPage(MMenu.Page + 1)
+				end,
+				NumpadKeys[9]
+			)
 		end
-		
-		MMenu.ZPOptions.Options[10] = "0 - " .. Dictionary:GetPhrase("MenuClose")
-		MMenu.ZPOptions.PressFunctions[10] = function()
-			MMenu.ZPOptions.PressFunctions = {}
-			MMenu.ZPOptions:Clear()
-			hook.Remove("SetupMove", "ZPMenuKeyListener")
-			hook.Remove("HUDPaint", "ChooseMenu")
-		end
+
+		MMenu.ZPOptions:AddLine(
+			"0 - " .. Dictionary:GetPhrase("MenuClose"), 
+			function()
+				MMenu.ZPOptions.PressFunctions = {}
+				MMenu.ZPOptions:Clear()
+				hook.Remove("SetupMove", "ZPMenuKeyListener")
+				hook.Remove("HUDPaint", "ChooseMenu")
+			end,
+			NumpadKeys[10]
+		)
+
 		hook.Add("HUDPaint", "ChooseMenu", function()
-			local i = 1
-			local Allign = (ScrH() / 2) - ((table.Count(MMenu.ZPOptions.Options)*20)/2)
-			for k, Text in pairs(MMenu.ZPOptions.Options) do
-				draw.DrawText(Text, "DermaDefault", 20, (i * 20) + Allign, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
-				i = i + 1
+			local MenuColor = HudManager:GetComponentColors("Menu")
+			local SizePerOption = 20
+			local TotalOptions = table.Count(MMenu.ZPOptions.Options)
+			local Allign = ((ScrH() / 2) - ((TotalOptions * SizePerOption) / 2))
+
+			HudManager:CreateBox(2, 10, MenuColor.Border, MenuColor.Body, 20, Allign - 10, MMenu.ZPOptions.BiggestTextSize + 20, ((TotalOptions * SizePerOption) + 15))
+			
+			for i, Option in pairs(MMenu.ZPOptions.Options) do
+				draw.DrawText(Option.Description, "DermaDefault", 30, ((i - 1) * SizePerOption) + Allign, MenuColor.Text, TEXT_ALIGN_LEFT)
 			end
 		end)
 	end
 end
 function OpenZPMenu()
 	local Options = {}
-	table.insert(Options, {Name = Dictionary:GetPhrase("MenuZombieChoose"), Function = function() net.Start("RequestZombieMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Name = Dictionary:GetPhrase("MenuHumanChoose"), Function = function() net.Start("RequestHumanMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Name = Dictionary:GetPhrase("MenuWeaponChoose"), Function = function() net.Start("RequestWeaponMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Name = Dictionary:GetPhrase("MenuExtraItemChoose"), Function = function() net.Start("RequestExtraItemMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Name = Dictionary:GetPhrase("MenuLanguageChoose"), Function = function() net.Start("RequestLanguageMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	Options[7] = {Name = (LocalPlayer():Team() != TEAM_SPECTATOR and Dictionary:GetPhrase("MenuSpectator") or Dictionary:GetPhrase("MenuNonSpectator")), Function = function() net.Start("RequestSpectator") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu")end}
+	table.insert(Options, {Order = 1, Name = Dictionary:GetPhrase("MenuZombieChoose"), Function = function() net.Start("RequestZombieMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 2, Name = Dictionary:GetPhrase("MenuHumanChoose"), Function = function() net.Start("RequestHumanMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 3, Name = Dictionary:GetPhrase("MenuWeaponChoose"), Function = function() net.Start("RequestWeaponMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 4, Name = Dictionary:GetPhrase("MenuExtraItemChoose"), Function = function() net.Start("RequestExtraItemMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 5, Name = Dictionary:GetPhrase("MenuLanguageChoose"), Function = function() net.Start("RequestLanguageMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 6, Name = (LocalPlayer():Team() != TEAM_SPECTATOR and Dictionary:GetPhrase("MenuSpectator") or Dictionary:GetPhrase("MenuNonSpectator")), Function = function() net.Start("RequestSpectator") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu")end})
 	if LocalPlayer():IsAdmin() || LocalPlayer():IsSuperAdmin() then
 		table.insert(Options, {
+			Order = 7,
 			Name = Dictionary:GetPhrase("MenuAdmin"),
 			Function = function()
 				local AdminOptions = {}
@@ -167,57 +197,25 @@ function OpenZPMenu()
 				--	)
 				--end
 
-				if(table.Count(AdminOptions) > 0) then
-					MMenu:UpdateOptions(AdminOptions)
-				else
-					notification.AddLegacy(Dictionary:GetPhrase("MenuNoOptionsAvailableNow"), NOTIFY_GENERIC, 5)
-				end
+				MMenu:UpdateOptions(AdminOptions)
 			end
 		})
 	end
+	table.insert(Options, GenerateMenuOption(
+		Dictionary:GetPhrase("HUDCustomizerTitle"),
+		function()
+			HudManager:CreateHudCustomizerMenu()
+		end,
+		8
+	))
 	table.insert(Options, {
 		Name = Dictionary:GetPhrase("MenuCredit"),
 		Function = function()
-			local CreditsOptions = {}
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditMeRcyLeZZ"),
-				function()
-					gui.OpenURL("https://forums.alliedmods.net/member.php?u=33273")
-				end,
-				0
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditZombiePlague"),
-				function()
-					gui.OpenURL("https://forums.alliedmods.net/showthread.php?t=72505")
-				end,
-				1
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditTheFireFuchs"),
-				function()
-					gui.OpenURL("https://steamcommunity.com/id/thefirefuchs")
-				end,
-				2
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditErickMaksimets"),
-				function()
-					gui.OpenURL("https://github.com/ErickMaksimets")
-				end,
-				3
-			))
-			table.insert(CreditsOptions, GenerateMenuOption(
-				Dictionary:GetPhrase("MenuCreditBlueberryy"),
-				function()
-					gui.OpenURL("https://github.com/Blueberryy")
-				end,
-				4
-			))
-			MMenu:UpdateOptions(CreditsOptions)
+			gui.OpenURL("https://github.com/Nicholas-Fuchs/zombieplague/blob/develop/credits.md")
 		end,
 		Order = 1000
 	})
+	
 	MMenu:UpdateOptions(Options)
 end
 function GenerateMenuOption(Name, Function, Order)
@@ -235,10 +233,6 @@ net.Receive("OpenZPMenu", OpenZPMenu)
 net.Receive("OpenBackMenu", function()
 	MMenu.NetworkString = net.ReadString()
 	local ReceivedOptions = net.ReadTable()
-	for k, Option in pairs(ReceivedOptions) do
-		if Option.Translations then
-		end
-	end
 	local MenuOptions = {}
 
 	for ID, ReceivedOption in pairs(ReceivedOptions) do

@@ -49,17 +49,73 @@ function PLAYER:GetZPClass()
 		return self:GetHumanClass()
 	end
 end
-function PLAYER:SetNextAbilityUse(NextAbilityUse)
-	self.NextAbilityUse = NextAbilityUse
+
+function PLAYER:SetAbilityPower(AbilityPower)
+	self.AbilityPower = AbilityPower
+	net.Start("SendAbilityPower")
+		net.WriteString(self:SteamID())
+		net.WriteInt(AbilityPower, 16)
+	net.Broadcast()
 end
-function PLAYER:GetNextAbilityUse()
-	return self.NextAbilityUse or 0
+function PLAYER:GetAbilityPower()
+	return self.AbilityPower or -1
 end
-function PLAYER:CanUseAbility()
-	local Class = self:GetZPClass()
+function PLAYER:DrainAbilityPower(Power)
+	local AbilityPower = self.AbilityPower - Power
+	if AbilityPower <= 0 then
+		AbilityPower = 0
+
+		hook.Call("PlayerAbilityPowerOver" .. self:SteamID64(), GAMEMODE)
+	end
 	
-	return (!Class.CanUseAbility || Class:CanUseAbility()) && CurTime() - self:GetNextAbilityUse() > 0
+	self:SetAbilityPower(AbilityPower)
+	self:AddRechargeOnAbilityPower(1)
 end
+function PLAYER:AddRechargeOnAbilityPower(Amount)
+	local RechargeAbilityPower = "RechargeAbilityPower" .. self:SteamID64()
+	hook.Add("SecondTickManager", RechargeAbilityPower, function()
+		self:AddAbilityPower(Amount)
+	end)
+
+	local EventName = "ZPResetAbilityEvent" .. self:SteamID64()
+	hook.Add(EventName, RechargeAbilityPower, function()
+		hook.Remove("SecondTickManager", RechargeAbilityPower)
+		hook.Remove(EventName, RechargeAbilityPower)
+	end)
+end
+function PLAYER:AddAbilityPower(Power)
+	local AbilityPower = self.AbilityPower + Power
+	if AbilityPower >= self:GetMaxAbilityPower() then
+		AbilityPower = self:GetMaxAbilityPower()
+
+		hook.Remove("SecondTickManager", "RechargeAbilityPower" .. self:SteamID64())
+	end
+
+	self:SetAbilityPower(AbilityPower)
+end
+
+function PLAYER:SetMaxAbilityPower(MaxAbilityPower)
+	self.MaxAbilityPower = MaxAbilityPower
+	net.Start("SendMaxAbilityPower")
+		net.WriteString(self:SteamID())
+		net.WriteInt(MaxAbilityPower, 16)
+	net.Broadcast()
+end
+function PLAYER:GetMaxAbilityPower()
+	return self.MaxAbilityPower or -1
+end
+
+function PLAYER:SetAbilityTimer(TimerName, Seconds, TimerAction)
+	local TimerNameWithSteamID64 = TimerName .. self:SteamID64()
+	timer.Create(TimerNameWithSteamID64, Seconds, 1, TimerAction)
+
+	local EventName = "ZPResetAbilityEvent" .. self:SteamID64()
+	hook.Add(EventName, TimerNameWithSteamID64, function()
+		timer.Destroy(TimerNameWithSteamID64)
+		hook.Remove(EventName, TimerNameWithSteamID64)
+	end)
+end
+
 function PLAYER:GiveZombieAllowedWeapon(Weap)
 	self:AddZombieAllowedWeapon(Weap)
 	self:Give(Weap)
@@ -95,7 +151,7 @@ function PLAYER:SetFootstep(Footstep)
 	self.Footstep = Footstep
 	net.Start("SendFoostep")
 		net.WriteString(self:SteamID())
-		net.WriteBool(Footstep != false)
+		net.WriteBool(Footstep)
 	net.Broadcast()
 end
 function PLAYER:GetFootstep()
@@ -400,7 +456,7 @@ end
 -------------------------Infection--------------------------
 function PLAYER:Infect(SilentInfection)
 	local ZombieClass = self:GetNextZombieClass()
-	if ZombieClass != nil then
+	if ZombieClass then
 		self:SetZombieClass(ZombieClass)
 	end
 
@@ -422,7 +478,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetMaxBreath(ZombieClass.Breath)
 	self:SetJumpPower(ZombieClass.JumpPower)
 	self:SetDamageAmplifier(ZombieClass.DamageAmplifier)
-	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && self:GetFootstep())
+	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && ZombieClass.Footstep)
 	if self:FlashlightIsOn() then
 		self:Flashlight(false)
 	end
@@ -436,10 +492,23 @@ function PLAYER:Infect(SilentInfection)
 	if(!SilentInfection) then
 		self:EmitSound(SafeTableRandom(InfectionSounds))
 	end
+
+	local Ability = ZombieClass.Ability
+	if Ability then
+		self:SetMaxAbilityPower(Ability.MaxAbilityPower)
+		self:SetAbilityPower(Ability.MaxAbilityPower)
+
+		SendPopupMessage(self, Dictionary:GetPhrase("NoticeHasHability", self))
+	else
+		self:SetMaxAbilityPower(-1)
+		self:SetAbilityPower(-1)
+	end
+
+	self:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
 end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
-	if HumanClass != nil then
+	if HumanClass then
 		self:SetHumanClass(HumanClass)
 	end
 	
@@ -489,8 +558,15 @@ function PLAYER:MakeHuman()
 		WeaponManager:OpenPrimaryWeaponMenu(self)
 	end
 	
-	if HumanClass.Ability then
+	local Ability = HumanClass.Ability
+	if Ability then
+		self:SetMaxAbilityPower(Ability.MaxAbilityPower)
+		self:SetAbilityPower(Ability.MaxAbilityPower)
+
 		SendPopupMessage(self, Dictionary:GetPhrase("NoticeHasHability", self))
+	else
+		self:SetMaxAbilityPower(-1)
+		self:SetAbilityPower(-1)
 	end
 end
 function PLAYER:SetDamageAmplifier(DamageAmplifier)
@@ -524,6 +600,7 @@ function PLAYER:MakeNemesis()
 		self:SetCrouchedWalkSpeed(NemesisClass.CrouchedSpeed)
 		self:SetAuxGravity(NemesisClass.Gravity)
 	end
+	self:SetFootstep(true)
 	self:SetDamageAmplifier(cvars.Number("zp_nemesis_damage", 10))
 	self:SetLight(NEMESIS_COLOR)
 	self:SetNemesis(true)
@@ -554,6 +631,7 @@ function PLAYER:MakeSurvivor()
 		self:SetCrouchedWalkSpeed(SurvivorClass.CrouchedSpeed)
 		self:SetAuxGravity(SurvivorClass.Gravity)
 	end
+	self:SetFootstep(false)
 	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 1.5))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
@@ -619,3 +697,5 @@ util.AddNetworkString("SendNightvision")
 util.AddNetworkString("SendVoice")
 util.AddNetworkString("SendLight")
 util.AddNetworkString("SendFoostep")
+util.AddNetworkString("SendAbilityPower")
+util.AddNetworkString("SendMaxAbilityPower")

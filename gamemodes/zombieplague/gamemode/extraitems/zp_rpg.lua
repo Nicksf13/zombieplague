@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPRPG"
 ExtraItem.Name = "ExtraItemRPGName"
-ExtraItem.Price = 30
+ExtraItem.Price = 15
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("weapon_rpg")
 	if IsValid(Weap) then

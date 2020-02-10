@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPAntidoteBullets"
 ExtraItem.Name = "ExtraItemAntidoteBulletsName"
-ExtraItem.Price = 100
+ExtraItem.Price = 40
 function ExtraItem:OnBuy(ply)
 	ply.AntidoteBullets = (ply.AntidoteBullets or 0) + 5
 	hook.Add("EntityFireBullets", "EntityFireBullets"..ply:SteamID64(), function(Attacker)
@@ -20,7 +20,7 @@ function ExtraItem:OnBuy(ply)
 		}
 
 		local ShouldIgnore = false
-		for k, DmgType in pairs(DmgList) do
+		for k, DmgType in pairs(DmgListToIgnore) do
 			if DmgInfo:IsDamageType(DmgType) then
 				ShouldIgnore = true
 				break

@@ -10,9 +10,7 @@ function InfectionManager:Infect(Infected, Attacker)
 	if InfectionFunction then
 		InfectionFunction(Attacker, Infected)
 	end
-	if Infected:GetZombieClass().Ability then
-		SendPopupMessage(Infected, Dictionary:GetPhrase("NoticeHasHability", Infected))
-	end
+	
 	Attacker:AddFrags(1)
 	Infected:AddDeaths(1)
 	

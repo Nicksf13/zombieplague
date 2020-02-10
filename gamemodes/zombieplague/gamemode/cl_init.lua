@@ -28,6 +28,10 @@ net.Receive("SendServerStatus", function()
 	end
 end)
 hook.Add("InitPostEntity", "PlayerRdy", function()
+	if !file.Exists("zombieplague", "DATA") then
+		file.CreateDir("zombieplague")
+	end
+
 	Dictionary:Start()
 	CreateMenu()
 	net.Start("RequestServerStatus")

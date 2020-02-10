@@ -7,24 +7,18 @@ ZPClass.RunSpeed = 260
 ZPClass.CrouchSpeed = 0.5
 ZPClass.Gravity = 1
 ZPClass.Breath = 50
-ZPClass.AbilityRecharge = 30
-function ZPClass:Ability(ply)
-	local OldJumpPower = ply:GetJumpPower()
+
+local ActivationAction = function(ply)
+	ply.OldJumpPower = ply:GetJumpPower()
 	ply:SetJumpPower(400)
-	
-	local TimerName = "JumpPower" .. ply:SteamID64()
-	timer.Create(TimerName, 10, 1, function()
-		ply:SetJumpPower(OldJumpPower)
-	end)
-
-	local EventName = "ZPResetAbilityEvent" .. ply:SteamID64()
-	hook.Add(EventName, TimerName, function()
-		ply:SetNextAbilityUse(0)
-
-		timer.Destroy(TimerName)
-		hook.Remove(EventName, TimerName)
-	end)
 end
+local ResetAction = function(ply)
+	ply:SetJumpPower(ply.OldJumpPower)
+	ply.OldJumpPower = nil
+end
+ZPClass.Ability = ClassManager:CreateClassAbility(true, ActivationAction, ResetAction, 10)
+ZPClass.Ability.Drain = 30
+ZPClass.Ability.MaxAbilityPower = 30
 
 if(ZPClass:ShouldBeEnabled()) then
 	ClassManager:AddZPClass("JumperZombie", ZPClass, TEAM_ZOMBIES)

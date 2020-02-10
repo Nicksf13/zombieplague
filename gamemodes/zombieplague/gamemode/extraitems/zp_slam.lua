@@ -1,10 +1,10 @@
 ExtraItem.ID = "ZPSlam"
 ExtraItem.Name = "ExtraItemSlamName"
-ExtraItem.Price = 10
+ExtraItem.Price = 6
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("weapon_slam")
 	if IsValid(Weap) then
-		ply:GiveAmmo(1, Weap:GetPrimaryAmmoType(), true) 
+		ply:GiveAmmo(1, "slam", true) 
 	else
 		ply:Give("weapon_slam")
 	end

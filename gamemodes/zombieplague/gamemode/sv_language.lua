@@ -59,7 +59,7 @@ function Dictionary:OpenLanguageMenu(ply)
 	net.Send(ply)
 end
 function Dictionary:Init()
-	local Language = {PrettyName = "English",
+	local Language = {PrettyName = "US English",
 		Values = 
 		{
 			Server = {
@@ -72,7 +72,7 @@ function Dictionary:Init()
 				RoundNemesisName = "Nemesis mode",
 				RoundSurvivorName = "Survivor mode",
 				RoundSwarmName = "Swarm mode",
-				RoundSwarmName = "Plague mode",
+				RoundPlagueName = "Plague mode",
 				NoticeFirstZombie = "%s is the first zombie!!",
 				NoticeInfect = "%s's brains has been eaten by %s...",
 				NoticeSelfInfect = "%s has used an T-Virus!",
@@ -87,6 +87,10 @@ function Dictionary:Init()
 				NoticeVotemapProlong = "The current map will be prolonged for more %s round(s)!",
 				NoticeNotAllowed = "You're not allowed to do this right now!",
 				NoticeHasHability = "Your class has an special ability! Type: zp_ability in console to use!",
+				NoticeIsNotAlive = "You must be alive to use your special ability!",
+				NoticeNoAbility = "Your class doesn't have an special ability!",
+				NoticeSpecialClassNotAllowed = "You are using an special class, you can't use your ability!",
+				NoticeNotEnoughAbilityPower = "You don't have enough power to use your special ability!",
 				NoticeForceRound = "%s has started %s",
 				LastZombieLeft = "The last zombie has left, %s is the new zombie",
 				LastHumanLeft = "The last human has left, %s is the new human.",
@@ -130,6 +134,7 @@ function Dictionary:Init()
 				ClassRunSpeed = "Run Speed",
 				ClassSpeed = "Speed",
 				ClassBattery = "Battery",
+				ClassAbilityPower = "Ability Power",
 				AP = "Ammo Packs",
 				MenuZombieChoose = "Zombie Class Menu",
 				MenuHumanChoose = "Human Class Menu",
@@ -146,11 +151,6 @@ function Dictionary:Init()
 				MenuNext = "Next",
 				MenuClose = "Close",
 				MenuCredit = "Credits",
-				MenuCreditMeRcyLeZZ = "MeRcyLeZZ - Creator of this gamemode in CS 1.6",
-				MenuCreditZombiePlague = "Zombie Plague - Original Post",
-				MenuCreditTheFireFuchs = "The Fire Fuchs - Creator of this gamemode in Garry's mod",
-				MenuCreditErickMaksimets = "Erick Maksimets - Helped with bug reporting, russian and ukrainian translation and also give a lot of ideas",
-				MenuCreditBlueberryy = "Blueberryy - Update READ.ME on github's project",
 				Nemesis = "Nemesis",
 				Survivor = "Survivor",
 				NoticeVotemapProlong = "Prolong current map for more {RoundsToExtend} round(s)!",
@@ -189,7 +189,15 @@ function Dictionary:Init()
 				ZombieJumperClassName = "Jumper Zombie",
 				ZombieJumperClassDescription = "His special ability allows him to jump very high.",
 				ZombieTankClassName = "Tank Zombie",
-				ZombieTankClassDescription = "Can enable god mode to protect himself."
+				ZombieTankClassDescription = "Can enable god mode to protect himself.",
+				HUDCustomizerTitle = "HUD Customizer",
+				HUDCustomizerComboMenu = "Menu",
+				HUDCustomizerComboStatusBar = "Status Bar",
+				HUDCustomizerComboRoundTimer = "Round Timer",
+				HUDCustomizerTabTitleBody = "Body",
+				HUDCustomizerTabTitleBorder = "Border",
+				HUDCustomizerTabTitleText = "Text",
+				HUDCustomizerApplyButton = "Apply"
 			}
 		},
 		Order = 0

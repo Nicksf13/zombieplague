@@ -8,8 +8,8 @@ ZPClass.Description = "HumanHeavyClassDescription"
 ZPClass.MaxHealth = 150
 ZPClass.Armor = 100
 ZPClass.PModel = "models/player/combine_super_soldier.mdl"
-ZPClass.Speed = 190
-ZPClass.RunSpeed = 200
+ZPClass.Speed = 170
+ZPClass.RunSpeed = 210
 ZPClass.CrouchSpeed = 0.3
 ZPClass.Gravity = 1.2
 ZPClass.Battery = 200
@@ -21,8 +21,8 @@ ZPClass.Name = "HumanSpeedClassName"
 ZPClass.Description = "HumanSpeedClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/riot.mdl"
-ZPClass.Speed = 270
-ZPClass.RunSpeed = 290
+ZPClass.Speed = 230
+ZPClass.RunSpeed = 270
 ZPClass.CrouchSpeed = 0.4
 ZPClass.Gravity = 1
 ZPClass.Battery = 50
@@ -34,16 +34,20 @@ ZPClass.Name = "HumanCrouchClassName"
 ZPClass.Description = "HumanCrouchClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/swat.mdl"
-ZPClass.Speed = 210
-ZPClass.RunSpeed = 230
+ZPClass.Speed = 180
+ZPClass.RunSpeed = 220
 ZPClass.CrouchSpeed = 1.5
+ZPClass.Gravity = 0.8
 ClassManager:AddZPClass("CrouchHuman", ZPClass, TEAM_HUMANS)
 
 ZPClass = ClassManager:NewHumanClass()
 ZPClass.Name = "HumanLightClassName"
 ZPClass.Description = "HumanLightClassDescription"
-ZPClass.MaxHealth = 100
+ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/urban.mdl"
+ZPClass.Speed = 180
+ZPClass.RunSpeed = 220
+ZPClass.CrouchSpeed = 0.5
 ZPClass.Gravity = 0.5
 ZPClass.Battery = 50
 ZPClass.Breath = 50
@@ -60,10 +64,10 @@ ZPClass.Name = "ZombieHeavyClassName"
 ZPClass.Description = "ZombieHeavyClassDescription"
 ZPClass.MaxHealth = 4000
 ZPClass.PModel = "models/player/zombie_soldier.mdl"
-ZPClass.Speed = 200
-ZPClass.RunSpeed = 220
+ZPClass.Speed = 230
+ZPClass.RunSpeed = 230
 ZPClass.CrouchSpeed = 0.6
-ZPClass.Gravity = 1.2
+ZPClass.Gravity = 0.9
 ZPClass.Breath = 200
 ZPClass.FallFunction = function()return true end
 ClassManager:AddZPClass("HeavyZombie", ZPClass, TEAM_ZOMBIES)
@@ -73,22 +77,22 @@ ZPClass.Name = "ZombieSpeedClassName"
 ZPClass.Description = "ZombieSpeedClassDescription"
 ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/zombie_fast.mdl"
-ZPClass.Speed = 270
-ZPClass.RunSpeed = 290
+ZPClass.Speed = 320
+ZPClass.RunSpeed = 320
 ZPClass.CrouchSpeed = 0.5
-ZPClass.Gravity = 0.9
+ZPClass.Gravity = 0.7
 ZPClass.Breath = 250
 ClassManager:AddZPClass("SpeedZombie", ZPClass, TEAM_ZOMBIES)
 
 ZPClass = ClassManager:NewZombieClass()
 ZPClass.Name = "ZombieCrouchClassName"
 ZPClass.Description = "ZombieCrouchClassDescription"
-ZPClass.MaxHealth = 350
+ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/corpse1.mdl"
-ZPClass.Speed = 200
-ZPClass.RunSpeed = 220
-ZPClass.CrouchSpeed = 1.5
-ZPClass.Gravity = 1
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 260
+ZPClass.CrouchSpeed = 1.7
+ZPClass.Gravity = 0.7
 ZPClass.Breath = 50
 ClassManager:AddZPClass("CrouchZombie", ZPClass, TEAM_ZOMBIES)
 
@@ -97,10 +101,10 @@ ZPClass.Name = "ZombieLightClassName"
 ZPClass.Description = "ZombieLightClassDescription"
 ZPClass.MaxHealth = 1000
 ZPClass.PModel = "models/player/charple.mdl"
-ZPClass.Speed = 220
-ZPClass.RunSpeed = 230
+ZPClass.Speed = 270
+ZPClass.RunSpeed = 270
 ZPClass.CrouchSpeed = 0.4
-ZPClass.Gravity = 0.5
+ZPClass.Gravity = 0.3
 ZPClass.Breath = 50
 ClassManager:AddZPClass("LightZombie", ZPClass, TEAM_ZOMBIES)
 
@@ -109,8 +113,11 @@ ZPClass.Name = "ZombieLeechClassName"
 ZPClass.Description = "ZombieLeechClassDescription"
 ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/soldier_stripped.mdl"
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 260
 ZPClass.CrouchSpeed = 0.5
+ZPClass.Gravity = 0.7
 ZPClass.InfectionFunction = function(Attacker, Infected)
-	Attacker:SetHealth(Attacker:Health() + 250)
+	Attacker:SetHealth(Attacker:Health() + 500)
 end
 ClassManager:AddZPClass("LeechZombie", ZPClass, TEAM_ZOMBIES)

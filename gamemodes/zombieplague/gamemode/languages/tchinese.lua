@@ -1,4 +1,3 @@
---Traditional Chinese translation by 辣鸡 | LaGi (https://steamcommunity.com/id/LaGi1569/)
 local Language = {PrettyName = "繁體中文",
 	Values = 
 	{
@@ -12,7 +11,7 @@ local Language = {PrettyName = "繁體中文",
 				RoundNemesisName = "復仇者模式",
 				RoundSurvivorName = "倖存者模式",
 				RoundSwarmName = "團隊模式",
-				RoundSwarmName = "瘟疫模式",
+				RoundPlagueName = "瘟疫模式",
 				NoticeFirstZombie = "%s 是第一隻殭屍!!",
 				NoticeInfect = "%s 的大腦被 %s 吃掉了...",
 				NoticeSelfInfect = "%s 使用了 T-病毒!",
@@ -32,7 +31,7 @@ local Language = {PrettyName = "繁體中文",
 				LastHumanLeft = "最後一個人類離開了, 新的人類是 %s 。",
 				ExtraItemCantBuy = "你現在無法購買此額外物品!",
 				ExtraItemEnought = "你沒有足夠的彈藥包來購買!",
-				ExtraItemChoose = "你需要選擇有效的額外物品!", -- Maybe this will never be called
+				ExtraItemChoose = "你需要選擇有效的額外物品!",
 				ExtraItemCantOpen = "你現在不能打開此選單",
 				ExtraItemBought = "你購買了: '%s'",
 				AmmoPackWithdraw = "你領取了 %d 個彈藥包, 你的帳戶還有 %d 個彈藥包",
@@ -86,11 +85,6 @@ local Language = {PrettyName = "繁體中文",
 				MenuNext = "下一頁",
 				MenuClose = "關閉",
 				MenuCredit = "積分",
-				MenuCreditMeRcyLeZZ = "MeRcyLeZZ - 在CS 1.6中是此模式的創建者",
-				MenuCreditZombiePlague = "殭屍瘟疫 - 原發布",
-				MenuCreditTheFireFuchs = "The Fire Fuchs - 在Garry's mod中是此模式的創建者",
-				MenuCreditErickMaksimets = "Erick Maksimets - 幫助提供錯誤回報、俄語和烏克蘭語翻譯，也提供了很多建議",
-				MenuCreditBlueberryy = "Blueberryy - 在github的項目上更新READ.ME",
 				Nemesis = "復仇者",
 				Survivor = "倖存者",
 				NoticeVotemapProlong = "延長當前地圖 {RoundsToExtend} 回合!", --RoundsToExtend=延伸回合
@@ -129,7 +123,15 @@ local Language = {PrettyName = "繁體中文",
 				ZombieJumperClassName = "跳躍殭屍",
 				ZombieJumperClassDescription = "特殊能力使他跳得很高",
 				ZombieTankClassName = "坦克殭屍",
-				ZombieTankClassDescription = "可以啟動無敵模式保護自己"
+				ZombieTankClassDescription = "可以啟動無敵模式保護自己",
+				HUDCustomizerTitle = "HUD 定制器",
+				HUDCustomizerComboMenu = "菜單",
+				HUDCustomizerComboStatusBar = "狀態欄",
+				HUDCustomizerComboRoundTimer = "循環計時器",
+				HUDCustomizerTabTitleBody = "身體",
+				HUDCustomizerTabTitleBorder = "邊境",
+				HUDCustomizerTabTitleText = "文本",
+				HUDCustomizerApplyButton = "應用"
 		}
 	}
 }
