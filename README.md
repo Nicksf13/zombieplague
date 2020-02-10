@@ -1,4 +1,4 @@
-## Addon description<br> 
+## I WILL ONLY ACCEPT MERGE REQUESTS WITH 'fix/feat(ZP-ISSUE NUMBER):' PATTERN, DO NOT INSIST!!!<br><br>Addon description
 -----------------------Introduction-----------------------<br> 
 This is an old gamemode (AMX Modx) that I played a lot, so I decided to make a GMOD version.<br> 
 I designed this gamemode to be fully customized. Wanna change something? You can!

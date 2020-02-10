@@ -3,13 +3,6 @@ KeyManager = {Keys = {}, EventGroups = {}, TemporaryKeys = {}, SaveFileName = "z
 function KeyManager:SetKeyGroup(GroupID, KeyGroup)
     self.Keys[GroupID] = KeyGroup
 end
---function KeyManager:SaveBindKey()
---    for GroupID, Group in pairs(self.TemporaryKeys) do
---        for Key, Event in pairs(Group) do
---            self.Keys[GroupID][Key]
---        end
---    end
---end
 function KeyManager:GetEvent(EventID)
     for GroupID, EventGroup in pairs(self.EventGroups) do
         if EventGroup[EventID] then
