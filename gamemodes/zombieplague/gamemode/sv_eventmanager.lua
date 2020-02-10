@@ -122,13 +122,8 @@ function GM:AllowPlayerPickup(ply, item)
 	return false
 end
 function GM:ShowSpare1(ply)
-	if ply:GetBattery() > 0 then
-		ply:SetNightvision(!ply:NightvisionIsOn())
-	end
 end
 function GM:ShowSpare2(ply)
-	net.Start("OpenZPMenu")
-	net.Send(ply)
 end
 function GM:PlayerDeathSound()
 	return true
@@ -229,6 +224,11 @@ function CalculateSpectator(ply)
 		ply:Spectate(OBS_MODE_ROAMING)
 	end
 	PlayersToObserve = nil
+end
+function ToggleNightvision(ply)
+	if ply:GetBattery() > 0 then
+		ply:SetNightvision(!ply:NightvisionIsOn())
+	end
 end
 --hook.Add("HalfSecondTickManager", "ZPReloadManager", function()
 --	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE_CLIP then
@@ -374,6 +374,9 @@ net.Receive("RequestSpectator", function(len, ply)
 		RoundManager:AddPlayerToPlay(ply)
 	end
 end)
+net.Receive("RequestNightvision", function(len, ply)
+	ToggleNightvision(ply)
+end)
 Commands:AddCommand("zp", "Open Zombie Plague's menu.", function(ply, args)
 	net.Start("OpenZPMenu")
 	net.Send(ply)
@@ -496,3 +499,4 @@ hook.Add("ZPLastZombieEvent", "LastZombieHealth", function()
 end)
 
 util.AddNetworkString("RequestSpectator")
+util.AddNetworkString("RequestNightvision")

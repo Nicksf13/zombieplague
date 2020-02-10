@@ -22,13 +22,6 @@ function CreateMenu()
 			PressKey = PressKey
 		}
 		table.insert(MMenu.ZPOptions.Options, Option)
-
-		surface.SetFont("DermaDefault")
-		local Width = surface.GetTextSize(Option.Description)
-		
-		if Width > MMenu.ZPOptions.BiggestTextSize then
-			MMenu.ZPOptions.BiggestTextSize = Width
-		end
 	end
 	function MMenu.ZPOptions:Clear()
 		MMenu.ZPOptions.Options = {}
@@ -99,15 +92,29 @@ function CreateMenu()
 		)
 
 		hook.Add("HUDPaint", "ChooseMenu", function()
-			local MenuColor = HudManager:GetComponentColors("Menu")
+			local MenuOptions = HudManager:GetComponentConfig("Menu")
 			local SizePerOption = 20
 			local TotalOptions = table.Count(MMenu.ZPOptions.Options)
-			local Allign = ((ScrH() / 2) - ((TotalOptions * SizePerOption) / 2))
 
-			HudManager:CreateBox(2, 10, MenuColor.Border, MenuColor.Body, 20, Allign - 10, MMenu.ZPOptions.BiggestTextSize + 20, ((TotalOptions * SizePerOption) + 15))
+			surface.SetFont(MenuOptions.Font)
+			local BiggestTextSize = 0
+
+			for i, Option in pairs(MMenu.ZPOptions.Options) do
+				local TextSize = surface.GetTextSize(Option.Description)
+
+				if TextSize > BiggestTextSize then
+					BiggestTextSize = TextSize
+				end
+			end
+
+			local Width = BiggestTextSize + 20
+			local Height = ((TotalOptions * SizePerOption) + 15)
+			local XPos, YPos = HudManager:CalculatePos(MenuOptions.XPos, MenuOptions.YPos, Width, Height, 20, 20)
+
+			HudManager:CreateBox(2, 10, MenuOptions.Border, MenuOptions.Body, XPos, YPos - 10, Width, Height)
 			
 			for i, Option in pairs(MMenu.ZPOptions.Options) do
-				draw.DrawText(Option.Description, "DermaDefault", 30, ((i - 1) * SizePerOption) + Allign, MenuColor.Text, TEXT_ALIGN_LEFT)
+				draw.DrawText(Option.Description, MenuOptions.Font, XPos + 10, YPos + ((i - 1) * SizePerOption), MenuOptions.Text, TEXT_ALIGN_LEFT)
 			end
 		end)
 	end
@@ -201,13 +208,6 @@ function OpenZPMenu()
 			end
 		})
 	end
-	table.insert(Options, GenerateMenuOption(
-		Dictionary:GetPhrase("HUDCustomizerTitle"),
-		function()
-			HudManager:CreateHudCustomizerMenu()
-		end,
-		8
-	))
 	table.insert(Options, {
 		Name = Dictionary:GetPhrase("MenuCredit"),
 		Function = function()
@@ -215,6 +215,13 @@ function OpenZPMenu()
 		end,
 		Order = 1000
 	})
+	table.insert(Options, GenerateMenuOption(
+		Dictionary:GetPhrase("MenuOptions"),
+		function()
+			OptionMenu:CreateOptionsMenu()
+		end,
+		999
+	))
 	
 	MMenu:UpdateOptions(Options)
 end
@@ -233,6 +240,7 @@ net.Receive("OpenZPMenu", OpenZPMenu)
 net.Receive("OpenBackMenu", function()
 	MMenu.NetworkString = net.ReadString()
 	local ReceivedOptions = net.ReadTable()
+	
 	local MenuOptions = {}
 
 	for ID, ReceivedOption in pairs(ReceivedOptions) do

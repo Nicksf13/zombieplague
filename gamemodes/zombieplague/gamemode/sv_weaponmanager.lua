@@ -135,10 +135,6 @@ function WeaponManager:OpenWeaponMenu(ply, WeaponType)
 	return PrettyWeapons
 end
 function WeaponManager:OpenPrimaryWeaponMenu(ply)
-	ply:SetPrimaryWeapon(nil)
-	ply:SetSecondaryWeapon(nil)
-	ply:SetMeleeWeapon(nil)
-	
 	net.Start("OpenBackMenu")
 		net.WriteString("SendPrimaryWeapon")
 		net.WriteTable(WeaponManager:OpenWeaponMenu(ply, WEAPON_PRIMARY))
@@ -157,6 +153,10 @@ function WeaponManager:OpenMeleeWeaponMenu(ply)
 	net.Send(ply)
 end
 net.Receive("SendPrimaryWeapon", function(len, ply)
+	ply:SetPrimaryWeapon(nil)
+	ply:SetSecondaryWeapon(nil)
+	ply:SetMeleeWeapon(nil)
+
 	ply:SetPrimaryWeapon(WeaponManager:FindWeaponByWeaponId(net.ReadString(), WEAPON_PRIMARY))
 end)
 net.Receive("SendSecondaryWeapon", function(len, ply)
