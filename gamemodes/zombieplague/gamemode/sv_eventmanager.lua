@@ -53,7 +53,7 @@ function GM:EntityTakeDamage(target, dmginfo)
 	local Attacker = dmginfo:GetAttacker()
 	if Attacker:IsPlayer() then
 		local Multiplier = WeaponManager:GetWeaponMultiplier(dmginfo:GetInflictor():GetClass())
-		if !Multiplier && Attacker:Alive() then
+		if !Multiplier && Attacker:Alive() && IsValid(Attacker:GetActiveWeapon()) then
 			Multiplier = WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass())
 		end
 		dmginfo:ScaleDamage(Multiplier and Multiplier or 1)
