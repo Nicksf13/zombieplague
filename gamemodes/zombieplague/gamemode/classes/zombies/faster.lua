@@ -2,10 +2,10 @@ ZPClass.Name = "ZombieFasterClassName"
 ZPClass.Description = "ZombieFasterClassDescription"
 ZPClass.MaxHealth = 500
 ZPClass.PModel = "models/player/skeleton.mdl"
-ZPClass.Speed = 200
-ZPClass.RunSpeed = 250
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 260
 ZPClass.CrouchSpeed = 0.6
-ZPClass.Gravity = 1
+ZPClass.Gravity = 0.7
 ZPClass.Breath = 50
 
 local ActivationAction = function(ply)
@@ -13,8 +13,8 @@ local ActivationAction = function(ply)
 	ply.OldMaxHealth = ply:GetMaxHealth()
 	ply.OldSpeed = ply:GetWalkSpeed()
 	ply.OldRunSpeed = ply:GetRunSpeed()
-	ply:SetHealth(50)
-	ply:SetMaxHealth(50)
+	ply:SetHealth(150)
+	ply:SetMaxHealth(150)
 	ply:SetWalkSpeed(500)
 	ply:SetRunSpeed(600)
 end
