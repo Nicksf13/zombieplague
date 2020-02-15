@@ -65,6 +65,23 @@ ZombieMadnessSounds = {"zombieplague/zombie_madness1.mp3"}
 	
 HumanTaunts = {}
 
+HumanDrownSounds = {"player/pl_drown1.wav",
+	"player/pl_drown2.wav",
+	"player/pl_drown3.wav"}
+
+ZombieDrownSounds = {"player/pl_drown1.wav",
+"player/pl_drown2.wav",
+"player/pl_drown3.wav"}
+
+HumanSuffocateSound = {"player/pl_pain5.wav",
+	"player/pl_pain6.wav",
+	"player/pl_pain7.wav"}
+
+ZombieSuffocateSound = {"player/pl_pain5.wav",
+	"player/pl_pain6.wav",
+	"player/pl_pain7.wav"}
+
+
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
 
@@ -108,6 +125,18 @@ for k, SoundPath in pairs(NemesisDamageSounds) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 for k, SoundPath in pairs(ZombieIdle) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieSuffocateSound) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 

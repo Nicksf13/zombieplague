@@ -135,6 +135,7 @@ function Dictionary:Init()
 				ClassSpeed = "Speed",
 				ClassBattery = "Battery",
 				ClassAbilityPower = "Ability Power",
+				ClassOxygenLevel = "Oxygen Level",
 				AP = "Ammo Packs",
 				MenuZombieChoose = "Zombie Class Menu",
 				MenuHumanChoose = "Human Class Menu",
