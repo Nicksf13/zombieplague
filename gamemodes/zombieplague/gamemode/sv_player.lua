@@ -315,12 +315,22 @@ function PLAYER:SetBreath(Breath)
 		Breath = self:GetMaxBreath()
 	end
 	self.Breath = Breath
+
+	net.Start("SendBreath")
+		net.WriteString(self:SteamID())
+		net.WriteFloat(Breath)
+	net.Broadcast()
 end
 function PLAYER:GetBreath()
-	return self.Breath or 0
+	return self.Breath or 100
 end
 function PLAYER:SetMaxBreath(MaxBreath)
 	self.MaxBreath = MaxBreath
+
+	net.Start("SendMaxBreath")
+		net.WriteString(self:SteamID())
+		net.WriteFloat(MaxBreath)
+	net.Broadcast()
 end
 function PLAYER:GetMaxBreath()
 	return self.MaxBreath or 100
@@ -699,3 +709,5 @@ util.AddNetworkString("SendLight")
 util.AddNetworkString("SendFoostep")
 util.AddNetworkString("SendAbilityPower")
 util.AddNetworkString("SendMaxAbilityPower")
+util.AddNetworkString("SendBreath")
+util.AddNetworkString("SendMaxBreath")

@@ -106,6 +106,20 @@ function PLAYER:GetMaxAbilityPower()
 	return self.MaxAbilityPower or -1
 end
 
+function PLAYER:SetBreath(Breath)
+	self.Breath = Breath
+end
+function PLAYER:GetBreath()
+	return self.Breath or 100
+end
+
+function PLAYER:SetMaxBreath(MaxBreath)
+	self.MaxBreath = MaxBreath
+end
+function PLAYER:GetMaxBreath()
+	return self.MaxBreath or 100
+end
+
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
@@ -192,5 +206,17 @@ net.Receive("SendMaxAbilityPower", function()
 	local ply = player.GetBySteamID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetMaxAbilityPower(net.ReadInt(16))
+	end
+end)
+net.Receive("SendBreath", function()
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetBreath(net.ReadFloat())
+	end
+end)
+net.Receive("SendMaxBreath", function()
+	local ply = player.GetBySteamID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetMaxBreath(net.ReadFloat())
 	end
 end)
