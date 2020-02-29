@@ -6,6 +6,7 @@ ZPClass.PModel = "models/player/guerilla.mdl"
 ZPClass.Speed = 180
 ZPClass.RunSpeed = 220
 ZPClass.CrouchSpeed = 0.5
+ZPClass.Gravity = 0.9
 ZPClass.Breath = 50
 
 local ActivationAction = function(ply)
