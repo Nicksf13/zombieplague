@@ -349,19 +349,14 @@ function WaterShouldDrain()
 	return (RoundManager:IsRealisticMod() || cvars.Bool("zp_water_should_drain", 0))
 end
 function RunShouldDrain(ply)
-	if ply:Team() == TEAM_ZOMBIES then
-		if !cvars.Bool("zp_zombie_should_run", true) then
-			return false
-		end
-	end
-	return RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0)
+	return ply:GetWalkSpeed() != ply:GetRunSpeed() && (RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0))
 end
 timer.Create("TickManager", 0.1, 0, function()
 	hook.Call("TickManager")
 end)
---timer.Create("HalfSecondTickManager", 0.5, 0, function()
---	hook.Call("HalfSecondTickManager")
---end)
+timer.Create("HalfSecondTickManager", 0.5, 0, function()
+	hook.Call("HalfSecondTickManager")
+end)
 timer.Create("SecondTickManager", 1, 0, function()
 	hook.Call("SecondTickManager")
 end)
@@ -428,6 +423,13 @@ hook.Add("ZPSuffocate", "ZPBreathDamage", function(ply)
 	DmgInfo:SetDamage(cvars.Number("zp_breath_damage", 5))
 	DmgInfo:SetDamageType(DMG_DROWNRECOVER)
 	ply:TakeDamageInfo(DmgInfo)
+
+	ply:ScreenFade(SCREENFADE.IN, Color(255, 255, 255, 20), 0.3, 0)
+	if ply:WaterLevel() > 2 then
+		ply:ZPEmitSound(SafeTableRandom(ply:IsHuman() and HumanDrownSounds or ZombieDrownSounds), 1.0)
+	else
+		ply:ZPEmitSound(SafeTableRandom(ply:IsHuman() and HumanSuffocateSound or ZombieSuffocateSound), 1.0)
+	end
 end)
 hook.Add("TickManager", "GravityManager", function()
 	for k, ply in pairs(RoundManager:GetPlayersToPlay()) do

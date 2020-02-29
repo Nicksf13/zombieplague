@@ -13,19 +13,17 @@ hook.Add("HUDShouldDraw", "HideHUD", function(name)
 end)
 hook.Add("HUDPaint", "HUDZombiePlague", function()
 	if LocalPlayer():GetObserverMode() != OBS_MODE_ROAMING then
-		local ply = LocalPlayer()
-		if !ply:Alive() then
-			ply = LocalPlayer():GetObserverTarget() 
-		end
+		local ply = LocalPlayer():Alive() and LocalPlayer() or LocalPlayer():GetObserverTarget()
+
 		if IsValid(ply) then
-			local StringHUD = Dictionary:GetPhrase("ClassClass") .. " " .. ply:GetZPClass() .. " - " .. Dictionary:GetPhrase("ClassHealth") .. " " .. ply:Health() 
-			if ply:IsHuman() then	
-				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassArmor") .. " " .. ply:Armor() .. " - " .. Dictionary:GetPhrase("ClassBattery") .. " " .. string.format("%.2f", (ply:GetBattery() / ply:GetMaxBatteryCharge()) * 100) .. "%"
+			local StringHUD = ""
+			for k, HudComponent in pairs(HudManager.HudComponents) do
+				if HudComponent:ShouldRenderFunction(ply) then
+					StringHUD = StringHUD .. HudComponent:TextFunction(ply) .. ": " .. HudComponent:InfoFunction(ply) .. " - "
+				end
 			end
-			if ply:GetMaxAbilityPower() > 0 then
-				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassAbilityPower") .. " " .. string.format("%.2f", (ply:GetAbilityPower() / ply:GetMaxAbilityPower()) * 100) .. "%"
-			end
-			StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks()
+			StringHUD = string.sub(StringHUD, 1, string.len(StringHUD) - 3)
+
 			local StatusConfig = HudManager:GetComponentConfig("Status")
 			local HUDProperties = {
 				Text = StringHUD,
@@ -81,8 +79,21 @@ hook.Add("Think", "ZPSpecialLights", function()
 	end
 end)
 
-HudManager = {HUDConfig = {}, SaveFileName = "zombieplague/hudconfig.json"}
+HudManager = {HUDConfig = {}, SaveFileName = "zombieplague/hudconfig.json", HudComponents = {}}
 
+function HudManager:CreateHudInfo(HudComponentID, TextFunction, InfoFunction, ShouldRenderFunction)
+	local HudComponent = {HudComponentID = HudComponentID}
+	function HudComponent:TextFunction(ply)
+		return TextFunction(ply)
+	end
+	function HudComponent:InfoFunction(ply)
+		return InfoFunction(ply)
+	end
+	function HudComponent:ShouldRenderFunction(ply)
+		return ShouldRenderFunction(ply)
+	end
+	table.insert(self.HudComponents, HudComponent)
+end
 function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadius, BorderColor, BodyColor, XPosEnum, YPosEnum)
 	local Text = TextProperties.Text
 	local TextFont = TextProperties.TextFont
@@ -173,45 +184,53 @@ function HudManager:CreateHudComponentInfo(XPos, YPos)
 end
 
 HudManager:LoadHudInformation()
+HudManager:CreateHudInfo("HUDZPClass", function()
+	return Dictionary:GetPhrase("ClassClass")
+end, function(ply)
+	return ply:GetZPClass()
+end, function()
+	return true
+end)
+HudManager:CreateHudInfo("HUDHealth", function()
+	return Dictionary:GetPhrase("ClassHealth")
+end, function(ply)
+	return ply:Health()
+end, function()
+	return true
+end)
+HudManager:CreateHudInfo("HUDArmor", function()
+	return Dictionary:GetPhrase("ClassArmor")
+end, function(ply)
+	return ply:Armor()
+end, function(ply)
+	return ply:Armor() > 0
+end)
+HudManager:CreateHudInfo("HUDOxygenLevel", function()
+	return Dictionary:GetPhrase("ClassOxygenLevel")
+end, function(ply)
+	return string.format("%.2f", (ply:GetBreath() / ply:GetMaxBreath()) * 100) .. "%"
+end, function(ply)
+	return ply:GetBreath() < ply:GetMaxBreath()
+end)
+HudManager:CreateHudInfo("HUDBattery", function()
+	return Dictionary:GetPhrase("ClassBattery")
+end, function(ply)
+	return string.format("%.2f", (ply:GetBattery() / ply:GetMaxBatteryCharge()) * 100) .. "%"
+end, function(ply)
+	return ply:GetBattery() < ply:GetMaxBatteryCharge()
+end)
+HudManager:CreateHudInfo("HUDAbilityPower", function()
+	return Dictionary:GetPhrase("ClassAbilityPower")
+end, function(ply)
+	return string.format("%.2f", (ply:GetAbilityPower() / ply:GetMaxAbilityPower()) * 100) .. "%"
+end, function(ply)
+	return ply:GetAbilityPower() < ply:GetMaxAbilityPower()
+end)
 
---hook.Add("PosInitEnt", "CreateScoreboard", function()
---	local Width = 700
---	local Height = 400
---	local Margin = 4
---	local PlayerLenght = 34
---	DScoreboard = vgui.Create("DFrame")
---	DScoreboard:SetTitle("")
---	DScoreboard:ShowCloseButton(false)
---	DScoreboard:SetVisible(false)
---	function DScoreboard:Paint()
---		draw.RoundedBox(2, 0, 0, Width, Height, Color(255, 0, 0, 125))
---	end
---	local i = 1
---	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
---		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_HUMANS) or Color(120, 120, 120))
---		i = i + 1
---	end
---	i = i + 2
---	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
---		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_ZOMBIES) or Color(120, 120, 120))
---		i = i + 1
---	end
---	DScoreboard:SetSize(Width, i * PlayerLenght)
---	DScoreboard:Center()
---end)
---function DrawPlayer(ply, i, Width, Height, Margin, Clr)
---	local Y = i * Height
---	Height = Height - 10
---	local BtPlayer = vgui.Create("DButton", DScrollBoard)
---	BtPlayer:SetText("")
---	BtPlayer:
---	draw.RoundedBox(4, Margin, Y, Width - (2 * Margin), Height, Clr)
---	draw.DrawText(ply:Name(), "DermaDefault", Margin + 2, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
---	draw.DrawText(ply:Ping(), "DermaDefault", Width - (Margin * 2) - 30, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT) 
---end
---function GM:ScoreboardShow()
---	DScoreboard:Show()
---end
---function GM:ScoreboardHide()
---	DScoreboard:Hide()
---end
+HudManager:CreateHudInfo("HUDAP", function()
+	return Dictionary:GetPhrase("AP")
+end, function(ply)
+	return ply:GetAmmoPacks()
+end, function()
+	return true
+end)
