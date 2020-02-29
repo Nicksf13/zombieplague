@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPInfectionBomb"
 ExtraItem.Name = "ExtraItemInfectionBombName"
-ExtraItem.Price = 10
+ExtraItem.Price = 5
 ExtraItem.Type = ITEM_ZOMBIE
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon(INFECTION_BOMB)
