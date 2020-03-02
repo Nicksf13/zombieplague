@@ -49,9 +49,14 @@ HumanWinSounds = {"zombieplague/win_humans1.mp3",
 	
 ZombieWinSounds = {"zombieplague/win_zombies1.mp3",
 	"zombieplague/win_zombies2.mp3",
-	"zombieplague/win_zombies3.mp3",}
+	"zombieplague/win_zombies3.mp3"}
 	
-DrawSounds = {}
+DrawSounds = {"ambient/atmosphere/cave_hit1.wav",
+	"ambient/atmosphere/cave_hit2.wav",
+	"ambient/atmosphere/cave_hit3.wav",
+	"ambient/atmosphere/cave_hit4.wav",
+	"ambient/atmosphere/cave_hit5.wav",
+	"ambient/atmosphere/cave_hit6.wav"}
 
 ZombieDeathSounds = {"npc/zombie/zombie_die1.wav",
 	"npc/zombie/zombie_die2.wav",

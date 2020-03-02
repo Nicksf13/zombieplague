@@ -169,6 +169,7 @@ function RoundManager:EndRound(Reason)
 		for k, ply in pairs(player.GetAll()) do
 			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundDraw", ply), 5, Color(0, 255, 0))
 		end
+		BroadcastSound(SafeTableRandom(DrawSounds))
 	end
 
 	if RoundManager:GetRound() < (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) then
