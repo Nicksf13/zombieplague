@@ -258,9 +258,6 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 	ply:SetLight(nil)
 	if ply:IsZombie() then
 		ply:EmitSound(SafeTableRandom(ZombieDeathSounds))
-		if RoundManager:LastZombie() then
-			hook.Call("ZPLastZombieEvent")
-		end
 		if killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
 
@@ -268,9 +265,6 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 			ply:SpectateEntity(killer)
 		end
 	else
-		if RoundManager:LastHuman() then
-			hook.Call("ZPLastHumanEvent")
-		end
 		if killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
 
@@ -280,6 +274,17 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 	end
 
 	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
+end)
+hook.Add("PostPlayerDeath", "ZPDeathEvents", function(ply)
+	if ply:IsZombie() then
+		if RoundManager:LastZombie() then
+			hook.Call("ZPLastZombieEvent")
+		end
+	else
+		if RoundManager:LastHuman() then
+			hook.Call("ZPLastHumanEvent")
+		end
+	end
 end)
 function PlayerCanSpawn(ply)
 	if table.HasValue(RoundManager:GetPlayersToPlay(), ply) then
