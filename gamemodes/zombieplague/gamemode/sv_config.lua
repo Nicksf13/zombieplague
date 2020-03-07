@@ -49,9 +49,14 @@ HumanWinSounds = {"zombieplague/win_humans1.mp3",
 	
 ZombieWinSounds = {"zombieplague/win_zombies1.mp3",
 	"zombieplague/win_zombies2.mp3",
-	"zombieplague/win_zombies3.mp3",}
+	"zombieplague/win_zombies3.mp3"}
 	
-DrawSounds = {}
+DrawSounds = {"ambient/atmosphere/cave_hit1.wav",
+	"ambient/atmosphere/cave_hit2.wav",
+	"ambient/atmosphere/cave_hit3.wav",
+	"ambient/atmosphere/cave_hit4.wav",
+	"ambient/atmosphere/cave_hit5.wav",
+	"ambient/atmosphere/cave_hit6.wav"}
 
 ZombieDeathSounds = {"npc/zombie/zombie_die1.wav",
 	"npc/zombie/zombie_die2.wav",
@@ -64,6 +69,23 @@ ZombieIdle = {"zombieplague/zombie_brains1.mp3",
 ZombieMadnessSounds = {"zombieplague/zombie_madness1.mp3"}
 	
 HumanTaunts = {}
+
+HumanDrownSounds = {"player/pl_drown1.wav",
+	"player/pl_drown2.wav",
+	"player/pl_drown3.wav"}
+
+ZombieDrownSounds = {"player/pl_drown1.wav",
+"player/pl_drown2.wav",
+"player/pl_drown3.wav"}
+
+HumanSuffocateSound = {"player/pl_pain5.wav",
+	"player/pl_pain6.wav",
+	"player/pl_pain7.wav"}
+
+ZombieSuffocateSound = {"player/pl_pain5.wav",
+	"player/pl_pain6.wav",
+	"player/pl_pain7.wav"}
+
 
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
@@ -108,6 +130,18 @@ for k, SoundPath in pairs(NemesisDamageSounds) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 for k, SoundPath in pairs(ZombieIdle) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieSuffocateSound) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 

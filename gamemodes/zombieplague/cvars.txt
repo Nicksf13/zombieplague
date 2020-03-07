@@ -3,24 +3,25 @@ zp_zombie_footstep - cvar used to set if zombies will emit footstep sounds.
 zp_admin_human_model - cvar used to set if admin will receive a special human player model.
 zp_battery_charge - cvar used to set battery recharge
 zp_water_drain - cvar used to set if water will drain player's breath.
-zp_rounds_to_extend - cvar used to set how many rounds will be increased to the current map
 zp_last_human_reward_mode - cvar used to set last human reward
 zp_can_hear_death - cvar used to set if players will hear death players
 zp_falldamage - cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)
 zp_battery_flashlight_drain - cvar used to set flashlight battery drain
 zp_ap_kill_zombie - cvar used to set how many ammo packs player will win if killed a zombie.
 zp_health_regen_time_delay - cvar used to set the delay time after last damage to regen zombie's health.
+zp_auto_deposit_when_disconnect - cvar used to set if server will auto withdraw player's ammo packs
 zp_ap_zombies - cvar used to set if Zombies should earn ammo packs when infected players.
 zp_ap_total - cvar used to set how many ammo packs humans will win after cause x damage.
-zp_auto_deposit_when_disconnect - cvar used to set if server will auto withdraw player's ammo packs
-zp_newround_delay - cvar used to define new round time delay.
 zp_auto_withdraw - cvar used to set if server will auto withdraw player's ammo packs
+zp_newround_delay - cvar used to define new round time delay.
+zp_notify_rounds_left - cvar used to set if players should be notified about how many rounds are left
 zp_nemesis_health - cvar used to the health of nemesis.
 zp_last_zombie_reward_mode - cvar used to set last zombie reward
 zp_min_players - cvar used to define minimun players to start the round.
 zp_spectate_team_ony - cvar used to define if the spectator can only see his teammates
 zp_health_regen - cvar used to set how much health zombies will regen.
 zp_clip_mode - cvar used to set the clip mode of the weapons.
+zp_rounds_to_extend - cvar used to set how many rounds will be increased to the current map
 zp_zombie_should_run - cvar used to enable zombies to run
 zp_ap_zombies_total - cvar used to set the amount of ammo packs the zombie will win after infect a player.
 zp_voice_all - cvar used to set if players will hear other team players.
@@ -29,7 +30,7 @@ zp_nemesis_health_mode - cvar used to set nemesis' health mode.
 zp_health_should_regen - cvar used to set if zombies will regen health.
 zp_last_zombie_reward_health - cvar used to set last zombie health reward
 zp_admin_zombie_model - cvar used to set if admin will receive a special zombie player model.
-zp_can_repeat_map - cvar used to set if it's possible to extend rounds in the current map
+zp_can_repeat_map - cvar used to set if it's possible to prolong the current map (0 = false, 1 = true)
 zp_last_human_reward_health - cvar used to set last human health reward
 zp_breath_recover - cvar used to set breath recover
 zp_survivor_health - cvar used to the health of survivor.

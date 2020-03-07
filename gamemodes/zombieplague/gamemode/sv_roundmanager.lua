@@ -58,7 +58,9 @@ function RoundManager:GetServerStatus(Requester)
 			ZombieClass = ply:GetZombieClass().Name,
 			HumanClass = ply:GetHumanClass().Name,
 			Light = ply:GetLight(),
-			Footstep = ply:GetFootstep()
+			Footstep = ply:GetFootstep(),
+			AbilityPower = ply:GetAbilityPower(),
+			MaxAbilityPower = ply:GetMaxAbilityPower()
 		})
 	end
 
@@ -167,6 +169,7 @@ function RoundManager:EndRound(Reason)
 		for k, ply in pairs(player.GetAll()) do
 			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundDraw", ply), 5, Color(0, 255, 0))
 		end
+		BroadcastSound(SafeTableRandom(DrawSounds))
 	end
 
 	if RoundManager:GetRound() < (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) then
