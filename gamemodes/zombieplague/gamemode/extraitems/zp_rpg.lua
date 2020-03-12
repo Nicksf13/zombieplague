@@ -8,6 +8,7 @@ function ExtraItem:OnBuy(ply)
 	else
 		ply:Give("weapon_rpg")
 	end
+	ply:EmitSound( "weapon.StepRight" )
 end
 
 WeaponManager:AddWeaponMultiplier("rpg_missile", 4)
