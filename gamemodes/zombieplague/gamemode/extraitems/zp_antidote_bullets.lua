@@ -43,6 +43,7 @@ function ExtraItem:OnBuy(ply)
 			SendPopupMessage(Attacker, Dictionary:GetPhrase("ExtraItemAntidoteBulletsLost", Attacker))
 		end
 	end)
+	ply:EmitSound( "NPC_Manhack.ChargeAnnounce" )
 end
 function ExtraItem:CanBuy(ply)
 	return !RoundManager:IsSpecialRound() && !RoundManager:LastZombie() && ply:Alive()
