@@ -8,6 +8,7 @@ function ExtraItem:OnBuy(ply)
 	else
 		ply:Give("weapon_slam")
 	end
+	ply:EmitSound( "NPC_CombineMine.TurnOn" )
 end
 
 WeaponManager:AddWeaponMultiplier("npc_tripmine", 4)
