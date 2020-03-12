@@ -8,6 +8,7 @@ function ExtraItem:OnBuy(ply)
 	else
 		ply:Give("weapon_frag")
 	end
+	ply:EmitSound( "Grenade.Blip" )
 end
 
 WeaponManager:AddWeaponMultiplier("npc_grenade_frag", 5)
