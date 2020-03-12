@@ -7,6 +7,7 @@ function ExtraItem:OnBuy(ply)
 	elseif RoundManager:GetRoundState() == ROUND_STARTING_NEW_ROUND then
 		RoundManager:StartRound(RoundManager:GetRounds().SimpleRound, ply) -- Simple Infection Round
 	end
+	ply:EmitSound( "NPC_PoisonZombie.Pain" )
 end
 function ExtraItem:CanBuy(ply)
 	return (RoundManager:GetRoundState() == ROUND_PLAYING || RoundManager:GetRoundState() == ROUND_STARTING_NEW_ROUND) && !RoundManager:IsSpecialRound() && !RoundManager:LastHuman() && ply:Alive()
