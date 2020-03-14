@@ -1,4 +1,4 @@
-DEBUG_MODE = false -- ONLY USE THIS FOR DEBUG/TEST PROPOSES
+DEBUG_MODE = true -- ONLY USE THIS FOR DEBUG/TEST PROPOSES
 
 include("shared.lua")
 include("sv_commands.lua")

@@ -44,5 +44,5 @@ ZPClass.Ability.CanUseAbility = function()
 end
 
 if(ZPClass:ShouldBeEnabled()) then
-	ClassManager:AddZPClass("SuicideHuman", ZPClass, TEAM_HUMANS)
+	ClassManager:AddZPClass("SuicidalHuman", ZPClass, TEAM_HUMANS)
 end
