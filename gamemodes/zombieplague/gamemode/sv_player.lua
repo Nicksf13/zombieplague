@@ -242,12 +242,16 @@ end
 function PLAYER:TakeAmmoPacks(Amount)
 	self:SetAmmoPacks(self:GetAmmoPacks() - Amount)
 end
-function PLAYER:SetAmmoPacks(AmmoPacks)
+function PLAYER:SetAmmoPacks(AmmoPacks, NotSave)
 	self.AmmoPacks = AmmoPacks
 	net.Start("SendAmmoPacks")
 		net.WriteString(self:SteamID())
 		net.WriteInt(AmmoPacks, 32)
 	net.Broadcast()
+
+	if !NotSave && Bank.ShouldSaveAmmoPacks then
+		Bank:SetPlayerAmmoPacks(self, AmmoPacks)
+	end	
 end
 function PLAYER:GetAmmoPacks()
 	return self.AmmoPacks or 0
