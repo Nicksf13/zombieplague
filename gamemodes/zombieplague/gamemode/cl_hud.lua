@@ -175,8 +175,8 @@ end
 function HudManager:CreateHudComponentInfo(XPos, YPos)
 	return {
 		Border = Color(0, 0, 0, 144),
-		Body = Color(255, 255, 255, 0),
-		Text = Color(72, 72, 72, 255),
+		Body = Color(72, 72, 72, 144),
+		Text = Color(255, 255, 255, 255),
 		Font = "Trebuchet18",
 		XPos = XPos,
 		YPos = YPos
