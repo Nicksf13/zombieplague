@@ -289,7 +289,12 @@ end)
 function PlayerCanSpawn(ply)
 	if table.HasValue(RoundManager:GetPlayersToPlay(), ply) then
 		if RoundManager:GetRoundState() == ROUND_PLAYING then
-			if RoundManager:IsDeathMatch() then
+			if RoundManager:IsRespawn() then
+				local RespawnFunction = RoundManager:GetCurrentRoundPlaying().RespawnFunction
+
+				if RespawnFunction then
+					return RespawnFunction(ply)
+				end
 				return true
 			end
 		end

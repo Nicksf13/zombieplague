@@ -4,7 +4,7 @@ Name - String
 Chance - Number
 MinPlayers - Number
 SpecialRound - Boolean
-Deathmatch - Boolean
+Respawn - Boolean
 StartSound - String
 
 - Functions:
@@ -16,7 +16,7 @@ RoundState - Number
 Round - Number
 Rounds - Table<Round>
 PlayersToPlay - Table<Player>
-Deathmatch - Boolean
+Respawn - Boolean
 
 - Functions:
 AddRoundType(RoundType Round) - Used to add a new round to the gamemode
