@@ -230,25 +230,23 @@ function ToggleNightvision(ply)
 		ply:SetNightvision(!ply:NightvisionIsOn())
 	end
 end
---hook.Add("HalfSecondTickManager", "ZPReloadManager", function()
---	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE_CLIP then
---		for k, ply in pairs(player.GetAll()) do
---			if ply:Alive() then
---				if WeaponManager:IsChosenWeapon(ply:GetActiveWeapon():GetClass()) then
---					local Weapon = ply:GetActiveWeapon()
---					if Weapon:GetPrimaryAmmoType() != -1 && ply:GetAmmoCount(Weapon:GetPrimaryAmmoType()) != (Weapon:GetMaxClip1() * 2) then
---						ply:SetAmmo(Weapon:GetMaxClip1() * 2, Weapon:GetPrimaryAmmoType())
---					end
---				end
---			end
---		end
---	end
---end)
-hook.Add("EntityFireBullets", "ZPReloadManager", function(Attacker)
-	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE && WeaponManager:IsChosenWeapon(Attacker:GetActiveWeapon():GetClass()) then
-		local Weapon = Attacker:GetActiveWeapon()
-		Weapon:SetClip1(Weapon:GetMaxClip1())
-		Weapon:SetClip2(Weapon:GetMaxClip2())
+hook.Add("TickManager", "ZPReloadManager", function()
+	local ClipMode = cvars.Number("zp_clip_mode", 0)
+	if ClipMode == WMODE_INFINITE_CLIP || ClipMode == WMODE_INFINITE then
+		for k, ply in pairs(player.GetAll()) do
+			if ply:Alive() && ply:IsHuman() then
+				local ActiveWeapon = ply:GetActiveWeapon()
+				if IsValid(ActiveWeapon) && WeaponManager:IsChosenWeapon(ActiveWeapon:GetClass()) then
+					if ClipMode == WMODE_INFINITE_CLIP then
+						if ply:GetAmmoCount(ActiveWeapon:GetPrimaryAmmoType()) != (ActiveWeapon:GetMaxClip1() * 2) then
+							ply:SetAmmo(ActiveWeapon:GetMaxClip1() * 2, ActiveWeapon:GetPrimaryAmmoType())
+						end
+					else
+						ActiveWeapon:SetClip1(ActiveWeapon:GetMaxClip1())
+					end
+				end
+			end
+		end
 	end
 end)
 hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
