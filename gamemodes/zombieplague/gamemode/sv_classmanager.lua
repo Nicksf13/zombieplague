@@ -96,7 +96,7 @@ function ClassManager:NewZombieClass()
 		Description = "ZombieDefaultClassDescription",
 		MaxHealth = 2000,
 		PModel = "models/player/zombie_classic.mdl",
-		Speed = 270,
+		Speed = 250,
 		RunSpeed = 270,
 		CrouchSpeed = 0.4,
 		Gravity = 0.7,

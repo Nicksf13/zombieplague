@@ -242,12 +242,16 @@ end
 function PLAYER:TakeAmmoPacks(Amount)
 	self:SetAmmoPacks(self:GetAmmoPacks() - Amount)
 end
-function PLAYER:SetAmmoPacks(AmmoPacks)
+function PLAYER:SetAmmoPacks(AmmoPacks, NotSave)
 	self.AmmoPacks = AmmoPacks
 	net.Start("SendAmmoPacks")
 		net.WriteString(self:SteamID())
 		net.WriteInt(AmmoPacks, 32)
 	net.Broadcast()
+
+	if !NotSave && Bank.ShouldSaveAmmoPacks then
+		Bank:SetPlayerAmmoPacks(self, AmmoPacks)
+	end	
 end
 function PLAYER:GetAmmoPacks()
 	return self.AmmoPacks or 0
@@ -315,12 +319,22 @@ function PLAYER:SetBreath(Breath)
 		Breath = self:GetMaxBreath()
 	end
 	self.Breath = Breath
+
+	net.Start("SendBreath")
+		net.WriteString(self:SteamID())
+		net.WriteFloat(Breath)
+	net.Broadcast()
 end
 function PLAYER:GetBreath()
-	return self.Breath or 0
+	return self.Breath or 100
 end
 function PLAYER:SetMaxBreath(MaxBreath)
 	self.MaxBreath = MaxBreath
+
+	net.Start("SendMaxBreath")
+		net.WriteString(self:SteamID())
+		net.WriteFloat(MaxBreath)
+	net.Broadcast()
 end
 function PLAYER:GetMaxBreath()
 	return self.MaxBreath or 100
@@ -699,3 +713,5 @@ util.AddNetworkString("SendLight")
 util.AddNetworkString("SendFoostep")
 util.AddNetworkString("SendAbilityPower")
 util.AddNetworkString("SendMaxAbilityPower")
+util.AddNetworkString("SendBreath")
+util.AddNetworkString("SendMaxBreath")

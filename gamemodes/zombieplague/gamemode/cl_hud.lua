@@ -1,3 +1,9 @@
+HUD_TOP = 1
+HUD_CENTER = 2
+HUD_BOTTOM = 3
+HUD_LEFT = 4
+HUD_RIGHT = 5
+
 local hide = {
 	CHudHealth = true,
 	CHudBattery = true,
@@ -7,37 +13,37 @@ hook.Add("HUDShouldDraw", "HideHUD", function(name)
 end)
 hook.Add("HUDPaint", "HUDZombiePlague", function()
 	if LocalPlayer():GetObserverMode() != OBS_MODE_ROAMING then
-		local ply = LocalPlayer()
-		if !ply:Alive() then
-			ply = LocalPlayer():GetObserverTarget() 
-		end
+		local ply = LocalPlayer():Alive() and LocalPlayer() or LocalPlayer():GetObserverTarget()
+
 		if IsValid(ply) then
-			local StringHUD = Dictionary:GetPhrase("ClassClass") .. " " .. ply:GetZPClass() .. " - " .. Dictionary:GetPhrase("ClassHealth") .. " " .. ply:Health() 
-			if ply:IsHuman() then	
-				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassArmor") .. " " .. ply:Armor() .. " - " .. Dictionary:GetPhrase("ClassBattery") .. " " .. string.format("%.2f", (ply:GetBattery() / ply:GetMaxBatteryCharge()) * 100) .. "%"
+			local StringHUD = ""
+			for k, HudComponent in pairs(HudManager.HudComponents) do
+				if HudComponent:ShouldRenderFunction(ply) then
+					StringHUD = StringHUD .. HudComponent:TextFunction(ply) .. ": " .. HudComponent:InfoFunction(ply) .. " - "
+				end
 			end
-			if ply:GetMaxAbilityPower() > 0 then
-				StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("ClassAbilityPower") .. " " .. string.format("%.2f", (ply:GetAbilityPower() / ply:GetMaxAbilityPower()) * 100) .. "%"
-			end
-			StringHUD = StringHUD .. " - " .. Dictionary:GetPhrase("AP") .. " " .. ply:GetAmmoPacks()
+			StringHUD = string.sub(StringHUD, 1, string.len(StringHUD) - 3)
+
+			local StatusConfig = HudManager:GetComponentConfig("Status")
 			local HUDProperties = {
 				Text = StringHUD,
-				TextFont = "Trebuchet18",
-				TextColor = HudManager:GetColor("Status", "Text"),
+				TextFont = StatusConfig.Font,
+				TextColor = StatusConfig.Text,
 				TextMargin = 6
 			}
-			HudManager:CreateTextDisplayBox(HUDProperties, 1, 10, HudManager:GetColor("Status", "Border"), HudManager:GetColor("Status", "Body"), 20, ScrH() - 40)
+			HudManager:CreateTextDisplayBox(HUDProperties, 1, 10, StatusConfig.Border, StatusConfig.Body, StatusConfig.XPos, StatusConfig.YPos)
 		end
 	end
 
+	local TimerConfig = HudManager:GetComponentConfig("Timer")
 	local TimerProperties = {
 		Text = string.FormattedTime(RoundManager:GetTimer(), "%02i:%02i" ),
-		TextFont = "Trebuchet24",
-		TextColor = HudManager:GetColor("Timer", "Text"),
+		TextFont = TimerConfig.Font,
+		TextColor = TimerConfig.Text,
 		TextMargin = 6
 	}
 
-	HudManager:CreateTextDisplayBox(TimerProperties, 1, 10, HudManager:GetColor("Timer", "Border"), HudManager:GetColor("Timer", "Body"), nil, ScrH() - 40)
+	HudManager:CreateTextDisplayBox(TimerProperties, 1, 10, TimerConfig.Border, TimerConfig.Body, TimerConfig.XPos, TimerConfig.YPos)
 end)
 hook.Add("Think", "ZPSpecialLights", function()
 	if IsNightvisionOn() then
@@ -73,92 +79,22 @@ hook.Add("Think", "ZPSpecialLights", function()
 	end
 end)
 
-HudManager = {Colors = {}, SaveFileName = "zombieplague/hudcolors.json"}
+HudManager = {HUDConfig = {}, SaveFileName = "zombieplague/hudconfig.json", HudComponents = {}}
 
-function HudManager:CreateHudCustomizerMenu()
-		local FrameWidth = 400
-		local FrameHeight = 415
-		local Border = 20
-		local FullScreenWidth = FrameWidth - (Border * 2)
-		local SelectedComponent = "Menu"
-
-		local HudCustomizerMenu = vgui.Create("DFrame")
-		HudCustomizerMenu:SetDraggable(true)
-		HudCustomizerMenu:SetSize(FrameWidth, FrameHeight)
-		HudCustomizerMenu:SetTitle("Zombie Plague - " .. Dictionary:GetPhrase("HUDCustomizerTitle"))
-		HudCustomizerMenu:Center()
-
-		local Y = 30
-
-		local DSheet = vgui.Create("DPropertySheet", HudCustomizerMenu)
-
-		local ColorPickerBorder = HudManager:CreateColorMixer(false)
-		local ColorPickerComponent = HudManager:CreateColorMixer(true)
-		local ColorPickerText = HudManager:CreateColorMixer(false)
-
-		ColorPickerBorder:SetColor(HudManager:GetColor(SelectedComponent, "Border"))
-		ColorPickerComponent:SetColor(HudManager:GetColor(SelectedComponent, "Body"))
-		ColorPickerText:SetColor(HudManager:GetColor(SelectedComponent, "Text"))
-
-		local DComboBox = vgui.Create("DComboBox", HudCustomizerMenu)
-		DComboBox:SetPos(Border, Y)
-		DComboBox:SetSize(FullScreenWidth, 20)
-		DComboBox:AddChoice(Dictionary:GetPhrase("HUDCustomizerComboMenu"), "Menu")
-		DComboBox:AddChoice(Dictionary:GetPhrase("HUDCustomizerComboStatusBar"), "Status")
-		DComboBox:AddChoice(Dictionary:GetPhrase("HUDCustomizerComboRoundTimer"), "Timer")
-		DComboBox:ChooseOptionID(1)
-		function DComboBox:OnSelect(Self, Index, Value)
-			SelectedComponent = Value
-
-			ColorPickerBorder:SetColor(HudManager:GetColor(SelectedComponent, "Border"))
-			ColorPickerComponent:SetColor(HudManager:GetColor(SelectedComponent, "Body"))
-			ColorPickerText:SetColor(HudManager:GetColor(SelectedComponent, "Text"))
-
-			DSheet:SetActiveTab(DSheet:GetItems()[1].Tab)
-		end
-
-		Y = Y + 30
-
-		DSheet:SetPos(Border, Y)
-		DSheet:SetSize(FullScreenWidth, 300)
-		
-		DSheet:AddSheet(Dictionary:GetPhrase("HUDCustomizerTabTitleBody"), ColorPickerComponent, "icon16/color_wheel.png")
-		DSheet:AddSheet(Dictionary:GetPhrase("HUDCustomizerTabTitleBorder"), ColorPickerBorder, "icon16/color_wheel.png")
-		DSheet:AddSheet(Dictionary:GetPhrase("HUDCustomizerTabTitleText"), ColorPickerText, "icon16/color_wheel.png")
-
-		Y = Y + 310
-
-		local DermaButton = vgui.Create("DButton", HudCustomizerMenu)
-		DermaButton:SetText(Dictionary:GetPhrase("HUDCustomizerApplyButton"))
-		DermaButton:SetPos(Border, Y)
-		DermaButton:SetSize(FullScreenWidth, 25)
-		function DermaButton:DoClick()
-			local Component = HudManager:GetComponentColors(SelectedComponent)
-			Component.Body = ColorPickerComponent:GetColor()
-			Component.Border = ColorPickerBorder:GetColor()
-			Component.Text = ColorPickerText:GetColor()
-
-			Component.Border.a = Component.Body.a
-
-			HudManager:SaveColor()
-		end
-
-		HudCustomizerMenu:MakePopup()
+function HudManager:CreateHudInfo(HudComponentID, TextFunction, InfoFunction, ShouldRenderFunction)
+	local HudComponent = {HudComponentID = HudComponentID}
+	function HudComponent:TextFunction(ply)
+		return TextFunction(ply)
+	end
+	function HudComponent:InfoFunction(ply)
+		return InfoFunction(ply)
+	end
+	function HudComponent:ShouldRenderFunction(ply)
+		return ShouldRenderFunction(ply)
+	end
+	table.insert(self.HudComponents, HudComponent)
 end
-
-function HudManager:CreateColorMixer(AlphaBarEnabled)
-	local ColorMixer = vgui.Create("DColorMixer")
-
-	ColorMixer:Dock(FILL)
-	ColorMixer:DockMargin(10, 10, 10, 10)
-	ColorMixer:SetPalette(true)
-	ColorMixer:SetAlphaBar(AlphaBarEnabled)
-	ColorMixer:SetWangs(true)
-
-	return ColorMixer
-end
-
-function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadius, BorderColor, BodyColor, XPosition, YPosition)
+function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadius, BorderColor, BodyColor, XPosEnum, YPosEnum)
 	local Text = TextProperties.Text
 	local TextFont = TextProperties.TextFont
 	local TextColor = TextProperties.TextColor
@@ -166,6 +102,7 @@ function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadiu
 	surface.SetFont(TextFont)
 
 	local Width, Height = surface.GetTextSize(Text)
+	local XPosition, YPosition = self:CalculatePos(XPosEnum, YPosEnum, Width, Height, 20, 20)
 	local DrawXPosition = (XPosition or (ScrW() / 2  - (Width / 2) - TextMargin))
 	local DrawYPosition = (YPosition or (ScrH() / 2 - (Height / 2) - TextMargin))
 	local ExtraMarginSize = TextMargin * 2
@@ -188,80 +125,112 @@ function HudManager:CreateBox(BorderSize, CornerRadius, BorderColor, BodyColor, 
 	if BodyColor.a > 0 then
 		draw.RoundedBox(CornerRadius, XPosition, YPosition, Width, Height, BodyColor)
 	end
-
 end
 
-function HudManager:GetColor(Component, Name)
-	return self.Colors[Component][Name]
+function HudManager:CalculatePos(XPosENum, YPosEnum, Width, Height, BorderX, BorderY)
+	local BorderX = BorderX or 0
+	local BorderY = BorderY or 0
+
+	local XPos = BorderX
+	local YPos = BorderY
+
+	if XPosENum == HUD_CENTER then
+		XPos = (ScrW() / 2) - (Width / 2)
+	elseif XPosENum == HUD_RIGHT then
+		XPos = ScrW() - Width - BorderX
+	end
+
+	if YPosEnum == HUD_CENTER then
+		YPos = (ScrH() / 2) - (Height / 2)
+	elseif YPosEnum == HUD_BOTTOM then
+		YPos = ScrH() - Height - BorderY
+	end
+
+	return XPos, YPos
 end
-function HudManager:GetComponentColors(Component)
-	return self.Colors[Component]
+
+function HudManager:GetConfig(Component, Name)
+	return self.HUDConfig[Component][Name]
+end
+function HudManager:GetComponentConfig(Component)
+	return self.HUDConfig[Component]
 end
 
 function HudManager:LoadHudInformation()
 	if file.Exists(self.SaveFileName, "DATA") then
-		self.Colors = util.JSONToTable(file.Read(self.SaveFileName, "DATA"))
+		self.HUDConfig = util.JSONToTable(file.Read(self.SaveFileName, "DATA"))
 	else
-		self.Colors.Menu = self:CreateHudComponentInfo()
-		self.Colors.Status = self:CreateHudComponentInfo()
-		self.Colors.Timer = self:CreateHudComponentInfo()
+		self.HUDConfig.Menu = self:CreateHudComponentInfo(HUD_LEFT, HUD_CENTER)
+		self.HUDConfig.Status = self:CreateHudComponentInfo(HUD_LEFT, HUD_BOTTOM)
+		self.HUDConfig.Timer = self:CreateHudComponentInfo(HUD_CENTER, HUD_BOTTOM)
 
-		self:SaveColor()
+		self:Save()
 	end
 end
 
-function HudManager:SaveColor()
-	file.Write(self.SaveFileName, util.TableToJSON(self.Colors, true))
+function HudManager:Save()
+	file.Write(self.SaveFileName, util.TableToJSON(self.HUDConfig, true))
 end
 
-function HudManager:CreateHudComponentInfo()
+function HudManager:CreateHudComponentInfo(XPos, YPos)
 	return {
-		Border = Color(255, 255, 255, 0),
-		Body = Color(255, 255, 255, 0),
-		Text = Color(255, 255, 255, 255)
+		Border = Color(0, 0, 0, 144),
+		Body = Color(72, 72, 72, 144),
+		Text = Color(255, 255, 255, 255),
+		Font = "Trebuchet18",
+		XPos = XPos,
+		YPos = YPos
 	}
 end
 
 HudManager:LoadHudInformation()
+HudManager:CreateHudInfo("HUDZPClass", function()
+	return Dictionary:GetPhrase("ClassClass")
+end, function(ply)
+	return ply:GetZPClass()
+end, function()
+	return true
+end)
+HudManager:CreateHudInfo("HUDHealth", function()
+	return Dictionary:GetPhrase("ClassHealth")
+end, function(ply)
+	return ply:Health()
+end, function()
+	return true
+end)
+HudManager:CreateHudInfo("HUDArmor", function()
+	return Dictionary:GetPhrase("ClassArmor")
+end, function(ply)
+	return ply:Armor()
+end, function(ply)
+	return ply:Armor() > 0
+end)
+HudManager:CreateHudInfo("HUDOxygenLevel", function()
+	return Dictionary:GetPhrase("ClassOxygenLevel")
+end, function(ply)
+	return string.format("%.2f", (ply:GetBreath() / ply:GetMaxBreath()) * 100) .. "%"
+end, function(ply)
+	return ply:GetBreath() < ply:GetMaxBreath()
+end)
+HudManager:CreateHudInfo("HUDBattery", function()
+	return Dictionary:GetPhrase("ClassBattery")
+end, function(ply)
+	return string.format("%.2f", (ply:GetBattery() / ply:GetMaxBatteryCharge()) * 100) .. "%"
+end, function(ply)
+	return ply:GetBattery() < ply:GetMaxBatteryCharge()
+end)
+HudManager:CreateHudInfo("HUDAbilityPower", function()
+	return Dictionary:GetPhrase("ClassAbilityPower")
+end, function(ply)
+	return string.format("%.2f", (ply:GetAbilityPower() / ply:GetMaxAbilityPower()) * 100) .. "%"
+end, function(ply)
+	return ply:GetAbilityPower() < ply:GetMaxAbilityPower()
+end)
 
---hook.Add("PosInitEnt", "CreateScoreboard", function()
---	local Width = 700
---	local Height = 400
---	local Margin = 4
---	local PlayerLenght = 34
---	DScoreboard = vgui.Create("DFrame")
---	DScoreboard:SetTitle("")
---	DScoreboard:ShowCloseButton(false)
---	DScoreboard:SetVisible(false)
---	function DScoreboard:Paint()
---		draw.RoundedBox(2, 0, 0, Width, Height, Color(255, 0, 0, 125))
---	end
---	local i = 1
---	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
---		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_HUMANS) or Color(120, 120, 120))
---		i = i + 1
---	end
---	i = i + 2
---	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
---		DrawPlayer(ply, i, Width, PlayerLenght, Margin, ply:Alive() and team.GetColor(TEAM_ZOMBIES) or Color(120, 120, 120))
---		i = i + 1
---	end
---	DScoreboard:SetSize(Width, i * PlayerLenght)
---	DScoreboard:Center()
---end)
---function DrawPlayer(ply, i, Width, Height, Margin, Clr)
---	local Y = i * Height
---	Height = Height - 10
---	local BtPlayer = vgui.Create("DButton", DScrollBoard)
---	BtPlayer:SetText("")
---	BtPlayer:
---	draw.RoundedBox(4, Margin, Y, Width - (2 * Margin), Height, Clr)
---	draw.DrawText(ply:Name(), "DermaDefault", Margin + 2, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT)
---	draw.DrawText(ply:Ping(), "DermaDefault", Width - (Margin * 2) - 30, Y + 2, Color(255, 255, 255, 255), TEXT_ALIGN_LEFT) 
---end
---function GM:ScoreboardShow()
---	DScoreboard:Show()
---end
---function GM:ScoreboardHide()
---	DScoreboard:Hide()
---end
+HudManager:CreateHudInfo("HUDAP", function()
+	return Dictionary:GetPhrase("AP")
+end, function(ply)
+	return ply:GetAmmoPacks()
+end, function()
+	return true
+end)

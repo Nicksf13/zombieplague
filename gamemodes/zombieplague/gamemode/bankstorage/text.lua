@@ -7,11 +7,8 @@ end
 function BankStorageSource:GetPlayerAmmopacks(ply)
     return tonumber(file.Read("zombie_plague/" .. ply:SteamID64() .. ".txt", "DATA") or "0")
 end
-function BankStorageSource:Withdraw(ply, Amount)
-    file.Write("zombie_plague/" .. ply:SteamID64() .. ".txt", BankStorageSource:GetPlayerAmmopacks(ply) - Amount)
-end
-function BankStorageSource:Deposit(ply, Amount)
-    file.Write("zombie_plague/" .. ply:SteamID64() .. ".txt", BankStorageSource:GetPlayerAmmopacks(ply) + Amount)
+BankStorageSource.Save = function(SteamID64, Amount)
+    file.Write("zombie_plague/" .. SteamID64 .. ".txt", Amount)
 end
 
 Bank.BankStorageSource = BankStorageSource

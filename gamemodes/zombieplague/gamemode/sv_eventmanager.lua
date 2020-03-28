@@ -53,7 +53,7 @@ function GM:EntityTakeDamage(target, dmginfo)
 	local Attacker = dmginfo:GetAttacker()
 	if Attacker:IsPlayer() then
 		local Multiplier = WeaponManager:GetWeaponMultiplier(dmginfo:GetInflictor():GetClass())
-		if !Multiplier && Attacker:Alive() then
+		if !Multiplier && Attacker:Alive() && IsValid(Attacker:GetActiveWeapon()) then
 			Multiplier = WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass())
 		end
 		dmginfo:ScaleDamage(Multiplier and Multiplier or 1)
@@ -122,13 +122,8 @@ function GM:AllowPlayerPickup(ply, item)
 	return false
 end
 function GM:ShowSpare1(ply)
-	if ply:GetBattery() > 0 then
-		ply:SetNightvision(!ply:NightvisionIsOn())
-	end
 end
 function GM:ShowSpare2(ply)
-	net.Start("OpenZPMenu")
-	net.Send(ply)
 end
 function GM:PlayerDeathSound()
 	return true
@@ -230,25 +225,28 @@ function CalculateSpectator(ply)
 	end
 	PlayersToObserve = nil
 end
---hook.Add("HalfSecondTickManager", "ZPReloadManager", function()
---	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE_CLIP then
---		for k, ply in pairs(player.GetAll()) do
---			if ply:Alive() then
---				if WeaponManager:IsChosenWeapon(ply:GetActiveWeapon():GetClass()) then
---					local Weapon = ply:GetActiveWeapon()
---					if Weapon:GetPrimaryAmmoType() != -1 && ply:GetAmmoCount(Weapon:GetPrimaryAmmoType()) != (Weapon:GetMaxClip1() * 2) then
---						ply:SetAmmo(Weapon:GetMaxClip1() * 2, Weapon:GetPrimaryAmmoType())
---					end
---				end
---			end
---		end
---	end
---end)
-hook.Add("EntityFireBullets", "ZPReloadManager", function(Attacker)
-	if cvars.Number("zp_clip_mode", 0) == WMODE_INFINITE && WeaponManager:IsChosenWeapon(Attacker:GetActiveWeapon():GetClass()) then
-		local Weapon = Attacker:GetActiveWeapon()
-		Weapon:SetClip1(Weapon:GetMaxClip1())
-		Weapon:SetClip2(Weapon:GetMaxClip2())
+function ToggleNightvision(ply)
+	if ply:GetBattery() > 0 then
+		ply:SetNightvision(!ply:NightvisionIsOn())
+	end
+end
+hook.Add("TickManager", "ZPReloadManager", function()
+	local ClipMode = cvars.Number("zp_clip_mode", 0)
+	if ClipMode == WMODE_INFINITE_CLIP || ClipMode == WMODE_INFINITE then
+		for k, ply in pairs(player.GetAll()) do
+			if ply:Alive() && ply:IsHuman() then
+				local ActiveWeapon = ply:GetActiveWeapon()
+				if IsValid(ActiveWeapon) && WeaponManager:IsChosenWeapon(ActiveWeapon:GetClass()) then
+					if ClipMode == WMODE_INFINITE_CLIP then
+						if ply:GetAmmoCount(ActiveWeapon:GetPrimaryAmmoType()) != (ActiveWeapon:GetMaxClip1() * 2) then
+							ply:SetAmmo(ActiveWeapon:GetMaxClip1() * 2, ActiveWeapon:GetPrimaryAmmoType())
+						end
+					else
+						ActiveWeapon:SetClip1(ActiveWeapon:GetMaxClip1())
+					end
+				end
+			end
+		end
 	end
 end)
 hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
@@ -258,9 +256,6 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 	ply:SetLight(nil)
 	if ply:IsZombie() then
 		ply:EmitSound(SafeTableRandom(ZombieDeathSounds))
-		if RoundManager:LastZombie() then
-			hook.Call("ZPLastZombieEvent")
-		end
 		if killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
 
@@ -268,9 +263,6 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 			ply:SpectateEntity(killer)
 		end
 	else
-		if RoundManager:LastHuman() then
-			hook.Call("ZPLastHumanEvent")
-		end
 		if killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
 
@@ -281,10 +273,26 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 
 	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end)
+hook.Add("PostPlayerDeath", "ZPDeathEvents", function(ply)
+	if ply:IsZombie() then
+		if RoundManager:LastZombie() then
+			hook.Call("ZPLastZombieEvent")
+		end
+	else
+		if RoundManager:LastHuman() then
+			hook.Call("ZPLastHumanEvent")
+		end
+	end
+end)
 function PlayerCanSpawn(ply)
 	if table.HasValue(RoundManager:GetPlayersToPlay(), ply) then
 		if RoundManager:GetRoundState() == ROUND_PLAYING then
-			if RoundManager:IsDeathMatch() then
+			if RoundManager:IsRespawn() then
+				local RespawnFunction = RoundManager:GetCurrentRoundPlaying().RespawnFunction
+
+				if RespawnFunction then
+					return RespawnFunction(ply)
+				end
 				return true
 			end
 		end
@@ -349,19 +357,14 @@ function WaterShouldDrain()
 	return (RoundManager:IsRealisticMod() || cvars.Bool("zp_water_should_drain", 0))
 end
 function RunShouldDrain(ply)
-	if ply:Team() == TEAM_ZOMBIES then
-		if !cvars.Bool("zp_zombie_should_run", true) then
-			return false
-		end
-	end
-	return RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0)
+	return ply:GetWalkSpeed() != ply:GetRunSpeed() && (RoundManager:IsRealisticMod() || cvars.Bool("zp_run_should_drain", 0))
 end
 timer.Create("TickManager", 0.1, 0, function()
 	hook.Call("TickManager")
 end)
---timer.Create("HalfSecondTickManager", 0.5, 0, function()
---	hook.Call("HalfSecondTickManager")
---end)
+timer.Create("HalfSecondTickManager", 0.5, 0, function()
+	hook.Call("HalfSecondTickManager")
+end)
 timer.Create("SecondTickManager", 1, 0, function()
 	hook.Call("SecondTickManager")
 end)
@@ -373,6 +376,9 @@ net.Receive("RequestSpectator", function(len, ply)
 	else
 		RoundManager:AddPlayerToPlay(ply)
 	end
+end)
+net.Receive("RequestNightvision", function(len, ply)
+	ToggleNightvision(ply)
 end)
 Commands:AddCommand("zp", "Open Zombie Plague's menu.", function(ply, args)
 	net.Start("OpenZPMenu")
@@ -425,6 +431,13 @@ hook.Add("ZPSuffocate", "ZPBreathDamage", function(ply)
 	DmgInfo:SetDamage(cvars.Number("zp_breath_damage", 5))
 	DmgInfo:SetDamageType(DMG_DROWNRECOVER)
 	ply:TakeDamageInfo(DmgInfo)
+
+	ply:ScreenFade(SCREENFADE.IN, Color(255, 255, 255, 20), 0.3, 0)
+	if ply:WaterLevel() > 2 then
+		ply:ZPEmitSound(SafeTableRandom(ply:IsHuman() and HumanDrownSounds or ZombieDrownSounds), 1.0)
+	else
+		ply:ZPEmitSound(SafeTableRandom(ply:IsHuman() and HumanSuffocateSound or ZombieSuffocateSound), 1.0)
+	end
 end)
 hook.Add("TickManager", "GravityManager", function()
 	for k, ply in pairs(RoundManager:GetPlayersToPlay()) do
@@ -496,3 +509,4 @@ hook.Add("ZPLastZombieEvent", "LastZombieHealth", function()
 end)
 
 util.AddNetworkString("RequestSpectator")
+util.AddNetworkString("RequestNightvision")

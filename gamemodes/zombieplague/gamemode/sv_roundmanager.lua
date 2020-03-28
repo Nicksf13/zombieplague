@@ -17,7 +17,7 @@ function RoundManager:SearchRounds()
 			RoundToAdd.MinPlayers = cvars.Number("zp_min_players", 2)
 			RoundToAdd.Chance = 100
 			RoundToAdd.SpecialRound = false
-			RoundToAdd.Deathmatch = false
+			RoundToAdd.Respawn = false
 			RoundToAdd.ShouldBeEnabled = function()return true end
 			RoundToAdd.Order = 100
 			include("zombieplague/gamemode/rounds/" .. File)
@@ -58,7 +58,9 @@ function RoundManager:GetServerStatus(Requester)
 			ZombieClass = ply:GetZombieClass().Name,
 			HumanClass = ply:GetHumanClass().Name,
 			Light = ply:GetLight(),
-			Footstep = ply:GetFootstep()
+			Footstep = ply:GetFootstep(),
+			AbilityPower = ply:GetAbilityPower(),
+			MaxAbilityPower = ply:GetMaxAbilityPower()
 		})
 	end
 
@@ -75,12 +77,18 @@ function RoundManager:GetTime()
 	return timer.TimeLeft("ZombiePlagueTimer") or 0
 end
 function RoundManager:CheckRoundEnd()
-	if RoundManager:CountHumansAlive() == 0 && RoundManager:CountZombiesAlive() == 0 then
-		RoundManager:EndRound(ROUND_DRAW)
-	elseif RoundManager:CountHumansAlive() == 0 then
-		RoundManager:EndRound(ZOMBIES_WIN)
-	elseif RoundManager:CountZombiesAlive() == 0 then
-		RoundManager:EndRound(HUMANS_WIN)
+	local CurrentRoundPlaying = RoundManager:GetCurrentRoundPlaying()
+
+	if CurrentRoundPlaying.Respawn && CurrentRoundPlaying.RoundEndFunction then
+		CurrentRoundPlaying:RoundEndFunction()
+	else
+		if RoundManager:CountHumansAlive() == 0 && RoundManager:CountZombiesAlive() == 0 then
+			RoundManager:EndRound(ROUND_DRAW)
+		elseif RoundManager:CountHumansAlive() == 0 then
+			RoundManager:EndRound(ZOMBIES_WIN)
+		elseif RoundManager:CountZombiesAlive() == 0 then
+			RoundManager:EndRound(HUMANS_WIN)
+		end
 	end
 end
 function RoundManager:WaitPlayers()
@@ -102,9 +110,8 @@ function RoundManager:Prepare()
 		end
 		hook.Call("ZPPostPreparingRound")
 		return true
-	else
-		return false
 	end
+	return false
 end
 function RoundManager:TryNewRound()
 	if RoundManager:Prepare() then
@@ -167,6 +174,7 @@ function RoundManager:EndRound(Reason)
 		for k, ply in pairs(player.GetAll()) do
 			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundDraw", ply), 5, Color(0, 255, 0))
 		end
+		BroadcastSound(SafeTableRandom(DrawSounds))
 	end
 
 	if RoundManager:GetRound() < (cvars.Number("zp_max_rounds", 10) + self.ExtraRounds) then
@@ -184,7 +192,7 @@ function RoundManager:StartRound(RoundToStart, ply)
 	hook.Call("ZPPreNewRound", GAMEMODE, RoundToStart)
 	RoundToStart.StartFunction(ply)
 	self:SetSpecialRound(RoundToStart.SpecialRound)
-	self:SetDeathmatch(RoundToStart.Deathmatch)
+	self:SetRespawn(RoundToStart.Respawn)
 	if RoundToStart.StartSound then
 		BroadcastSound(SafeTableRandom(RoundToStart.StartSound))
 	end
@@ -195,8 +203,12 @@ function RoundManager:StartRound(RoundToStart, ply)
 
 	self:SetRound(self:GetRound() + 1)
 	self:SetRoundState(ROUND_PLAYING)
+	self.RoundPlaying = RoundToStart
 
 	hook.Call("ZPNewRound", GAMEMODE, RoundToStart, self:GetRound())
+end
+function RoundManager:GetCurrentRoundPlaying()
+	return self.RoundPlaying
 end
 
 function RoundManager:GetGoodRounds()
@@ -311,7 +323,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = cvars.Number("zp_min_players", 2)
 	ROUND.Chance = 100
 	ROUND.SpecialRound = false
-	ROUND.Deathmatch = false
+	ROUND.Respawn = false
 	ROUND.Order = 1
 	ROUND.StartFunction = function(ply)
 		local FirstZombie = (ply and ply or table.Random(RoundManager:GetPlayersToPlay(true)))
@@ -321,6 +333,10 @@ function RoundManager:AddDefaultRounds()
 			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeFirstZombie", ply), FirstZombie:Name()))
 		end
 	end
+	ROUND.RespawnFunction = function(ply)
+		return RoundManager:CountHumansAlive() > 1
+	end
+
 	RoundManager:AddRoundType("SimpleRound", ROUND)
 	
 	ROUND = {}
@@ -328,6 +344,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Chance = 15
 	ROUND.MinPlayers = 4
 	ROUND.Order = 2
+	ROUND.Respawn = false
 	ROUND.StartFunction = function()
 		local ValidPlayers = RoundManager:GetPlayersToPlay(true)
 		table.remove(ValidPlayers, math.random(1, table.Count(ValidPlayers))):Infect()
@@ -337,6 +354,10 @@ function RoundManager:AddDefaultRounds()
 			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeMultiInfection", ply), 5, Color(0, 255, 0))
 		end
 	end
+	ROUND.RespawnFunction = function(ply)
+		return RoundManager:CountHumansAlive() > 1
+	end
+
 	RoundManager:AddRoundType("MultiInfectionRound", ROUND)
 	
 	ROUND = {}
@@ -344,19 +365,27 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Chance = 5
 	ROUND.MinPlayers = 5
 	ROUND.SpecialRound = true
+	ROUND.Respawn = false
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
 	ROUND.Order = 3
 	ROUND.StartFunction = function()
-		local Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
-		while(Nemesis:IsBot()) do
-			Nemesis = table.Random(RoundManager:GetPlayersToPlay(true))
-		end
+		local Nemesis = SafeTableRandom(RoundManager:GetPlayersToPlay(true))
 
 		Nemesis:MakeNemesis()
 		
 		for k, ply in pairs(player.GetAll()) do
 			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeNemesis", ply), Nemesis:Name()))
+
+			if ROUND.Respawn && ply:IsHuman() then
+				ply.Lifes = 5
+			end
 		end
+	end
+	ROUND.OnDeathFunction = function(ply)
+		ply.Lifes = ply.Lifes - 1
+	end
+	ROUND.RespawnFunction = function(ply)
+		return ply.Lifes > 0
 	end
 	RoundManager:AddRoundType("NemesisRound", ROUND)
 	
@@ -372,10 +401,19 @@ function RoundManager:AddDefaultRounds()
 		local Survivor = table.Random(Players)
 		table.RemoveByValue(Players, Survivor)
 		for k, ply in pairs(Players) do
+			if ROUND.Respawn then
+				ply.Lifes = 5
+			end
 			ply:Infect()
 			SendNotifyMessage(ply, string.format(Dictionary:GetPhrase("NoticeSurvivor", ply), Survivor:Name()), 5, SURVIVOR_COLOR)
 		end
 		Survivor:MakeSurvivor()
+	end
+	ROUND.OnDeathFunction = function(ply)
+		ply.Lifes = ply.Lifes - 1
+	end
+	ROUND.RespawnFunction = function(ply)
+		return ply.Lifes > 0
 	end
 	RoundManager:AddRoundType("SurvivalRound", ROUND)
 	
@@ -430,8 +468,12 @@ function RoundManager:AddDefaultRounds()
 	end
 	RoundManager:AddRoundType("PlagueRound", ROUND)
 end
-hook.Add("PostPlayerDeath", "RoundEndCheck", function()
+hook.Add("PostPlayerDeath", "RoundEndCheck", function(ply)
 	if RoundManager:GetRoundState() == ROUND_PLAYING then
+		local OnDeathFunction = RoundManager:GetCurrentRoundPlaying().OnDeathFunction
+		if OnDeathFunction then
+			OnDeathFunction(ply)
+		end
 		timer.Create("ZPEndRound" .. CurTime(), 0.1, 1, RoundManager.CheckRoundEnd)
 	end
 end)
