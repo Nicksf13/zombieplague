@@ -3,8 +3,8 @@ RoundManager = {}
 function RoundManager:SetSpecialRound(SpecialRound)
 	SetGlobalBool("SpecialRound", SpecialRound)
 end
-function RoundManager:SetDeathmatch(Deathmatch)
-	SetGlobalBool("Deathmatch", Deathmatch)
+function RoundManager:SetRespawn(Respawn)
+	SetGlobalBool("Respawn", Respawn)
 end
 function RoundManager:SetRound(Round)
 	SetGlobalInt("Round", Round)
@@ -15,8 +15,8 @@ end
 function RoundManager:IsSpecialRound()
 	return GetGlobalInt("SpecialRound", false)
 end
-function RoundManager:IsDeathMatch()
-	return GetGlobalInt("Deathmatch", false)
+function RoundManager:IsRespawn()
+	return GetGlobalInt("Respawn", false)
 end
 function RoundManager:GetRound()
 	return GetGlobalInt("Round", 0)
