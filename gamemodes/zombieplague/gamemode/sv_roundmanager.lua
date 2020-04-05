@@ -381,11 +381,13 @@ function RoundManager:AddDefaultRounds()
 			end
 		end
 	end
-	ROUND.OnDeathFunction = function(ply)
-		ply.Lifes = ply.Lifes - 1
-	end
-	ROUND.RespawnFunction = function(ply)
-		return ply.Lifes > 0
+	if ROUND.Respawn then
+		ROUND.OnDeathFunction = function(ply)
+			ply.Lifes = (ply.Lifes or 0) - 1
+		end
+		ROUND.RespawnFunction = function(ply)
+			return ply.Lifes > 0
+		end
 	end
 	RoundManager:AddRoundType("NemesisRound", ROUND)
 	
@@ -409,11 +411,13 @@ function RoundManager:AddDefaultRounds()
 		end
 		Survivor:MakeSurvivor()
 	end
-	ROUND.OnDeathFunction = function(ply)
-		ply.Lifes = ply.Lifes - 1
-	end
-	ROUND.RespawnFunction = function(ply)
-		return ply.Lifes > 0
+	if ROUND.Respawn then
+		ROUND.OnDeathFunction = function(ply)
+			ply.Lifes = (ply.Lifes or 0) - 1
+		end
+		ROUND.RespawnFunction = function(ply)
+			return ply.Lifes > 0
+		end
 	end
 	RoundManager:AddRoundType("SurvivalRound", ROUND)
 	
