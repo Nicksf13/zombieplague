@@ -29,6 +29,7 @@ AddCSLuaFile("cl_roundmanager.lua")
 AddCSLuaFile("cl_menu.lua")
 AddCSLuaFile("cl_keymanager.lua")
 AddCSLuaFile("cl_derma.lua")
+AddCSLuaFile("cl_scoreboard.lua")
 AddCSLuaFile("zombieplague/gamemode/vgui/vgui_keybinding.lua")
 AddCSLuaFile("zombieplague/gamemode/vgui/vgui_hudcustomizer.lua")
 

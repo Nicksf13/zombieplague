@@ -99,9 +99,8 @@ function HudManager:CreateTextDisplayBox(TextProperties, BorderSize, CornerRadiu
 	local TextFont = TextProperties.TextFont
 	local TextColor = TextProperties.TextColor
 	local TextMargin = TextProperties.TextMargin or 0
-	surface.SetFont(TextFont)
 
-	local Width, Height = surface.GetTextSize(Text)
+	local Width, Height = HudManager:CalculateTextSize(Text, TextFont)
 	local XPosition, YPosition = self:CalculatePos(XPosEnum, YPosEnum, Width, Height, 20, 20)
 	local DrawXPosition = (XPosition or (ScrW() / 2  - (Width / 2) - TextMargin))
 	local DrawYPosition = (YPosition or (ScrH() / 2 - (Height / 2) - TextMargin))
@@ -125,6 +124,12 @@ function HudManager:CreateBox(BorderSize, CornerRadius, BorderColor, BodyColor, 
 	if BodyColor.a > 0 then
 		draw.RoundedBox(CornerRadius, XPosition, YPosition, Width, Height, BodyColor)
 	end
+end
+
+function HudManager:CalculateTextSize(Text, TextFont)
+	surface.SetFont(TextFont)
+
+	return surface.GetTextSize(Text)
 end
 
 function HudManager:CalculatePos(XPosENum, YPosEnum, Width, Height, BorderX, BorderY)
