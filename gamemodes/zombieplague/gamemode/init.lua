@@ -1,4 +1,4 @@
-DEBUG_MODE = false -- ONLY USE THIS FOR DEBUG/TEST PROPOSES
+BOT_MODE = true
 
 include("shared.lua")
 include("sv_commands.lua")
@@ -21,6 +21,7 @@ AddCSLuaFile("shared.lua")
 AddCSLuaFile("sh_bank.lua")
 AddCSLuaFile("sh_roundmanager.lua")
 AddCSLuaFile("sh_player.lua")
+AddCSLuaFile("sh_playermanager.lua")
 AddCSLuaFile("cl_hud.lua")
 AddCSLuaFile("cl_language.lua")
 AddCSLuaFile("cl_message.lua")

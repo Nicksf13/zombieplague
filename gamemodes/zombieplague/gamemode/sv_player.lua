@@ -3,7 +3,7 @@ local PLAYER = FindMetaTable("Player")
 function PLAYER:SetZombieClass(ZombieClass)
 	self.ZombieClass = ZombieClass
 	net.Start("SendZombieClass")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteString(ZombieClass.Name)
 	net.Broadcast()
 end
@@ -24,7 +24,7 @@ end
 function PLAYER:SetHumanClass(HumanClass)
 	self.HumanClass = HumanClass
 	net.Start("SendHumanClass")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteString(HumanClass.Name)
 	net.Broadcast()
 end
@@ -53,7 +53,7 @@ end
 function PLAYER:SetAbilityPower(AbilityPower)
 	self.AbilityPower = AbilityPower
 	net.Start("SendAbilityPower")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteInt(AbilityPower, 16)
 	net.Broadcast()
 end
@@ -97,7 +97,7 @@ end
 function PLAYER:SetMaxAbilityPower(MaxAbilityPower)
 	self.MaxAbilityPower = MaxAbilityPower
 	net.Start("SendMaxAbilityPower")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteInt(MaxAbilityPower, 16)
 	net.Broadcast()
 end
@@ -150,7 +150,7 @@ end
 function PLAYER:SetFootstep(Footstep)
 	self.Footstep = Footstep
 	net.Start("SendFoostep")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Footstep)
 	net.Broadcast()
 end
@@ -245,7 +245,7 @@ end
 function PLAYER:SetAmmoPacks(AmmoPacks, NotSave)
 	self.AmmoPacks = AmmoPacks
 	net.Start("SendAmmoPacks")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteInt(AmmoPacks, 32)
 	net.Broadcast()
 
@@ -283,7 +283,7 @@ end
 function PLAYER:SetBattery(Battery)
 	self.Battery = Battery
 	net.Start("SendBatteryCharge")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(Battery)
 	net.Broadcast()
 end
@@ -293,7 +293,7 @@ end
 function PLAYER:SetMaxBatteryCharge(MaxCharge)
 	self.MaxCharge = MaxCharge
 	net.Start("SendMaxBatteryCharge")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(MaxCharge)
 	net.Broadcast()
 end
@@ -321,7 +321,7 @@ function PLAYER:SetBreath(Breath)
 	self.Breath = Breath
 
 	net.Start("SendBreath")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(Breath)
 	net.Broadcast()
 end
@@ -332,7 +332,7 @@ function PLAYER:SetMaxBreath(MaxBreath)
 	self.MaxBreath = MaxBreath
 
 	net.Start("SendMaxBreath")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(MaxBreath)
 	net.Broadcast()
 end
@@ -551,25 +551,29 @@ function PLAYER:MakeHuman()
 	self:SetSecondaryWeaponGiven(false)
 	self:SetMeleeWeaponGiven(false)
 	
-	if self:GetPrimaryWeapon() then
-		self:GiveWeapon(self:GetPrimaryWeapon())
-		self:SetPrimaryWeaponGiven(true)
-		
-		if self:GetSecondaryWeapon() then
-			self:GiveWeapon(self:GetSecondaryWeapon())
-			self:SetSecondaryWeaponGiven(true)
+	if !self:IsBot() then
+		if self:GetPrimaryWeapon() then
+			self:GiveWeapon(self:GetPrimaryWeapon())
+			self:SetPrimaryWeaponGiven(true)
+			
+			if self:GetSecondaryWeapon() then
+				self:GiveWeapon(self:GetSecondaryWeapon())
+				self:SetSecondaryWeaponGiven(true)
 
-			if self:GetMeleeWeapon() then
-				self:GiveWeapon(self:GetMeleeWeapon())
-				self:SetMeleeWeaponGiven(true)
+				if self:GetMeleeWeapon() then
+					self:GiveWeapon(self:GetMeleeWeapon())
+					self:SetMeleeWeaponGiven(true)
+				else
+					WeaponManager:OpenMeleeWeaponMenu(self)
+				end
 			else
-				WeaponManager:OpenMeleeWeaponMenu(self)
+				WeaponManager:OpenSecondaryWeaponMenu(self)
 			end
 		else
-			WeaponManager:OpenSecondaryWeaponMenu(self)
+			WeaponManager:OpenPrimaryWeaponMenu(self)
 		end
 	else
-		WeaponManager:OpenPrimaryWeaponMenu(self)
+		self:GiveWeapon(SafeTableRandom(WeaponManager:GetWeaponsTableByWeaponType(WEAPON_PRIMARY)))
 	end
 	
 	local Ability = HumanClass.Ability
@@ -622,7 +626,7 @@ end
 function PLAYER:SetNemesis(Nemesis)
 	self.Nemesis = Nemesis
 	net.Start("SendNemesis")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Nemesis)
 	net.Broadcast()
 end
@@ -653,7 +657,7 @@ end
 function PLAYER:SetSurvivor(Survivor)
 	self.Survivor = Survivor
 	net.Start("SendSurvivor")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Survivor)
 	net.Broadcast()
 end
@@ -683,7 +687,7 @@ end
 -----------------------Special Lights-----------------------
 function PLAYER:SetLight(Light)
 	net.Start("SendLight")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Light != nil)
 		if Light then
 			net.WriteColor(Light)

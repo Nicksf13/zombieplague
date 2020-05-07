@@ -52,7 +52,7 @@ function RoundManager:GetServerStatus(Requester)
 	}
 
 	for k, ply in pairs(RoundManager:GetPlayersToPlay()) do
-		table.insert(ServerStatus.Players, {SteamID = ply:SteamID(),
+		table.insert(ServerStatus.Players, {ID = PlayerManager:GetPlayerID(ply),
 			AmmoPacks = ply:GetAmmoPacks(),
 			Battery = ply:GetMaxBatteryCharge(),
 			ZombieClass = ply:GetZombieClass().Name,
@@ -82,11 +82,13 @@ function RoundManager:CheckRoundEnd()
 	if CurrentRoundPlaying.Respawn && CurrentRoundPlaying.RoundEndFunction then
 		CurrentRoundPlaying:RoundEndFunction()
 	else
-		if RoundManager:CountHumansAlive() == 0 && RoundManager:CountZombiesAlive() == 0 then
+		local HumansAlive = RoundManager:CountHumansAlive()
+		local ZombiesAlive = RoundManager:CountZombiesAlive()
+		if HumansAlive == 0 && ZombiesAlive == 0 then
 			RoundManager:EndRound(ROUND_DRAW)
-		elseif RoundManager:CountHumansAlive() == 0 then
+		elseif HumansAlive == 0 then
 			RoundManager:EndRound(ZOMBIES_WIN)
-		elseif RoundManager:CountZombiesAlive() == 0 then
+		elseif ZombiesAlive == 0 then
 			RoundManager:EndRound(HUMANS_WIN)
 		end
 	end
