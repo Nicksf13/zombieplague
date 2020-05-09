@@ -19,7 +19,7 @@ net.Receive("SendServerStatus", function()
 	RoundManager:SetRoundState(Info.RoundState)
 	RoundManager:SetRound(Info.Round)
 	for k, TempPly in pairs(Info.Players) do
-		local ply = player.GetBySteamID(TempPly.SteamID)
+		local ply = PlayerManager:DiscoverPlayerByTextID(TempPly.ID)
 		if IsValid(ply) then
 			ply:SetMaxBatteryCharge(TempPly.Battery)
 			ply:SetAmmoPacks(TempPly.AmmoPacks)

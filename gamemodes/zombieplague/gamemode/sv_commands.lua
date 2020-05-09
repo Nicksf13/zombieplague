@@ -1,10 +1,16 @@
 Commands = {CommandList = {}}
 
-function Commands:AddCommand(Command, Description, Function, Help, Private)
+function Commands:AddCommand(Command, Description, Function, Help, Private, PermissionFunction)
 	if (type(Command) != "table") then Command = {Command} end
 	for k, Com in pairs(Command) do
 		if !Commands.CommandList[Com] then
-			Commands.CommandList[Com] = {Description = Description, Function = Function, Help = (Help and Help or ""), Private = Private}
+			Commands.CommandList[Com] = {
+				Description = Description,
+				Function = Function,
+				Help = (Help and Help or ""),
+				Private = Private,
+				PermissionFunction = PermissionFunction
+			}
 		end
 	end
 end
@@ -22,25 +28,19 @@ Commands:AddCommand("commands", "Print the server's commands.", function(ply, ar
 	end
 	SendConsoleMessage(ply, StringCommands .. "------------------------------------------------------------")
 end)
-if DEBUG_MODE then
-	Commands:AddCommand("bot", "Print the server's commands.", function(ply, args)
+if BOT_MODE then
+	Commands:AddCommand("bot", "Add a bot to the server", function(ply, args)
 		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot")
-		RunConsoleCommand("bot_zombie", "1")
 
 		timer.Create("bot", 1, 1, function()
+			local PlayersToPlay = RoundManager:GetPlayersToPlay()
 			for k, Bot in pairs(player.GetBots()) do
-				RoundManager:AddPlayerToPlay(Bot)
+				if !table.HasValue(PlayersToPlay, Bot) then
+					RoundManager:AddPlayerToPlay(Bot)
+				end
 			end
 		end)
-	end)
+	end, "", true, function(ply) return ply:IsSuperAdmin() end)
 end
 hook.Add("PlayerSay", "Commands", function(ply, txt)
 	local args = string.Explode(" ", string.lower(txt))
@@ -51,7 +51,11 @@ hook.Add("PlayerSay", "Commands", function(ply, txt)
 			if args[1] == "help" || args[1] == "ajuda" then
 				SendColorMessage(ply, "Help:\n" .. Command.Help, Color(255, 255, 0))
 			else
-				Command.Function(ply, args)
+				if(!Command.PermissionFunction || Command.PermissionFunction(ply)) then
+					Command.Function(ply, args)
+				else
+					SendPopupMessage(ply, Dictionary:GetPhrase("CommandNotAccess", ply))
+				end
 			end
 			if Command.Private then
 				return ""
