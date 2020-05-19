@@ -482,7 +482,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetTeam(TEAM_ZOMBIES)
 	self:StripWeapons()
 	
-	local ZombieClass = self:GetZombieClass()
+	local ZombieClass = self:IsBot() and SafeTableRandom(ClassManager:GetZombieClasses()) or self:GetZombieClass()
 	self:SetMaxHealth(ZombieClass.MaxHealth)
 	self:SetHealth(ZombieClass.MaxHealth)
 	self:SetWalkSpeed(ZombieClass.Speed)
@@ -530,7 +530,7 @@ function PLAYER:MakeHuman()
 	self:SetTeam(TEAM_HUMANS)
 	self:StripWeapons()
 	
-	local HumanClass = self:GetHumanClass()
+	local HumanClass = self:IsBot() and SafeTableRandom(ClassManager:GetHumanClasses()) or self:GetHumanClass()
 	self:SetMaxHealth(HumanClass.MaxHealth)
 	if HumanClass.Armor != nil then
 		self:SetArmor(HumanClass.Armor)
