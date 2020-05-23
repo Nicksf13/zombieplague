@@ -200,7 +200,7 @@ end
 function CalculateSpectator(ply)
 	local PlayersToObserve
 	local SpectateTeamOnly = cvars.Bool("zp_spectate_team_ony", true)
-	if RoundManager:IsRealisticMod() || SpectateTeamOnly then
+	if ply:Team() != TEAM_SPECTATOR && (RoundManager:IsRealisticMod() || SpectateTeamOnly) then
 		if ply:IsZombie() then
 			PlayersToObserve = RoundManager:GetAliveZombies()
 		else
@@ -211,7 +211,7 @@ function CalculateSpectator(ply)
 	end
 	if #PlayersToObserve > 0 then
 		local Observed = ply:GetObserverTarget()
-		if (!Observed || !ply:GetObserverTarget():IsPlayer() || !ply:GetObserverTarget():Alive() || (SpectateTeamOnly && Observed:Team() != ply:Team())) && ply:GetObserverMode() != OBS_MODE_ROAMING then
+		if ShouldResetSpectate(ply, SpectateTeamOnly) then
 			ply:MoveSpectateID(0, PlayersToObserve)
 		elseif ply:KeyPressed(IN_JUMP) then
 			ply:Spectate(((ply:GetObserverMode() + 1) % 3) + 4)
@@ -224,6 +224,19 @@ function CalculateSpectator(ply)
 		ply:Spectate(OBS_MODE_ROAMING)
 	end
 	PlayersToObserve = nil
+end
+function ShouldResetSpectate(ply, SpectateTeamOnly)
+	if ply:GetObserverMode() != OBS_MODE_ROAMING then
+		local Observed = ply:GetObserverTarget()
+		if !IsValid(Observed) || !Observed:IsPlayer() || !Observed:Alive() then
+			return true
+		end
+
+		if ply:Team() != TEAM_SPECTATOR && SpectateTeamOnly then
+			return Observed:Team() != ply:Team()
+		end
+	end
+	return false
 end
 function ToggleNightvision(ply)
 	if ply:GetBattery() > 0 then
