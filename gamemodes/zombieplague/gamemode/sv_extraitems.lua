@@ -61,6 +61,7 @@ function ExtraItemsManager:OpenExtraItemMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("BuyExtraItem")
 		net.WriteTable(ExtraItemsManager:GetAvailableExtraItems(ply))
+		net.WriteBool(false)
 	net.Send(ply)
 end
 function ExtraItemsManager:AddRemoveFunction(RemoveFunction)
