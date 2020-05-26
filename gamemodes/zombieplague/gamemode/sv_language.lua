@@ -56,6 +56,7 @@ function Dictionary:OpenLanguageMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("SendLanguage")
 		net.WriteTable(Dictionary:GetLanguageIDs())
+		net.WriteBool(false)
 	net.Send(ply)
 end
 function Dictionary:Init()

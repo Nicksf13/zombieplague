@@ -43,6 +43,7 @@ function ZPVoteMap:StartVotemap(Prefixes)
 	net.Start("OpenBackMenu")
 		net.WriteString("SendVotemap")
 		net.WriteTable(AuxVotemap)
+		net.WriteBool(false)
 	net.Broadcast()
 	
 	ZPVoteMap.MapsToVote = MapsToVote

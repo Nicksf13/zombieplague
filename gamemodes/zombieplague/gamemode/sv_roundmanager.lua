@@ -247,6 +247,7 @@ function RoundManager:OpenRoundsMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("SendRounds")
 		net.WriteTable(Pretty)
+		net.WriteBool(false)
 	net.Send(ply)
 end
 function RoundManager:AddPlayerToPlay(ply)
