@@ -379,9 +379,6 @@ function PLAYER:SetPrimaryWeapon(PrimaryWeapon)
 			self:SetPrimaryWeaponGiven(true)
 		end
 	end
-	if !self:GetSecondaryWeapon() then
-		WeaponManager:OpenSecondaryWeaponMenu(self)
-	end
 end
 function PLAYER:GetPrimaryWeapon()
 	return self.PrimaryWeapon
@@ -393,9 +390,6 @@ function PLAYER:SetSecondaryWeapon(SecondaryWeapon)
 			self:GiveWeapon(SecondaryWeapon)
 			self:SetSecondaryWeaponGiven(true)
 		end
-	end
-	if !self:GetMeleeWeapon() then
-		WeaponManager:OpenMeleeWeaponMenu(self)
 	end
 end
 function PLAYER:GetSecondaryWeapon()
@@ -554,25 +548,30 @@ function PLAYER:MakeHuman()
 	self:SetMeleeWeaponGiven(false)
 	
 	if !self:IsBot() then
+		local HasOpenChooseMenu = false
 		if self:GetPrimaryWeapon() then
 			self:GiveWeapon(self:GetPrimaryWeapon())
 			self:SetPrimaryWeaponGiven(true)
-			
-			if self:GetSecondaryWeapon() then
-				self:GiveWeapon(self:GetSecondaryWeapon())
-				self:SetSecondaryWeaponGiven(true)
-
-				if self:GetMeleeWeapon() then
-					self:GiveWeapon(self:GetMeleeWeapon())
-					self:SetMeleeWeaponGiven(true)
-				else
-					WeaponManager:OpenMeleeWeaponMenu(self)
-				end
-			else
-				WeaponManager:OpenSecondaryWeaponMenu(self)
-			end
 		else
-			WeaponManager:OpenPrimaryWeaponMenu(self)
+			WeaponManager:OpenWeaponMenu(self, WEAPON_PRIMARY)
+
+			HasOpenChooseMenu = true
+		end
+		
+		if self:GetSecondaryWeapon() then
+			self:GiveWeapon(self:GetSecondaryWeapon())
+			self:SetSecondaryWeaponGiven(true)
+		elseif !HasOpenChooseMenu then
+			WeaponManager:OpenWeaponMenu(self, WEAPON_SECONDARY)
+
+			HasOpenChooseMenu = true
+		end
+
+		if self:GetMeleeWeapon() then
+			self:GiveWeapon(self:GetMeleeWeapon())
+			self:SetMeleeWeaponGiven(true)
+		elseif !HasOpenChooseMenu then
+			WeaponManager:OpenWeaponMenu(self, WEAPON_MELEE)
 		end
 	else
 		self:GiveWeapon(SafeTableRandom(WeaponManager:GetWeaponsTableByWeaponType(WEAPON_PRIMARY)))

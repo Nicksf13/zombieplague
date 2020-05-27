@@ -125,7 +125,8 @@ function Dictionary:Init()
 				ExtraItemZombieMadnessName = "Zombie Madness",
 				ExtraItemRPGName = "RPG",
 				RoundsLeft = "%d round(s) left!",
-				FinalRound = "Final round!"
+				FinalRound = "Final round!",
+				SaveSelection = "Save selection?"
 			},
 			Client = {
 				ClassClass = "Class",
@@ -152,6 +153,9 @@ function Dictionary:Init()
 				MenuZombieChoose = "Zombie Class Menu",
 				MenuHumanChoose = "Human Class Menu",
 				MenuWeaponChoose = "Weapon Choose Menu",
+				MenuPrimaryWeaponChoose = "Primary Weapon Menu",
+				MenuSecondaryWeaponChoose = "Secondary Weapon Menu",
+				MenuMeleeWeaponChoose = "Melee Weapon Menu",
 				MenuExtraItemChoose = "Extra Items",
 				MenuLanguageChoose = "Language Choose Menu",
 				MenuAdminRoundChoose = "Round Choose Menu",
