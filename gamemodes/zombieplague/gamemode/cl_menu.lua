@@ -64,13 +64,15 @@ function CreateMenu()
 			i = i + 1
 		end
 
+		i = 1
 		for k, FixedOption in pairs(MMenu.FixedOptions) do
+			local Key = 8 - i
 			local PressFunction = function()
 				MMenu:GetPressFunction(FixedOption)()
 				
 				MMenu:SetPage(Page)
 			end
-			MMenu.ZPOptions:AddLine(i .. " - " .. MMenu:GetFormatedText(FixedOption), PressFunction, NumpadKeys[i])
+			MMenu.ZPOptions:AddLine(Key .. " - " .. MMenu:GetFormatedText(FixedOption), PressFunction, NumpadKeys[Key])
 
 			i = i + 1
 		end
@@ -160,11 +162,19 @@ function CreateMenu()
 		end
 	end
 end
+function OpenWeaponMenu()
+	local Options = {}
+	table.insert(Options, {Order = 1, Name = Dictionary:GetPhrase("MenuPrimaryWeaponChoose"), Function = function() net.Start("RequestPrimaryWeaponMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 2, Name = Dictionary:GetPhrase("MenuSecondaryWeaponChoose"), Function = function() net.Start("RequestSecondaryWeaponMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 3, Name = Dictionary:GetPhrase("MenuMeleeWeaponChoose"), Function = function() net.Start("RequestMeleeWeaponMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+
+	MMenu:UpdateOptions(Options, {})
+end
 function OpenZPMenu()
 	local Options = {}
 	table.insert(Options, {Order = 1, Name = Dictionary:GetPhrase("MenuZombieChoose"), Function = function() net.Start("RequestZombieMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
 	table.insert(Options, {Order = 2, Name = Dictionary:GetPhrase("MenuHumanChoose"), Function = function() net.Start("RequestHumanMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Order = 3, Name = Dictionary:GetPhrase("MenuWeaponChoose"), Function = function() net.Start("RequestWeaponMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
+	table.insert(Options, {Order = 3, Name = Dictionary:GetPhrase("MenuWeaponChoose"), Function = OpenWeaponMenu})
 	table.insert(Options, {Order = 4, Name = Dictionary:GetPhrase("MenuExtraItemChoose"), Function = function() net.Start("RequestExtraItemMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
 	table.insert(Options, {Order = 5, Name = Dictionary:GetPhrase("MenuLanguageChoose"), Function = function() net.Start("RequestLanguageMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
 	table.insert(Options, {Order = 6, Name = (LocalPlayer():Team() != TEAM_SPECTATOR and Dictionary:GetPhrase("MenuSpectator") or Dictionary:GetPhrase("MenuNonSpectator")), Function = function() net.Start("RequestSpectator") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu")end})

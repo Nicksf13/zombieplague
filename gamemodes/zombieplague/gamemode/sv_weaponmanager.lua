@@ -123,7 +123,7 @@ function WeaponManager:IsChosenWeapon(Weapon)
 	end
 	return false
 end
-function WeaponManager:OpenWeaponMenu(ply, WeaponType)
+function WeaponManager:GetWeaponMenu(ply, WeaponType)
 	local PrettyWeapons = {}
 	for k, Weapon in pairs(self:GetWeaponsTableByWeaponType(WeaponType)) do
 		PrettyWeapons[Weapon.WeaponID] = {
@@ -134,49 +134,145 @@ function WeaponManager:OpenWeaponMenu(ply, WeaponType)
 
 	return PrettyWeapons
 end
-function WeaponManager:OpenPrimaryWeaponMenu(ply)
+function WeaponManager:OpenWeaponMenu(ply, WeaponType)
+	local FixedOptions = {
+		ShouldSaveWeapon = {
+			DescribeText = Dictionary:GetPhrase("SaveSelection", ply),
+			Type = "Boolean",
+			Value = WeaponManager:IsWeaponTypeSet(ply, WeaponType)
+		}
+	}
+
 	net.Start("OpenBackMenu")
-		net.WriteString("SendPrimaryWeapon")
-		net.WriteTable(WeaponManager:OpenWeaponMenu(ply, WEAPON_PRIMARY))
-		net.WriteBool(false)
+		net.WriteString(WeaponManager:GetWeaponNetworkString(WeaponType))
+		net.WriteTable(WeaponManager:GetWeaponMenu(ply, WeaponType))
+		net.WriteBool(true)
+		net.WriteTable(FixedOptions)
 	net.Send(ply)
 end
-function WeaponManager:OpenSecondaryWeaponMenu(ply)
-	net.Start("OpenBackMenu")
-		net.WriteString("SendSecondaryWeapon")
-		net.WriteTable(WeaponManager:OpenWeaponMenu(ply, WEAPON_SECONDARY))
-		net.WriteBool(false)
-	net.Send(ply)
+function WeaponManager:IsWeaponTypeSet(ply, WeaponType)
+	if WeaponType == WEAPON_PRIMARY then
+		return ply:GetPrimaryWeapon() != nil
+	end
+
+	if WeaponType == WEAPON_SECONDARY then
+		return ply:GetSecondaryWeapon() != nil
+	end
+
+	return ply:GetMeleeWeapon() != nil
 end
-function WeaponManager:OpenMeleeWeaponMenu(ply)
-	net.Start("OpenBackMenu")
-		net.WriteString("SendMeleeWeapon")
-		net.WriteTable(WeaponManager:OpenWeaponMenu(ply, WEAPON_MELEE))
-		net.WriteBool(false)
-	net.Send(ply)
+function WeaponManager:GetWeaponNetworkString(WeaponType)
+	if WeaponType == WEAPON_PRIMARY then
+		return "SendPrimaryWeapon"
+	end
+
+	if WeaponType == WEAPON_SECONDARY then
+		return "SendSecondaryWeapon"
+	end
+
+	return "SendMeleeWeapon"
+end
+function WeaponManager:ReadWeaponRequest(ply, WeaponType)
+	
 end
 net.Receive("SendPrimaryWeapon", function(len, ply)
-	ply:SetPrimaryWeapon(nil)
-	ply:SetSecondaryWeapon(nil)
-	ply:SetMeleeWeapon(nil)
+	local WeaponID = net.ReadString()
+	local Weapon = WeaponManager:FindWeaponByWeaponId(WeaponID, WEAPON_PRIMARY)
+	local ShouldSaveWeapon = false
+	if net.ReadBool() then
+		ShouldSaveWeapon = net.ReadTable().ShouldSaveWeapon.Value
+	end
 
-	ply:SetPrimaryWeapon(WeaponManager:FindWeaponByWeaponId(net.ReadString(), WEAPON_PRIMARY))
+	if ShouldSaveWeapon then
+		ply:SetPrimaryWeapon(Weapon)
+	elseif !ply:GetPrimaryWeaponGiven() then
+		ply:GiveWeapon(Weapon)
+		ply:SetPrimaryWeaponGiven(true)
+	end
+
+	if !ShouldSaveWeapon then
+		ply:SetPrimaryWeapon(nil)
+	end
+
+	if !ply:GetSecondaryWeaponGiven() then
+		WeaponManager:OpenWeaponMenu(ply, WEAPON_SECONDARY)
+	elseif !ply:GetMeleeWeaponGiven() then
+		WeaponManager:OpenWeaponMenu(ply, WEAPON_MELEE)
+	end
 end)
 net.Receive("SendSecondaryWeapon", function(len, ply)
-	ply:SetSecondaryWeapon(WeaponManager:FindWeaponByWeaponId(net.ReadString(), WEAPON_SECONDARY))
+	local WeaponID = net.ReadString()
+	local Weapon = WeaponManager:FindWeaponByWeaponId(WeaponID, WEAPON_SECONDARY)
+	local ShouldSaveWeapon = false
+	if net.ReadBool() then
+		ShouldSaveWeapon = net.ReadTable().ShouldSaveWeapon.Value
+	end
+
+	if ShouldSaveWeapon then
+		ply:SetSecondaryWeapon(Weapon)
+	elseif !ply:GetSecondaryWeaponGiven() then
+		ply:GiveWeapon(Weapon)
+		ply:SetSecondaryWeaponGiven(true)
+	end
+
+	if !ShouldSaveWeapon then
+		ply:SetSecondaryWeapon(nil)
+	end
+
+	if !ply:GetPrimaryWeaponGiven() then
+		WeaponManager:OpenWeaponMenu(ply, WEAPON_PRIMARY)
+	elseif !ply:GetMeleeWeaponGiven() then
+		WeaponManager:OpenWeaponMenu(ply, WEAPON_MELEE)
+	end
 end)
 net.Receive("SendMeleeWeapon", function(len, ply)
-	ply:SetMeleeWeapon(WeaponManager:FindWeaponByWeaponId(net.ReadString(), WEAPON_MELEE))
+	local WeaponID = net.ReadString()
+	local Weapon = WeaponManager:FindWeaponByWeaponId(WeaponID, WEAPON_MELEE)
+	local ShouldSaveWeapon = false
+	if net.ReadBool() then
+		ShouldSaveWeapon = net.ReadTable().ShouldSaveWeapon.Value
+	end
+
+	if ShouldSaveWeapon then
+		ply:SetMeleeWeapon(Weapon)
+	elseif !ply:GetMeleeWeaponGiven() then
+		ply:GiveWeapon(Weapon)
+		ply:SetMeleeWeaponGiven(true)
+	end
+
+	if !ShouldSaveWeapon then
+		ply:SetMeleeWeapon(nil)
+	end
+
+	if !ply:GetPrimaryWeaponGiven() then
+		WeaponManager:OpenWeaponMenu(ply, WEAPON_PRIMARY)
+	elseif !ply:GetSecondaryWeaponGiven() then
+		WeaponManager:OpenWeaponMenu(ply, WEAPON_SECONDARY)
+	end
 end)
-net.Receive("RequestWeaponMenu", function(len, ply)
-	WeaponManager:OpenPrimaryWeaponMenu(ply)
+net.Receive("RequestPrimaryWeaponMenu", function(len, ply)
+	WeaponManager:OpenWeaponMenu(ply, WEAPON_PRIMARY)
+end)
+net.Receive("RequestSecondaryWeaponMenu", function(len, ply)
+	WeaponManager:OpenWeaponMenu(ply, WEAPON_SECONDARY)
+end)
+net.Receive("RequestMeleeWeaponMenu", function(len, ply)
+	WeaponManager:OpenWeaponMenu(ply, WEAPON_MELEE)
 end)
 
-Commands:AddCommand("weapons", "Open the weapons menu.", function(ply, args)
-	WeaponManager:OpenPrimaryWeaponMenu(ply)
+Commands:AddCommand({"weapons", "primaryweapon"}, "Open primary weapons menu.", function(ply, args)
+	WeaponManager:OpenWeaponMenu(ply, WEAPON_PRIMARY)
+end)
+Commands:AddCommand("secondaryweapon", "Open secondary weapons menu.", function(ply, args)
+	WeaponManager:OpenWeaponMenu(ply, WEAPON_SECONDARY)
+end)
+Commands:AddCommand("meleeweapon", "Open melee weapons menu.", function(ply, args)
+	WeaponManager:OpenWeaponMenu(ply, WEAPON_MELEE)
 end)
 
-util.AddNetworkString("RequestWeaponMenu")
+util.AddNetworkString("RequestPrimaryWeaponMenu")
+util.AddNetworkString("RequestSecondaryWeaponMenu")
+util.AddNetworkString("RequestMeleeWeaponMenu")
 util.AddNetworkString("SendPrimaryWeapon")
 util.AddNetworkString("SendSecondaryWeapon")
 util.AddNetworkString("SendMeleeWeapon")
