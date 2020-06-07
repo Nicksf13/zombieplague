@@ -319,7 +319,7 @@ function PLAYER:SetBreath(Breath)
 		Breath = self:GetMaxBreath()
 	end
 	self.Breath = Breath
-
+	
 	net.Start("SendBreath")
 		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(Breath)
@@ -379,9 +379,6 @@ function PLAYER:SetPrimaryWeapon(PrimaryWeapon)
 			self:SetPrimaryWeaponGiven(true)
 		end
 	end
-	if !self:GetSecondaryWeapon() then
-		WeaponManager:OpenSecondaryWeaponMenu(self)
-	end
 end
 function PLAYER:GetPrimaryWeapon()
 	return self.PrimaryWeapon
@@ -393,9 +390,6 @@ function PLAYER:SetSecondaryWeapon(SecondaryWeapon)
 			self:GiveWeapon(SecondaryWeapon)
 			self:SetSecondaryWeaponGiven(true)
 		end
-	end
-	if !self:GetMeleeWeapon() then
-		WeaponManager:OpenMeleeWeaponMenu(self)
 	end
 end
 function PLAYER:GetSecondaryWeapon()
@@ -482,7 +476,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetTeam(TEAM_ZOMBIES)
 	self:StripWeapons()
 	
-	local ZombieClass = self:GetZombieClass()
+	local ZombieClass = self:IsBot() and SafeTableRandom(ClassManager:GetZombieClasses()) or self:GetZombieClass()
 	self:SetMaxHealth(ZombieClass.MaxHealth)
 	self:SetHealth(ZombieClass.MaxHealth)
 	self:SetWalkSpeed(ZombieClass.Speed)
@@ -490,6 +484,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetCrouchedWalkSpeed(ZombieClass.CrouchSpeed)
 	self:SetAuxGravity(ZombieClass.Gravity)
 	self:SetMaxBreath(ZombieClass.Breath)
+	self:SetBreath(ZombieClass.Breath)
 	self:SetJumpPower(ZombieClass.JumpPower)
 	self:SetDamageAmplifier(ZombieClass.DamageAmplifier)
 	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && ZombieClass.Footstep)
@@ -529,7 +524,7 @@ function PLAYER:MakeHuman()
 	self:SetTeam(TEAM_HUMANS)
 	self:StripWeapons()
 	
-	local HumanClass = self:GetHumanClass()
+	local HumanClass = self:IsBot() and SafeTableRandom(ClassManager:GetHumanClasses()) or self:GetHumanClass()
 	self:SetMaxHealth(HumanClass.MaxHealth)
 	if HumanClass.Armor != nil then
 		self:SetArmor(HumanClass.Armor)
@@ -542,6 +537,7 @@ function PLAYER:MakeHuman()
 	self:SetJumpPower(HumanClass.JumpPower)
 	self:SetModel(HumanClass.PModel)
 	self:SetMaxBreath(HumanClass.Breath)
+	self:SetBreath(HumanClass.Breath)
 	self:SetMaxBatteryCharge(HumanClass.Battery)
 	self:SetDamageAmplifier(HumanClass.DamageAmplifier)
 	self:SetFootstep(HumanClass.Footstep)
@@ -552,25 +548,30 @@ function PLAYER:MakeHuman()
 	self:SetMeleeWeaponGiven(false)
 	
 	if !self:IsBot() then
+		local HasOpenChooseMenu = false
 		if self:GetPrimaryWeapon() then
 			self:GiveWeapon(self:GetPrimaryWeapon())
 			self:SetPrimaryWeaponGiven(true)
-			
-			if self:GetSecondaryWeapon() then
-				self:GiveWeapon(self:GetSecondaryWeapon())
-				self:SetSecondaryWeaponGiven(true)
-
-				if self:GetMeleeWeapon() then
-					self:GiveWeapon(self:GetMeleeWeapon())
-					self:SetMeleeWeaponGiven(true)
-				else
-					WeaponManager:OpenMeleeWeaponMenu(self)
-				end
-			else
-				WeaponManager:OpenSecondaryWeaponMenu(self)
-			end
 		else
-			WeaponManager:OpenPrimaryWeaponMenu(self)
+			WeaponManager:OpenWeaponMenu(self, WEAPON_PRIMARY)
+
+			HasOpenChooseMenu = true
+		end
+		
+		if self:GetSecondaryWeapon() then
+			self:GiveWeapon(self:GetSecondaryWeapon())
+			self:SetSecondaryWeaponGiven(true)
+		elseif !HasOpenChooseMenu then
+			WeaponManager:OpenWeaponMenu(self, WEAPON_SECONDARY)
+
+			HasOpenChooseMenu = true
+		end
+
+		if self:GetMeleeWeapon() then
+			self:GiveWeapon(self:GetMeleeWeapon())
+			self:SetMeleeWeaponGiven(true)
+		elseif !HasOpenChooseMenu then
+			WeaponManager:OpenWeaponMenu(self, WEAPON_MELEE)
 		end
 	else
 		self:GiveWeapon(SafeTableRandom(WeaponManager:GetWeaponsTableByWeaponType(WEAPON_PRIMARY)))

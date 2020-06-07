@@ -18,20 +18,25 @@ function ExtraItemsManager:Search()
 			if ExtraItem:ShouldBeEnabled() then
 				if !ExtraItem.ID || !ExtraItem.Name || !ExtraItem.Price || !ExtraItem.OnBuy then
 					print("Invalid Extra Item: '" .. File .. "'")
-				elseif ExtraItem.Type == ITEM_ZOMBIE then
-					self:AddZombieExtraItem(ExtraItem)
 				else
-					self:AddHumanExtraItem(ExtraItem)
+					self:AddExtraItem(ExtraItem, ExtraItem.Type)
 				end
 			end
 		end
 	end
 end
-function ExtraItemsManager:AddZombieExtraItem(ExtraItem)
-	table.insert(ExtraItemsManager.ZombiesExtraItems, ExtraItem)
-end
-function ExtraItemsManager:AddHumanExtraItem(ExtraItem)
-	table.insert(ExtraItemsManager.HumansExtraItems, ExtraItem)
+function ExtraItemsManager:AddExtraItem(ExtraItem, Type)
+	if Type == ITEM_ZOMBIE then
+		table.insert(ExtraItemsManager.ZombiesExtraItems, ExtraItem)
+	else
+		table.insert(ExtraItemsManager.HumansExtraItems, ExtraItem)
+	end
+
+	if ExtraItem.BuySounds then
+		for k, BuySound in pairs(ExtraItem.BuySounds) do
+			resource.AddFile("sound/" .. BuySound)
+		end
+	end
 end
 function ExtraItemsManager:GetZombiesExtraItems()
 	return ExtraItemsManager.ZombiesExtraItems
@@ -56,6 +61,7 @@ function ExtraItemsManager:OpenExtraItemMenu(ply)
 	net.Start("OpenBackMenu")
 		net.WriteString("BuyExtraItem")
 		net.WriteTable(ExtraItemsManager:GetAvailableExtraItems(ply))
+		net.WriteBool(false)
 	net.Send(ply)
 end
 function ExtraItemsManager:AddRemoveFunction(RemoveFunction)
@@ -78,6 +84,9 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 				ExtraItem:OnBuy(ply)
 				if ExtraItem.RemoveFunction then
 					table.insert(ExtraItemsManager.PostRoundEvents, ExtraItem.RemoveFunction)
+				end
+				if ExtraItem.BuySounds then
+					SendSound(ply, SafeTableRandom(ExtraItem.BuySounds))
 				end
 				ply:TakeAmmoPacks(ExtraItem.Price)
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), Dictionary:GetPhrase(ExtraItem.Name, ply)))
