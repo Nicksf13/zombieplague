@@ -129,7 +129,7 @@ end
 function RoundManager:NewRound()
 	local TotalChance = 0
 	local ValidRounds = {}
-	local TotalPlayers = RoundManager:CountPlayersToPlay(true)
+	local TotalPlayers = RoundManager:CountPlayersToPlayAlive()
 	for k, Round in pairs(RoundManager:GetRounds()) do
 		if TotalPlayers >= Round.MinPlayers then
 			TotalChance = TotalChance + Round.Chance
@@ -215,7 +215,7 @@ end
 
 function RoundManager:GetGoodRounds()
 	local GoodRounds = {}
-	local TotalPlayers = RoundManager:CountPlayerToPlayAlive()
+	local TotalPlayers = RoundManager:CountPlayersToPlayAlive()
 	for k, Round in pairs(RoundManager:GetRounds()) do
 		if TotalPlayers >= Round.MinPlayers then
 			GoodRounds[k] = Round
@@ -284,41 +284,40 @@ function RoundManager:RemovePlayerToPlay(ply)
 
 	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end
-function RoundManager:CountPlayersToPlay(Alive)
-	if !Alive then
-		return table.Count(RoundManager:GetPlayersToPlay())
-	end
-	
-	local i = 0
-	for k, ply in pairs(RoundManager:GetPlayersToPlay(true)) do
-		i = i + 1
-	end
-
-	return i
-end
-function RoundManager:GetPlayersToPlay(Alive)
-	if !Alive then
-		return RoundManager.PlayersToPlay
-	end
-	
-	local Alive = {}
-	for k, ply in pairs(RoundManager.PlayersToPlay) do
-		if ply:Alive() then
-			table.insert(Alive, ply)
+function RoundManager:CountPlayersToPlay()
+	local PlayersToPlay = 0
+	for k, ply in pairs(self.PlayersToPlay) do
+		if IsValid(ply) then
+			PlayersToPlay = PlayersToPlay + 1
 		end
 	end
 
-	return Alive
+	return PlayersToPlay
 end
-function RoundManager:CountPlayerToPlayAlive()
+function RoundManager:CountPlayersToPlayAlive()
 	local Alive = 0
-	for k, ply in pairs(RoundManager.PlayersToPlay) do
-		if ply:Alive() then
+	for k, ply in pairs(self.PlayersToPlay) do
+		if IsValid(ply) && ply:Alive() then
 			Alive = Alive + 1
 		end
 	end
 
 	return Alive
+end
+function RoundManager:GetPlayersToPlay(Alive)
+	local PlayersToPlay = {}
+
+	for k, ply in pairs(self.PlayersToPlay) do
+		if IsValid(ply) then
+			if !Alive || ply:Alive() then
+				table.insert(PlayersToPlay, ply)
+			end
+		else
+			table.remove(self.PlayersToPlay, k)
+		end
+	end
+
+	return PlayersToPlay
 end
 function RoundManager:AddDefaultRounds()
 	local ROUND = {}

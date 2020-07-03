@@ -674,7 +674,7 @@ end
 -------------------------Infection--------------------------
 -------------------------EmitSound--------------------------
 function PLAYER:ZPEmitSound(SoundPath, DelayTime, Force)
-	if SoundPath != nil then
+	if SoundPath then
 		if self:ZPCanEmitSound() || Force then
 			self.ZPEmit = CurTime() + DelayTime
 			self:EmitSound(SoundPath)
@@ -700,6 +700,19 @@ function PLAYER:GetLight()
 	return self.Light
 end
 -----------------------Special Lights-----------------------
+-----------------------Screen Filter------------------------
+function PLAYER:SetFilter(ScreenFilter)
+	net.Start("SendFilter")
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteBool(ScreenFilter != nil)
+		if ScreenFilter then
+			net.WriteColor(ScreenFilter)
+		end
+	net.Broadcast()
+
+	self.ScreenFilter = ScreenFilter
+end
+---------------------------Filter---------------------------
 net.Receive("SendVoice", function(len, ply)
 	ply:SetTalking(net.ReadBool())
 end)
@@ -720,3 +733,4 @@ util.AddNetworkString("SendAbilityPower")
 util.AddNetworkString("SendMaxAbilityPower")
 util.AddNetworkString("SendBreath")
 util.AddNetworkString("SendMaxBreath")
+util.AddNetworkString("SendFilter")
