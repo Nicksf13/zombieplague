@@ -514,6 +514,9 @@ function PLAYER:Infect(SilentInfection)
 	end
 
 	self:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
+	if cvars.Bool("zp_zombie_screen_filter", true) then
+		self:SetScreenFilter(Color(255, 0, 0, 5))
+	end
 end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
@@ -586,6 +589,10 @@ function PLAYER:MakeHuman()
 	else
 		self:SetMaxAbilityPower(-1)
 		self:SetAbilityPower(-1)
+	end
+	
+	if cvars.Bool("zp_zombie_screen_filter", true) then
+		self:SetScreenFilter(nil)
 	end
 end
 function PLAYER:SetDamageAmplifier(DamageAmplifier)
@@ -689,7 +696,7 @@ end
 function PLAYER:SetLight(Light)
 	net.Start("SendLight")
 		net.WriteString(PlayerManager:GetPlayerID(self))
-		net.WriteBool(Light != nil)
+		net.WriteBool(!!Light)
 		if Light then
 			net.WriteColor(Light)
 		end
@@ -701,10 +708,10 @@ function PLAYER:GetLight()
 end
 -----------------------Special Lights-----------------------
 -----------------------Screen Filter------------------------
-function PLAYER:SetFilter(ScreenFilter)
-	net.Start("SendFilter")
+function PLAYER:SetScreenFilter(ScreenFilter)
+	net.Start("SendScreenFilter")
 		net.WriteString(PlayerManager:GetPlayerID(self))
-		net.WriteBool(ScreenFilter != nil)
+		net.WriteBool(!!ScreenFilter)
 		if ScreenFilter then
 			net.WriteColor(ScreenFilter)
 		end
@@ -733,4 +740,4 @@ util.AddNetworkString("SendAbilityPower")
 util.AddNetworkString("SendMaxAbilityPower")
 util.AddNetworkString("SendBreath")
 util.AddNetworkString("SendMaxBreath")
-util.AddNetworkString("SendFilter")
+util.AddNetworkString("SendScreenFilter")

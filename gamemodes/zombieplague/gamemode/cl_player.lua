@@ -120,6 +120,13 @@ function PLAYER:GetMaxBreath()
 	return self.MaxBreath or 100
 end
 
+function PLAYER:SetScreenFilter(ScreenFilter)
+	self.ScreenFilter = ScreenFilter
+end
+function PLAYER:GetScreenFilter()
+	return self.ScreenFilter
+end
+
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
@@ -218,5 +225,15 @@ net.Receive("SendMaxBreath", function()
 	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetMaxBreath(net.ReadFloat())
+	end
+end)
+net.Receive("SendScreenFilter", function()
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
+	if IsValid(ply) then
+		if net.ReadBool() then
+			ply:SetScreenFilter(net.ReadColor())
+		else
+			ply:SetScreenFilter(nil)
+		end
 	end
 end)

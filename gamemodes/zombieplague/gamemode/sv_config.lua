@@ -172,6 +172,7 @@ ConvarManager:CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set
 ConvarManager:CreateConVar("zp_survivor_health", 300, 8, "cvar used to the health of survivor.")
 
 ConvarManager:CreateConVar("zp_zombie_footstep", 1, 8, "cvar used to set if zombies will emit footstep sounds.") 
+ConvarManager:CreateConVar("zp_zombie_screen_filter", 1, 8, "cvar used to set if zombie will have a \"red\" effect in his screen")
 
 ConvarManager:CreateConVar("zp_admin_human_model", 0, 8, "cvar used to set if admin will receive a special human player model.")
 ConvarManager:CreateConVar("zp_admin_zombie_model", 0, 8, "cvar used to set if admin will receive a special zombie player model.")
