@@ -69,6 +69,7 @@ ZPClass.RunSpeed = 250
 ZPClass.CrouchSpeed = 0.6
 ZPClass.Gravity = 0.9
 ZPClass.Breath = 200
+ZPClass.Scale = 1.1
 ZPClass.FallFunction = function()return true end
 ClassManager:AddZPClass("HeavyZombie", ZPClass, TEAM_ZOMBIES)
 
