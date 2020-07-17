@@ -7,6 +7,7 @@ ZPClass.RunSpeed = 250
 ZPClass.CrouchSpeed = 0.4
 ZPClass.Gravity = 1.1
 ZPClass.Breath = 50
+ZPClass.Scale = 1.1
 
 ZPClass.Ability = ClassManager:CreateClassAbility(true, function(ply)
 	ply:ZombieMadness()
