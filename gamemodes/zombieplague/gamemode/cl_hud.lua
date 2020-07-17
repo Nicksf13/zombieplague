@@ -16,6 +16,10 @@ hook.Add("HUDPaint", "HUDZombiePlague", function()
 		local ply = LocalPlayer():Alive() and LocalPlayer() or LocalPlayer():GetObserverTarget()
 
 		if IsValid(ply) then
+			if ply:GetScreenFilter() then
+				draw.RoundedBox(0, 0, 0, ScrW(), ScrH(), ply:GetScreenFilter())
+			end
+
 			local StringHUD = ""
 			for k, HudComponent in pairs(HudManager.HudComponents) do
 				if HudComponent:ShouldRenderFunction(ply) then

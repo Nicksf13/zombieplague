@@ -477,6 +477,9 @@ function PLAYER:Infect(SilentInfection)
 	self:StripWeapons()
 	
 	local ZombieClass = self:IsBot() and SafeTableRandom(ClassManager:GetZombieClasses()) or self:GetZombieClass()
+	if ZombieClass.Scale then
+		self:SetModelScale(ZombieClass.Scale, 0)
+	end
 	self:SetMaxHealth(ZombieClass.MaxHealth)
 	self:SetHealth(ZombieClass.MaxHealth)
 	self:SetWalkSpeed(ZombieClass.Speed)
@@ -514,6 +517,9 @@ function PLAYER:Infect(SilentInfection)
 	end
 
 	self:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
+	if cvars.Bool("zp_zombie_screen_filter", true) then
+		self:SetScreenFilter(Color(255, 0, 0, 5))
+	end
 end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
@@ -526,8 +532,11 @@ function PLAYER:MakeHuman()
 	
 	local HumanClass = self:IsBot() and SafeTableRandom(ClassManager:GetHumanClasses()) or self:GetHumanClass()
 	self:SetMaxHealth(HumanClass.MaxHealth)
-	if HumanClass.Armor != nil then
+	if HumanClass.Armor then
 		self:SetArmor(HumanClass.Armor)
+	end
+	if HumanClass.Scale then
+		self:SetModelScale(HumanClass.Scale, 0)
 	end
 	self:SetHealth(HumanClass.MaxHealth)
 	self:SetWalkSpeed(HumanClass.Speed)
@@ -586,6 +595,10 @@ function PLAYER:MakeHuman()
 	else
 		self:SetMaxAbilityPower(-1)
 		self:SetAbilityPower(-1)
+	end
+	
+	if cvars.Bool("zp_zombie_screen_filter", true) then
+		self:SetScreenFilter(nil)
 	end
 end
 function PLAYER:SetDamageAmplifier(DamageAmplifier)
@@ -674,7 +687,7 @@ end
 -------------------------Infection--------------------------
 -------------------------EmitSound--------------------------
 function PLAYER:ZPEmitSound(SoundPath, DelayTime, Force)
-	if SoundPath != nil then
+	if SoundPath then
 		if self:ZPCanEmitSound() || Force then
 			self.ZPEmit = CurTime() + DelayTime
 			self:EmitSound(SoundPath)
@@ -689,7 +702,7 @@ end
 function PLAYER:SetLight(Light)
 	net.Start("SendLight")
 		net.WriteString(PlayerManager:GetPlayerID(self))
-		net.WriteBool(Light != nil)
+		net.WriteBool(!!Light)
 		if Light then
 			net.WriteColor(Light)
 		end
@@ -700,6 +713,19 @@ function PLAYER:GetLight()
 	return self.Light
 end
 -----------------------Special Lights-----------------------
+-----------------------Screen Filter------------------------
+function PLAYER:SetScreenFilter(ScreenFilter)
+	net.Start("SendScreenFilter")
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteBool(!!ScreenFilter)
+		if ScreenFilter then
+			net.WriteColor(ScreenFilter)
+		end
+	net.Broadcast()
+
+	self.ScreenFilter = ScreenFilter
+end
+---------------------------Filter---------------------------
 net.Receive("SendVoice", function(len, ply)
 	ply:SetTalking(net.ReadBool())
 end)
@@ -720,3 +746,4 @@ util.AddNetworkString("SendAbilityPower")
 util.AddNetworkString("SendMaxAbilityPower")
 util.AddNetworkString("SendBreath")
 util.AddNetworkString("SendMaxBreath")
+util.AddNetworkString("SendScreenFilter")
