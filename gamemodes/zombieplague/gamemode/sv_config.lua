@@ -2,7 +2,52 @@ ZOMBIE_KNIFE = "zp_weapon_fists"
 
 INFECTION_BOMB = "weapon_frag"
 
+ZombiePlague_mk2 = ZombiePlague_mk2 or {}
+
 ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
+
+ZombiePlague_mk2.config = {
+	serverName = "Zombie Plague server",
+	serverPassword = "",
+	serverLoadingURL = "",
+
+	serverRunCommands = {
+		"net_maxfilesize 64",
+	},
+	
+	-- https://i.imgur.com/MMEm7c6.png
+	serverFastDL = {
+		"maps/zm_street.bsp", -- 5mb
+		
+		"sound/zombieplague/knife_slash1.mp3",
+		"sound/zombieplague/knife_slash2.mp3",
+		"sound/zombieplague/nemesis_pain1.mp3",
+		"sound/zombieplague/nemesis_pain2.mp3",
+		"sound/zombieplague/nemesis_pain3.mp3",
+		"sound/zombieplague/nemesis1.mp3",
+		"sound/zombieplague/nemesis2.mp3",
+		"sound/zombieplague/nightvision.mp3",
+		"sound/zombieplague/survivor1.mp3",
+		"sound/zombieplague/survivor2.mp3",
+		"sound/zombieplague/win_humans1.mp3",
+		"sound/zombieplague/win_humans2.mp3",
+		"sound/zombieplague/win_zombies1.mp3",
+		"sound/zombieplague/win_zombies2.mp3",
+		"sound/zombieplague/win_zombies3.mp3",
+		"sound/zombieplague/zombie_brains1.mp3",
+		"sound/zombieplague/zombie_brains2.mp3",
+		"sound/zombieplague/zombie_burn3.mp3",
+		"sound/zombieplague/zombie_burn4.mp3",
+		"sound/zombieplague/zombie_burn5.mp3",
+		"sound/zombieplague/zombie_burn6.mp3",
+		"sound/zombieplague/zombie_burn7.mp3",
+		"sound/zombieplague/zombie_fall1.mp3",
+		"sound/zombieplague/zombie_infec1.mp3",
+		"sound/zombieplague/zombie_infec2.mp3",
+		"sound/zombieplague/zombie_infec3.mp3",
+		"sound/zombieplague/zombie_madness1.mp3"
+	}
+}
 
 AdminHumanPlayerModel = ""
 AdminZombiePlayerModel = ""
@@ -91,6 +136,29 @@ NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
 
 resource.AddFile("sound/" .. NIGHTVISION_ON_SOUND)
 resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
+
+function ZombiePlague_mk2.loadConfig()
+	local data = ZombiePlague_mk2.config
+
+	RunConsoleCommand( "hostname", data.serverName )
+	RunConsoleCommand( "sv_password", data.serverPassword )
+	RunConsoleCommand( "sv_loadingurl", data.serverLoadingURL )
+
+	for _, entry in pairs( data.serverRunCommands ) do
+		local args = string.Explode( " ", entry )
+			local cmd = table.remove( args, 1 )
+
+		RunConsoleCommand( cmd, unpack( args ) )
+	end
+
+	for k, v in ipairs( data.serverFastDL ) do
+		resource.AddSingleFile(v)
+	end
+end
+
+function GM:InitPostEntity()
+	ZombiePlague_mk2.loadConfig();
+end
 
 ---------------------------------Sounds---------------------------------
 -------------------------------Ammo Pack--------------------------------
