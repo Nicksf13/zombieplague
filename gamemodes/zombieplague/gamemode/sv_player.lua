@@ -347,15 +347,15 @@ function PLAYER:SetNightvision(Nightvision)
 	if self:Alive() && self:IsHuman() then
 		if RoundManager:IsRealisticMod() then
 			if Nightvision then
-				self:EmitSound(NIGHTVISION_ON_SOUND, 75, 100, 0.25)
+				self:EmitSound("zombieplague/nightvision.mp3", 75, 100, 0.25)
 			elseif !self:NightvisionIsOn() then
-				self:EmitSound(NIGHTVISION_OFF_SOUND, 75, 100, 0.25)
+				self:EmitSound("zombieplague/nightvision.mp3", 75, 100, 0.25)
 			end
 		else
 			if Nightvision then
-				SendSound(self, NIGHTVISION_ON_SOUND)
+				SendSound(self, "zombieplague/nightvision.mp3")
 			elseif !self:NightvisionIsOn() then
-				SendSound(self, NIGHTVISION_OFF_SOUND)
+				SendSound(self, "zombieplague/nightvision.mp3")
 			end
 		end
 	end
