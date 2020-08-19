@@ -4,6 +4,8 @@ ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define inf
 ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
 ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 
+-- Micro-optimisation
+RoundManager = RoundManager or {}
 RoundManager.Rounds = {}
 RoundManager.PlayersToPlay = {}
 RoundManager.ExtraRounds = 0
