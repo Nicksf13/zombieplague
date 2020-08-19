@@ -86,64 +86,8 @@ ZombieSuffocateSound = {"player/pl_pain5.wav",
 	"player/pl_pain6.wav",
 	"player/pl_pain7.wav"}
 
-
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
-
-for k, SoundPath in pairs(ZombieKnifeSound) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(ZombieMadnessSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(FallDamageSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(BurnDamageSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(GenericDamageSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(InfectionSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(CureSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(HumanWinSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(ZombieWinSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(DrawSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(ZombieDeathSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(HumanTaunts) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(NemesisDamageSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(ZombieIdle) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(HumanDrownSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(ZombieDrownSounds) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(HumanSuffocateSound) do
-	resource.AddFile("sound/" .. SoundPath)
-end
-for k, SoundPath in pairs(ZombieSuffocateSound) do
-	resource.AddFile("sound/" .. SoundPath)
-end
 
 resource.AddFile("sound/" .. NIGHTVISION_ON_SOUND)
 resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
