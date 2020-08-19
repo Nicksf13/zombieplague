@@ -45,7 +45,8 @@ ZombiePlague_mk2.config = {
 		"sound/zombieplague/zombie_infec1.mp3",
 		"sound/zombieplague/zombie_infec2.mp3",
 		"sound/zombieplague/zombie_infec3.mp3",
-		"sound/zombieplague/zombie_madness1.mp3"
+		"sound/zombieplague/zombie_madness1.mp3",
+		"sound/zombieplague/nightvision.mp3"
 	}
 }
 
@@ -130,12 +131,6 @@ HumanSuffocateSound = {"player/pl_pain5.wav",
 ZombieSuffocateSound = {"player/pl_pain5.wav",
 	"player/pl_pain6.wav",
 	"player/pl_pain7.wav"}
-
-NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
-NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
-
-resource.AddFile("sound/" .. NIGHTVISION_ON_SOUND)
-resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
 
 function ZombiePlague_mk2.loadConfig()
 	local data = ZombiePlague_mk2.config
