@@ -124,6 +124,7 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
         Dictionary:GetPhrase("ScoreBoardHeaderDeaths"),
         Dictionary:GetPhrase("ScoreBoardHeaderStatus"),
         Dictionary:GetPhrase("ScoreBoardHeaderPing"),
+        "",
         "DermaDefault",
         TeamColor
     )
@@ -145,6 +146,7 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
                 return Dictionary:GetPhrase("ScoreBoardStatusDead")
             end,
             function() return ply:Ping() end,
+            ply,
             "DermaDefault",
             TeamColor
         )
@@ -154,7 +156,7 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
     Table:SetSize(ScrWidth, Table.TotalComponentHeight)
 end
 
-function ScoreBoardManager:CreatePlayerLine(Name, Frags, Deaths, Status, Ping, TextFont, TeamColor)
+function ScoreBoardManager:CreatePlayerLine(Name, Frags, Deaths, Status, Ping, PlyMuted, TextFont, TeamColor)
     local PlayerLine = vgui.Create("DPanel")
     PlayerLine:SetSize(ScrWidth, 20)
     PlayerLine.Paint = function()end
@@ -163,7 +165,30 @@ function ScoreBoardManager:CreatePlayerLine(Name, Frags, Deaths, Status, Ping, T
     PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Frags, TextFont, TeamColor, 220, 80))
     PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Deaths, TextFont, TeamColor, 300, 80))
     PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Status, TextFont, TeamColor, 380, 80))
-    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Ping, TextFont, TeamColor, 470, 80))
+    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Ping, TextFont, TeamColor, 460, 80))
+    
+    if type(PlyMuted) != "string" && IsValid(PlyMuted) && PlyMuted != LocalPlayer() then
+        local Mute = vgui.Create("DButton")
+        Mute:SetSize(20, 20)
+        Mute:SetImage(!PlyMuted:IsMuted() and "icon16/sound.png" or "icon16/sound_mute.png")
+        Mute:SetPos(530, 0)
+        Mute:SetText("")
+        function Mute:DoClick()
+            notification.AddLegacy("Teste " .. PlyMuted:Name(), NOTIFY_GENERIC, 5)
+            PlyMuted:SetMuted(!PlyMuted:IsMuted())
+        end
+        function Mute:Paint(Width, Heigth)end
+
+        ScoreBoardManager:AddComponentToListening(Mute,
+            function()
+                return true
+            end, 
+            function()
+                Mute:SetImage(!PlyMuted:IsMuted() and "icon16/sound.png" or "icon16/sound_mute.png")
+            end
+        )
+        PlayerLine:Add(Mute)
+    end
 
     return PlayerLine
 end
