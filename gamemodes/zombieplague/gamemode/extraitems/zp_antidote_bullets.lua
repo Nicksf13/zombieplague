@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPAntidoteBullets"
 ExtraItem.Name = "ExtraItemAntidoteBulletsName"
-ExtraItem.Price = 40
+ExtraItem.Price = 30
 function ExtraItem:OnBuy(ply)
 	ply.AntidoteBullets = (ply.AntidoteBullets or 0) + 5
 	hook.Add("EntityFireBullets", "EntityFireBullets"..ply:SteamID64(), function(Attacker)
