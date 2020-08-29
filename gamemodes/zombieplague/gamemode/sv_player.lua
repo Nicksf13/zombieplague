@@ -664,7 +664,7 @@ function PLAYER:MakeSurvivor()
 		self:SetAuxGravity(SurvivorClass.Gravity)
 	end
 	self:SetFootstep(false)
-	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 1.5))
+	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 2.0))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
 end
