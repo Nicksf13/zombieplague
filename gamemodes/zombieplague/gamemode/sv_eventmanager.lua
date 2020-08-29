@@ -1,6 +1,6 @@
 ConvarManager:CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
 ConvarManager:CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
-ConvarManager:CreateConVar("zp_survivor_damage", 1.1, 8, "cvar used to set how stronger survivor will be.")
+ConvarManager:CreateConVar("zp_survivor_damage", 2.0, 8, "cvar used to set how stronger survivor will be.")
 ConvarManager:CreateConVar("zp_battery_flashlight_should_drain", 0, "cvar used to set if flashlight should drain battery")
 ConvarManager:CreateConVar("zp_battery_flashlight_drain", 1, 8, "cvar used to set flashlight battery drain")
 ConvarManager:CreateConVar("zp_battery_nightvision_should_drain", 0, "cvar used to set if nightvision should drain battery")
