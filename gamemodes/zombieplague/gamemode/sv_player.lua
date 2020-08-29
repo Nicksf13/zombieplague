@@ -518,7 +518,7 @@ function PLAYER:Infect(SilentInfection)
 
 	self:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
 	if cvars.Bool("zp_zombie_screen_filter", true) then
-		self:SetScreenFilter(Color(255, 0, 0, 5))
+		self:SetScreenFilter(Color(255, 0, 0, 2))
 	end
 end
 function PLAYER:MakeHuman()
