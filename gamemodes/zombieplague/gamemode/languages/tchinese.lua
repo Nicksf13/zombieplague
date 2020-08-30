@@ -62,6 +62,7 @@ local Language = {PrettyName = "繁體中文",
 				ExtraItemTVirusName = "T-病毒",
 				ExtraItemZombieMadnessName = "殭屍狂暴",
 				ExtraItemRPGName = "RPG",
+				ExtraItemExtraAmmoName = "額外的彈藥",
 				RoundsLeft = "剩下 %d 回合!",
 				FinalRound = "終局!",
 				SaveSelection = "保存選擇？"
