@@ -62,6 +62,7 @@ local Language = {PrettyName = "Español Argentino",
 			ExtraItemTVirusName = "T-Virus",
 			ExtraItemZombieMadnessName = "Furia zombie",
 			ExtraItemRPGName = "RPG",
+			ExtraItemExtraAmmoName = "Munición Extra",
 			RoundsLeft = "%d ronda(s) restante(s)!",
 			FinalRound = "Ronda final!",
 			SaveSelection = "¿Guardar selección?"

@@ -124,6 +124,7 @@ function Dictionary:Init()
 				ExtraItemTVirusName = "T-Virus",
 				ExtraItemZombieMadnessName = "Zombie Madness",
 				ExtraItemRPGName = "RPG",
+				ExtraItemExtraAmmoName = "Extra Ammo",
 				RoundsLeft = "%d round(s) left!",
 				FinalRound = "Final round!",
 				SaveSelection = "Save selection?"
