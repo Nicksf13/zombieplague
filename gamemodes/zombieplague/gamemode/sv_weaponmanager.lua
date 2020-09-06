@@ -47,6 +47,20 @@ function WeaponManager:ServerHasWeapon(WeaponClass)
 
 	return false
 end
+function WeaponManager:IsChoosableWeapon(Weap)
+	for k, Weapon in pairs(self.PrimaryWeapons) do
+		if Weapon.WeaponID == Weap then
+			return true
+		end
+	end
+	for k, Weapon in pairs(self.SecondaryWeapons) do
+		if Weapon.WeaponID == Weap then
+			return true
+		end
+	end
+
+	return false
+end
 function WeaponManager:IsValidWeaponType(WeaponType)
 	return WeaponType == WEAPON_PRIMARY ||
 	WeaponType == WEAPON_SECONDARY ||

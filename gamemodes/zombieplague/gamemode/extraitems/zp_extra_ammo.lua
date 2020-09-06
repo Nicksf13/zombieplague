@@ -3,7 +3,7 @@ ExtraItem.Name = "ExtraItemExtraAmmoName"
 ExtraItem.Price = 7
 function ExtraItem:OnBuy(ply)
 	for k, Weap in pairs(ply:GetWeapons()) do
-		if WeaponManager:ServerHasWeapon(Weap:GetClass()) then
+		if WeaponManager:IsChoosableWeapon(Weap:GetClass()) then
 			if Weap:GetMaxClip1() then
 				ply:GiveAmmo(Weap:GetMaxClip1() * 15, Weap:GetPrimaryAmmoType(), true) 
 			else
