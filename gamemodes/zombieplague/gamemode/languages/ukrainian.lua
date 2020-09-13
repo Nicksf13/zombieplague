@@ -62,6 +62,7 @@ local Language = {PrettyName = "Українська",
 			ExtraItemTVirusName = "Т-Вірус",
 			ExtraItemZombieMadnessName = "Шаленість зомбі",
 			ExtraItemRPGName = "RPG",
+			ExtraItemExtraAmmoName = "Додаткові набої",
 			RoundsLeft = "%d раундів залишилося!",
 			FinalRound = "Фінальний раунд!",
 			SaveSelection = "Зберегти вибір?"

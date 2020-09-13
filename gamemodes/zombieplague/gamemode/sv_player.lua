@@ -518,7 +518,7 @@ function PLAYER:Infect(SilentInfection)
 
 	self:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
 	if cvars.Bool("zp_zombie_screen_filter", true) then
-		self:SetScreenFilter(Color(255, 0, 0, 5))
+		self:SetScreenFilter(Color(255, 0, 0, 2))
 	end
 end
 function PLAYER:MakeHuman()
@@ -664,7 +664,7 @@ function PLAYER:MakeSurvivor()
 		self:SetAuxGravity(SurvivorClass.Gravity)
 	end
 	self:SetFootstep(false)
-	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 1.5))
+	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 2.0))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
 end
