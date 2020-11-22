@@ -34,24 +34,13 @@ AddCSLuaFile("cl_scoreboard.lua")
 AddCSLuaFile("zombieplague/gamemode/vgui/vgui_keybinding.lua")
 AddCSLuaFile("zombieplague/gamemode/vgui/vgui_hudcustomizer.lua")
 
--- Micro-optimisation
-local RoundManager = RoundManager
-local Dictionary = Dictionary
-local hook = hook
-local ClassManager = ClassManager
-local WeaponManager = WeaponManager
-local ExtraItemsManager = ExtraItemsManager
-local MapManager = MapManager
-
 function SafeTableRandom(Table)
 	local Result = table.Random(Table)
 	return Result
 end
-
 hook.Add("PlayerDisconnected", "ZombiePlagueDisconnect", function(ply)
 	RoundManager:RemovePlayerToPlay(ply)
 end)
-
 hook.Add("Initialize", "ServerReady", function()
 	Dictionary:Init()
 	ClassManager:SearchClasses()
@@ -60,7 +49,6 @@ hook.Add("Initialize", "ServerReady", function()
 	ExtraItemsManager:Search()
 	MapManager:SearchConfigs()
 end)
-
 net.Receive("RequestServerStatus", function(len, ply)
 	ply:SetLanguage(net.ReadString(), false)
 	RoundManager:AddPlayerToPlay(ply)

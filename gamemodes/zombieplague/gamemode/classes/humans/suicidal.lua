@@ -10,6 +10,8 @@ ZPClass.Breath = 50
 
 local ActivationAction = function(ply)
 	ply:SetArmor(ply:Armor() + 100)
+	ply:SetWalkSpeed(290)
+	ply:SetRunSpeed(290)
 
 	local TimerNameWithSteamID64 = ply:SteamID64() .. "SuicideExplode"
 	timer.Create(TimerNameWithSteamID64, 0.5, 12, function()

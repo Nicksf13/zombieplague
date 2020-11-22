@@ -1,4 +1,4 @@
-RoundManager = RoundManager or {}
+RoundManager = {}
 
 function RoundManager:SetSpecialRound(SpecialRound)
 	SetGlobalBool("SpecialRound", SpecialRound)

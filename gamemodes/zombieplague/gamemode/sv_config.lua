@@ -2,53 +2,7 @@ ZOMBIE_KNIFE = "zp_weapon_fists"
 
 INFECTION_BOMB = "weapon_frag"
 
-ZombiePlague_mk2 = ZombiePlague_mk2 or {}
-
 ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
-
-ZombiePlague_mk2.config = {
-	serverName = "Zombie Plague server",
-	serverPassword = "",
-	serverLoadingURL = "",
-
-	serverRunCommands = {
-		"net_maxfilesize 64",
-	},
-	
-	-- https://i.imgur.com/MMEm7c6.png
-	serverFastDL = {
-		"maps/zm_street.bsp", -- 5mb
-		
-		"sound/zombieplague/knife_slash1.mp3",
-		"sound/zombieplague/knife_slash2.mp3",
-		"sound/zombieplague/nemesis_pain1.mp3",
-		"sound/zombieplague/nemesis_pain2.mp3",
-		"sound/zombieplague/nemesis_pain3.mp3",
-		"sound/zombieplague/nemesis1.mp3",
-		"sound/zombieplague/nemesis2.mp3",
-		"sound/zombieplague/nightvision.mp3",
-		"sound/zombieplague/survivor1.mp3",
-		"sound/zombieplague/survivor2.mp3",
-		"sound/zombieplague/win_humans1.mp3",
-		"sound/zombieplague/win_humans2.mp3",
-		"sound/zombieplague/win_zombies1.mp3",
-		"sound/zombieplague/win_zombies2.mp3",
-		"sound/zombieplague/win_zombies3.mp3",
-		"sound/zombieplague/zombie_brains1.mp3",
-		"sound/zombieplague/zombie_brains2.mp3",
-		"sound/zombieplague/zombie_burn3.mp3",
-		"sound/zombieplague/zombie_burn4.mp3",
-		"sound/zombieplague/zombie_burn5.mp3",
-		"sound/zombieplague/zombie_burn6.mp3",
-		"sound/zombieplague/zombie_burn7.mp3",
-		"sound/zombieplague/zombie_fall1.mp3",
-		"sound/zombieplague/zombie_infec1.mp3",
-		"sound/zombieplague/zombie_infec2.mp3",
-		"sound/zombieplague/zombie_infec3.mp3",
-		"sound/zombieplague/zombie_madness1.mp3",
-		"sound/zombieplague/nightvision.mp3"
-	}
-}
 
 AdminHumanPlayerModel = ""
 AdminZombiePlayerModel = ""
@@ -132,28 +86,67 @@ ZombieSuffocateSound = {"player/pl_pain5.wav",
 	"player/pl_pain6.wav",
 	"player/pl_pain7.wav"}
 
-function ZombiePlague_mk2.loadConfig()
-	local data = ZombiePlague_mk2.config
 
-	RunConsoleCommand( "hostname", data.serverName )
-	RunConsoleCommand( "sv_password", data.serverPassword )
-	RunConsoleCommand( "sv_loadingurl", data.serverLoadingURL )
+NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
+NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
 
-	for _, entry in pairs( data.serverRunCommands ) do
-		local args = string.Explode( " ", entry )
-			local cmd = table.remove( args, 1 )
-
-		RunConsoleCommand( cmd, unpack( args ) )
-	end
-
-	for k, v in ipairs( data.serverFastDL ) do
-		resource.AddSingleFile(v)
-	end
+for k, SoundPath in pairs(ZombieKnifeSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieMadnessSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(FallDamageSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(BurnDamageSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(GenericDamageSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(InfectionSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(CureSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanWinSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieWinSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(DrawSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieDeathSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanTaunts) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(NemesisDamageSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieIdle) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
 end
 
-function GM:InitPostEntity()
-	ZombiePlague_mk2.loadConfig();
-end
+resource.AddFile("sound/" .. NIGHTVISION_ON_SOUND)
+resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
 
 ---------------------------------Sounds---------------------------------
 -------------------------------Ammo Pack--------------------------------
@@ -172,7 +165,7 @@ ConvarManager:CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realisti
 
 ConvarManager:CreateConVar("zp_nemesis_health_mode", 1, 8, "cvar used to set nemesis' health mode.")
 ConvarManager:CreateConVar("zp_nemesis_health_player", 250, 8, "cvar used to set how much health nemesis will earn per player.")
-ConvarManager:CreateConVar("zp_nemesis_health", 3000, 8, "cvar used to the health of nemesis.")
+ConvarManager:CreateConVar("zp_nemesis_health", 5000, 8, "cvar used to the health of nemesis.")
 
 ConvarManager:CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")
 ConvarManager:CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set how much health survivor will earn per player.")
