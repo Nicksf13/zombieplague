@@ -329,7 +329,7 @@ function RoundManager:AddPlayerToBeRewarded(ply)
 end
 function RoundManager:ReturnValidPlayerToBeRewardedOrNil(SteamID64, Team)
 	local ply = player.GetBySteamID64(SteamID64)
-
+	
 	return (ply && ply:Team() == Team) and ply or nil
 end
 function RoundManager:AddDefaultRounds()

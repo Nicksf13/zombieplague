@@ -174,6 +174,7 @@ function ScoreBoardManager:CreatePlayerLine(Name, Frags, Deaths, Status, Ping, P
         Mute:SetPos(530, 0)
         Mute:SetText("")
         function Mute:DoClick()
+            notification.AddLegacy("Teste " .. PlyMuted:Name(), NOTIFY_GENERIC, 5)
             PlyMuted:SetMuted(!PlyMuted:IsMuted())
         end
         function Mute:Paint(Width, Heigth)end

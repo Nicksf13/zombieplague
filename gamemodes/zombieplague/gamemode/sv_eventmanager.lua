@@ -1,3 +1,5 @@
+ConvarManager:CreateConVar("zp_friendly_fire", 1, 8, "cvar used to enable friendly fire")
+ConvarManager:CreateConVar("zp_infection_bomb_radius", 1000, 8, "cvar used to calculate infection bomb radius")
 ConvarManager:CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
 ConvarManager:CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
 ConvarManager:CreateConVar("zp_survivor_damage", 2.0, 8, "cvar used to set how stronger survivor will be.")
@@ -47,60 +49,92 @@ local MoveKeys = {IN_ATTACK,
 	IN_WALK,
 	IN_ZOOM,
 	IN_WEAPON1,
-	IN_WEAPON2}
+	IN_WEAPON2
+}
 
-function GM:EntityTakeDamage(target, dmginfo)
-	local Attacker = dmginfo:GetAttacker()
-	if Attacker:IsPlayer() then
-		local Multiplier = WeaponManager:GetWeaponMultiplier(dmginfo:GetInflictor():GetClass())
-		if !Multiplier && Attacker:Alive() && IsValid(Attacker:GetActiveWeapon()) then
-			Multiplier = WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass())
-		end
-		dmginfo:ScaleDamage(Multiplier and Multiplier or 1)
-		dmginfo:ScaleDamage(Attacker:GetDamageAmplifier())
+hook.Add("ZPDamageAttackerIsPlayer", "HandlePlayerDamage", function(Attacker, Target, DmgInfo)
+	local Multiplier = WeaponManager:GetWeaponMultiplier(DmgInfo:GetInflictor():GetClass())
+	if !Multiplier && Attacker:Alive() && IsValid(Attacker:GetActiveWeapon()) then
+		Multiplier = WeaponManager:GetWeaponMultiplier(Attacker:GetActiveWeapon():GetClass())
 	end
+	DmgInfo:ScaleDamage(Multiplier and Multiplier or 1)
+	DmgInfo:ScaleDamage(Attacker:GetDamageAmplifier())
 
-	if target:IsPlayer() then
+	if Target:IsPlayer() then
+		if Attacker:IsZombie() then
+			hook.Call("ZPZombieInflictedDamageOnPlayer", GAMEMODE, Attacker, Target, DmgInfo)
+		else
+			hook.Call("ZPHumanInflictedDamageOnPlayer", GAMEMODE, Attacker, Target, DmgInfo)
+		end
+	else
+		DmgInfo:ScaleDamage(cvars.Number("zp_map_prop_damage_multiplier", 1))
+	end
+end)
+hook.Add("ZPZombieTakeDamage", "HandleZombieDamage", function(Target, DmgInfo)
+	if DmgInfo:IsDamageType(DMG_FALL) then
+		if DmgInfo:GetDamage() > 0 then
+			Target:ZPEmitSound(SafeTableRandom(FallDamageSounds), 1)
+		end
+	elseif DmgInfo:IsDamageType(DMG_BURN) then
+		Target:ZPEmitSound(SafeTableRandom(BurnDamageSounds), 1)
+	else
+		Target:ZPEmitSound(SafeTableRandom(Target:IsNemesis() and NemesisDamageSounds or NemesisDamageSounds), 1)
+	end
+end)
+hook.Add("ZPZombieInflictedDamageOnPlayer", "HandleZombieCausingDamage", function(Attacker, Target, DmgInfo)
+	if RoundManager:IsRealisticMod() || RoundManager:GetRoundState() == ROUND_PLAYING then
+		local Damage = Target:TakeArmorDamage(DmgInfo:GetDamage())
+		if Damage > 0 && (Target:Team() == TEAM_HUMANS || (cvars.Bool("zp_friendly_fire", false) && Target:Team() == TEAM_ZOMBIES)) then
+			DmgInfo:SetDamage(Damage)
+		else
+			DmgInfo:SetDamage(0)
+		end
+		if !RoundManager:IsSpecialRound() && !RoundManager:LastHuman() then
+			if Target:Team() != TEAM_ZOMBIES then
+				if DmgInfo:GetInflictor():GetClass() == INFECTION_BOMB_ENTITY then
+					if DmgInfo:IsDamageType(DMG_BLAST) then
+						local InfectionBombRadius = cvars.Number("zp_infection_bomb_radius", 1000)
+						if(DmgInfo:GetDamagePosition():DistToSqr(Target:GetPos()) <= InfectionBombRadius) then
+							InfectionManager:Infect(Target, Attacker)
+						end
+
+						DmgInfo:SetDamage(0)
+					end
+				elseif Damage > 0 then
+					InfectionManager:Infect(Target, Attacker)
+					DmgInfo:SetDamage(0)
+				end
+
+				return 
+			end
+		end
+	else
+		DmgInfo:SetDamage(0)
+	end
+end)
+hook.Add("ZPHumanInflictedDamageOnPlayer", "HandleHumanCausingDamage", function(Attacker, Target, DmgInfo)
+	if Target:IsZombie() then
+		Attacker:AddTotalDamage(DmgInfo:GetDamage())
+		hook.Call("ZPHumanDamage", GAMEMODE, Target, Attacker, DmgInfo)
+	end
+end)
+function GM:EntityTakeDamage(Target, DmgInfo)
+	local Attacker = DmgInfo:GetAttacker()
+	if Attacker:IsPlayer() then
 		if !RoundManager:IsRealisticMod() && RoundManager:GetRoundState() != ROUND_PLAYING then
 			return true
 		end
-		if Attacker:IsPlayer() then
-			if target:Team() != Attacker:Team() then
-				if Attacker:IsZombie() then
-					local Damage = target:TakeArmorDamage(dmginfo:GetDamage())
-					if Damage > 0 then
-						if RoundManager:GetRoundState() == ROUND_PLAYING && !RoundManager:IsSpecialRound() && !RoundManager:LastHuman() then
-							InfectionManager:Infect(target, Attacker)
-						else
-							dmginfo:SetDamage(Damage)
-						end
-					else
-						return true
-					end
-				else
-					Attacker:AddTotalDamage(dmginfo:GetDamage())
-					if target:IsNemesis() then
-						target:ZPEmitSound(SafeTableRandom(NemesisDamageSounds), 1)
-					else
-						target:ZPEmitSound(SafeTableRandom(GenericDamageSounds), 1)
-					end
-					hook.Call("ZPHumanDamage", GAMEMODE, target, Attacker, dmginfo)
-				end
-			end
-		elseif target:IsZombie() then
-			if dmginfo:IsDamageType(DMG_FALL) then
-				if dmginfo:GetDamage() > 0 then
-					target:ZPEmitSound(SafeTableRandom(FallDamageSounds), 1)
-				end
-			elseif dmginfo:IsDamageType(DMG_BURN) then
-				target:ZPEmitSound(SafeTableRandom(BurnDamageSounds), 1)
-			else
-				target:ZPEmitSound(SafeTableRandom(GenericDamageSounds), 1)
+		hook.Call("ZPDamageAttackerIsPlayer", GAMEMODE, Attacker, Target, DmgInfo)
+	end
+
+	if Target:IsPlayer() then
+		if Target:IsZombie() then
+			if DmgInfo:GetDamage() > 0 then
+				hook.Call("ZPZombieTakeDamage", GAMEMODE, Target, DmgInfo)
 			end
 		end
-		target:TakeLastDamage()
-	else
-		dmginfo:ScaleDamage(cvars.Number("zp_map_prop_damage_multiplier", 1))
+
+		Target:TakeLastDamage()
 	end
 end
 function GM:GetFallDamage(ply, speed)
@@ -269,14 +303,14 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 	ply:SetLight(nil)
 	if ply:IsZombie() then
 		ply:EmitSound(SafeTableRandom(ZombieDeathSounds))
-		if killer:IsPlayer() then
+		if ply != killer && killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
 
 			ply:Spectate(OBS_MODE_CHASE)
 			ply:SpectateEntity(killer)
 		end
 	else
-		if killer:IsPlayer() then
+		if ply != killer && killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
 
 			ply:Spectate(OBS_MODE_CHASE)
