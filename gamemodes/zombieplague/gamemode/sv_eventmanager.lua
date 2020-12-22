@@ -1,5 +1,5 @@
 ConvarManager:CreateConVar("zp_friendly_fire", 1, 8, "cvar used to enable friendly fire")
-ConvarManager:CreateConVar("zp_infection_bomb_radius", 1000, 8, "cvar used to calculate infection bomb radius")
+ConvarManager:CreateConVar("zp_infection_bomb_radius", 20000, 8, "cvar used to calculate infection bomb radius")
 ConvarManager:CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
 ConvarManager:CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
 ConvarManager:CreateConVar("zp_survivor_damage", 2.0, 8, "cvar used to set how stronger survivor will be.")
@@ -93,7 +93,7 @@ hook.Add("ZPZombieInflictedDamageOnPlayer", "HandleZombieCausingDamage", functio
 			if Target:Team() != TEAM_ZOMBIES then
 				if DmgInfo:GetInflictor():GetClass() == INFECTION_BOMB_ENTITY then
 					if DmgInfo:IsDamageType(DMG_BLAST) then
-						local InfectionBombRadius = cvars.Number("zp_infection_bomb_radius", 1000)
+						local InfectionBombRadius = cvars.Number("zp_infection_bomb_radius", 20000)
 						if(DmgInfo:GetDamagePosition():DistToSqr(Target:GetPos()) <= InfectionBombRadius) then
 							InfectionManager:Infect(Target, Attacker)
 						end
