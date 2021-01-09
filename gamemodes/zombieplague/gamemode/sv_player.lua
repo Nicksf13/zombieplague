@@ -161,6 +161,10 @@ function PLAYER:ZombieMadness(ZombieMadnessTime)
 	self:SetLight(Color(255, 0, 0))
 	self:GodEnable()
 	self:ZPEmitSound(SafeTableRandom(ZombieMadnessSounds), 5, true)
+	self.OldWalkSpeed = self:GetWalkSpeed()
+	self.selfOldRunSpeed = self:GetRunSpeed()
+	self:SetWalkSpeed(200)
+	self:SetRunSpeed(200)
 
 	local ZombieMadnessIdentifier = "ZPZombieMadness" .. self:SteamID64()
 	local ZombieMadnessDuration = ZombieMadnessTime and ZombieMadnessTime or 5
@@ -173,6 +177,8 @@ function PLAYER:ZombieMadness(ZombieMadnessTime)
 		if IsValid(self) then
 			self:SetLight(nil)
 			self:GodDisable()
+			self:SetWalkSpeed(self.OldWalkSpeed)
+			self:SetRunSpeed(self.selfOldRunSpeed)
 		end
 	end)
 
@@ -616,7 +622,7 @@ function PLAYER:MakeNemesis()
 	local HealthMode = cvars.Number("zp_nemesis_health_mode", 0)
 	
 	if HealthMode == 1 then
-		local Health = self:Health() + RoundManager:CountHumansAlive() * cvars.Number("zp_nemesis_health_player", 100)
+		local Health = self:Health() + RoundManager:CountHumansAlive() * cvars.Number("zp_nemesis_health_player", 500)
 		self:SetHealth(Health)
 		self:SetMaxHealth(Health)
 	elseif HealthMode == 2 then

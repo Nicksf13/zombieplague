@@ -165,7 +165,7 @@ ConvarManager:CreateConVar("zp_ap_kill_zombie", 5, 8, "cvar used to set how many
 ConvarManager:CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realistic mode on Zombie Plague.")
 
 ConvarManager:CreateConVar("zp_nemesis_health_mode", 1, 8, "cvar used to set nemesis' health mode.")
-ConvarManager:CreateConVar("zp_nemesis_health_player", 250, 8, "cvar used to set how much health nemesis will earn per player.")
+ConvarManager:CreateConVar("zp_nemesis_health_player", 500, 8, "cvar used to set how much health nemesis will earn per player.")
 ConvarManager:CreateConVar("zp_nemesis_health", 5000, 8, "cvar used to the health of nemesis.")
 
 ConvarManager:CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")

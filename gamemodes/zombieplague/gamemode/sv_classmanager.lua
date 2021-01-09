@@ -75,7 +75,7 @@ function ClassManager:NewHumanClass()
 	return {Name = "HumanDefaultClassName",
 		Description = "HumanDefaultClassDescription",
 		MaxHealth = 100,
-		Armor = 0,
+		Armor = 20,
 		PModel = "models/player/gasmask.mdl",
 		Speed = 190,
 		RunSpeed = 230,

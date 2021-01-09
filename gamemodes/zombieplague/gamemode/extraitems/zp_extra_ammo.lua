@@ -1,6 +1,6 @@
 ExtraItem.ID = "ZPExtraAmmo"
 ExtraItem.Name = "ExtraItemExtraAmmoName"
-ExtraItem.Price = 7
+ExtraItem.Price = 3
 function ExtraItem:OnBuy(ply)
 	for k, Weap in pairs(ply:GetWeapons()) do
 		if WeaponManager:IsChoosableWeapon(Weap:GetClass()) then
