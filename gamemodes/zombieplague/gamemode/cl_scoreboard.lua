@@ -132,25 +132,27 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
     Table:AddComponent(ScoreBoardManager:CreateLine(4, ScrWidth - (self.CompPosX * 2), 2, TeamColor), 0)
 
     for k, ply in pairs(team.GetPlayers(Team)) do
-        local NewPlayerLine = ScoreBoardManager:CreatePlayerLine(
-            function() return ply:Name() end,
-            function() return ply:Frags() end,
-            function() return ply:Deaths() end,
-            function()
-                if ply:Team() == TEAM_SPECTATOR then
-                    return Dictionary:GetPhrase("ScoreBoardStatusSpectating")
-                end
-                if ply:Alive() then
-                    return Dictionary:GetPhrase("ScoreBoardStatusAlive")
-                end
-                return Dictionary:GetPhrase("ScoreBoardStatusDead")
-            end,
-            function() return ply:Ping() end,
-            ply,
-            "DermaDefault",
-            TeamColor
-        )
-        Table:AddComponent(NewPlayerLine, 0)
+        if IsValid(ply) then
+            local NewPlayerLine = ScoreBoardManager:CreatePlayerLine(
+                function() return ply:Name() end,
+                function() return ply:Frags() end,
+                function() return ply:Deaths() end,
+                function()
+                    if ply:Team() == TEAM_SPECTATOR then
+                        return Dictionary:GetPhrase("ScoreBoardStatusSpectating")
+                    end
+                    if ply:Alive() then
+                        return Dictionary:GetPhrase("ScoreBoardStatusAlive")
+                    end
+                    return Dictionary:GetPhrase("ScoreBoardStatusDead")
+                end,
+                function() return ply:Ping() end,
+                ply,
+                "DermaDefault",
+                TeamColor
+            )
+            Table:AddComponent(NewPlayerLine, 0)
+        end
     end
 
     Table:SetSize(ScrWidth, Table.TotalComponentHeight)
