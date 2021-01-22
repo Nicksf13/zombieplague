@@ -1,12 +1,13 @@
 ZPClass.Name = "ZombieTankClassName"
 ZPClass.Description = "ZombieTankClassDescription"
-ZPClass.MaxHealth = 4000
+ZPClass.MaxHealth = 3000
 ZPClass.PModel = "models/player/zombie_classic.mdl"
-ZPClass.Speed = 170
-ZPClass.RunSpeed = 170
+ZPClass.Speed = 230
+ZPClass.RunSpeed = 250
 ZPClass.CrouchSpeed = 0.4
-ZPClass.Gravity = 1.5
+ZPClass.Gravity = 1.1
 ZPClass.Breath = 50
+ZPClass.Scale = 1.1
 
 ZPClass.Ability = ClassManager:CreateClassAbility(true, function(ply)
 	ply:ZombieMadness()

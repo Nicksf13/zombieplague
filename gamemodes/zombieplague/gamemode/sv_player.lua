@@ -3,7 +3,7 @@ local PLAYER = FindMetaTable("Player")
 function PLAYER:SetZombieClass(ZombieClass)
 	self.ZombieClass = ZombieClass
 	net.Start("SendZombieClass")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteString(ZombieClass.Name)
 	net.Broadcast()
 end
@@ -24,7 +24,7 @@ end
 function PLAYER:SetHumanClass(HumanClass)
 	self.HumanClass = HumanClass
 	net.Start("SendHumanClass")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteString(HumanClass.Name)
 	net.Broadcast()
 end
@@ -53,7 +53,7 @@ end
 function PLAYER:SetAbilityPower(AbilityPower)
 	self.AbilityPower = AbilityPower
 	net.Start("SendAbilityPower")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteInt(AbilityPower, 16)
 	net.Broadcast()
 end
@@ -97,7 +97,7 @@ end
 function PLAYER:SetMaxAbilityPower(MaxAbilityPower)
 	self.MaxAbilityPower = MaxAbilityPower
 	net.Start("SendMaxAbilityPower")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteInt(MaxAbilityPower, 16)
 	net.Broadcast()
 end
@@ -150,7 +150,7 @@ end
 function PLAYER:SetFootstep(Footstep)
 	self.Footstep = Footstep
 	net.Start("SendFoostep")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Footstep)
 	net.Broadcast()
 end
@@ -242,12 +242,16 @@ end
 function PLAYER:TakeAmmoPacks(Amount)
 	self:SetAmmoPacks(self:GetAmmoPacks() - Amount)
 end
-function PLAYER:SetAmmoPacks(AmmoPacks)
+function PLAYER:SetAmmoPacks(AmmoPacks, NotSave)
 	self.AmmoPacks = AmmoPacks
 	net.Start("SendAmmoPacks")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteInt(AmmoPacks, 32)
 	net.Broadcast()
+
+	if !NotSave && Bank.ShouldSaveAmmoPacks then
+		Bank:SetPlayerAmmoPacks(self, AmmoPacks)
+	end	
 end
 function PLAYER:GetAmmoPacks()
 	return self.AmmoPacks or 0
@@ -279,7 +283,7 @@ end
 function PLAYER:SetBattery(Battery)
 	self.Battery = Battery
 	net.Start("SendBatteryCharge")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(Battery)
 	net.Broadcast()
 end
@@ -289,7 +293,7 @@ end
 function PLAYER:SetMaxBatteryCharge(MaxCharge)
 	self.MaxCharge = MaxCharge
 	net.Start("SendMaxBatteryCharge")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteFloat(MaxCharge)
 	net.Broadcast()
 end
@@ -315,12 +319,22 @@ function PLAYER:SetBreath(Breath)
 		Breath = self:GetMaxBreath()
 	end
 	self.Breath = Breath
+	
+	net.Start("SendBreath")
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteFloat(Breath)
+	net.Broadcast()
 end
 function PLAYER:GetBreath()
-	return self.Breath or 0
+	return self.Breath or 100
 end
 function PLAYER:SetMaxBreath(MaxBreath)
 	self.MaxBreath = MaxBreath
+
+	net.Start("SendMaxBreath")
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteFloat(MaxBreath)
+	net.Broadcast()
 end
 function PLAYER:GetMaxBreath()
 	return self.MaxBreath or 100
@@ -365,9 +379,6 @@ function PLAYER:SetPrimaryWeapon(PrimaryWeapon)
 			self:SetPrimaryWeaponGiven(true)
 		end
 	end
-	if !self:GetSecondaryWeapon() then
-		WeaponManager:OpenSecondaryWeaponMenu(self)
-	end
 end
 function PLAYER:GetPrimaryWeapon()
 	return self.PrimaryWeapon
@@ -379,9 +390,6 @@ function PLAYER:SetSecondaryWeapon(SecondaryWeapon)
 			self:GiveWeapon(SecondaryWeapon)
 			self:SetSecondaryWeaponGiven(true)
 		end
-	end
-	if !self:GetMeleeWeapon() then
-		WeaponManager:OpenMeleeWeaponMenu(self)
 	end
 end
 function PLAYER:GetSecondaryWeapon()
@@ -468,7 +476,10 @@ function PLAYER:Infect(SilentInfection)
 	self:SetTeam(TEAM_ZOMBIES)
 	self:StripWeapons()
 	
-	local ZombieClass = self:GetZombieClass()
+	local ZombieClass = self:IsBot() and SafeTableRandom(ClassManager:GetZombieClasses()) or self:GetZombieClass()
+	if ZombieClass.Scale then
+		self:SetModelScale(ZombieClass.Scale, 0)
+	end
 	self:SetMaxHealth(ZombieClass.MaxHealth)
 	self:SetHealth(ZombieClass.MaxHealth)
 	self:SetWalkSpeed(ZombieClass.Speed)
@@ -476,6 +487,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetCrouchedWalkSpeed(ZombieClass.CrouchSpeed)
 	self:SetAuxGravity(ZombieClass.Gravity)
 	self:SetMaxBreath(ZombieClass.Breath)
+	self:SetBreath(ZombieClass.Breath)
 	self:SetJumpPower(ZombieClass.JumpPower)
 	self:SetDamageAmplifier(ZombieClass.DamageAmplifier)
 	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && ZombieClass.Footstep)
@@ -505,6 +517,9 @@ function PLAYER:Infect(SilentInfection)
 	end
 
 	self:ScreenFade(SCREENFADE.IN, Color(0, 255, 0, 128), 0.3, 0)
+	if cvars.Bool("zp_zombie_screen_filter", true) then
+		self:SetScreenFilter(Color(255, 0, 0, 2))
+	end
 end
 function PLAYER:MakeHuman()
 	local HumanClass = self:GetNextHumanClass()
@@ -515,10 +530,13 @@ function PLAYER:MakeHuman()
 	self:SetTeam(TEAM_HUMANS)
 	self:StripWeapons()
 	
-	local HumanClass = self:GetHumanClass()
+	local HumanClass = self:IsBot() and SafeTableRandom(ClassManager:GetHumanClasses()) or self:GetHumanClass()
 	self:SetMaxHealth(HumanClass.MaxHealth)
-	if HumanClass.Armor != nil then
+	if HumanClass.Armor then
 		self:SetArmor(HumanClass.Armor)
+	end
+	if HumanClass.Scale then
+		self:SetModelScale(HumanClass.Scale, 0)
 	end
 	self:SetHealth(HumanClass.MaxHealth)
 	self:SetWalkSpeed(HumanClass.Speed)
@@ -528,6 +546,7 @@ function PLAYER:MakeHuman()
 	self:SetJumpPower(HumanClass.JumpPower)
 	self:SetModel(HumanClass.PModel)
 	self:SetMaxBreath(HumanClass.Breath)
+	self:SetBreath(HumanClass.Breath)
 	self:SetMaxBatteryCharge(HumanClass.Battery)
 	self:SetDamageAmplifier(HumanClass.DamageAmplifier)
 	self:SetFootstep(HumanClass.Footstep)
@@ -537,25 +556,34 @@ function PLAYER:MakeHuman()
 	self:SetSecondaryWeaponGiven(false)
 	self:SetMeleeWeaponGiven(false)
 	
-	if self:GetPrimaryWeapon() then
-		self:GiveWeapon(self:GetPrimaryWeapon())
-		self:SetPrimaryWeaponGiven(true)
+	if !self:IsBot() then
+		local HasOpenChooseMenu = false
+		if self:GetPrimaryWeapon() then
+			self:GiveWeapon(self:GetPrimaryWeapon())
+			self:SetPrimaryWeaponGiven(true)
+		else
+			WeaponManager:OpenWeaponMenu(self, WEAPON_PRIMARY)
+
+			HasOpenChooseMenu = true
+		end
 		
 		if self:GetSecondaryWeapon() then
 			self:GiveWeapon(self:GetSecondaryWeapon())
 			self:SetSecondaryWeaponGiven(true)
+		elseif !HasOpenChooseMenu then
+			WeaponManager:OpenWeaponMenu(self, WEAPON_SECONDARY)
 
-			if self:GetMeleeWeapon() then
-				self:GiveWeapon(self:GetMeleeWeapon())
-				self:SetMeleeWeaponGiven(true)
-			else
-				WeaponManager:OpenMeleeWeaponMenu(self)
-			end
-		else
-			WeaponManager:OpenSecondaryWeaponMenu(self)
+			HasOpenChooseMenu = true
+		end
+
+		if self:GetMeleeWeapon() then
+			self:GiveWeapon(self:GetMeleeWeapon())
+			self:SetMeleeWeaponGiven(true)
+		elseif !HasOpenChooseMenu then
+			WeaponManager:OpenWeaponMenu(self, WEAPON_MELEE)
 		end
 	else
-		WeaponManager:OpenPrimaryWeaponMenu(self)
+		self:GiveWeapon(SafeTableRandom(WeaponManager:GetWeaponsTableByWeaponType(WEAPON_PRIMARY)))
 	end
 	
 	local Ability = HumanClass.Ability
@@ -567,6 +595,10 @@ function PLAYER:MakeHuman()
 	else
 		self:SetMaxAbilityPower(-1)
 		self:SetAbilityPower(-1)
+	end
+	
+	if cvars.Bool("zp_zombie_screen_filter", true) then
+		self:SetScreenFilter(nil)
 	end
 end
 function PLAYER:SetDamageAmplifier(DamageAmplifier)
@@ -608,7 +640,7 @@ end
 function PLAYER:SetNemesis(Nemesis)
 	self.Nemesis = Nemesis
 	net.Start("SendNemesis")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Nemesis)
 	net.Broadcast()
 end
@@ -632,14 +664,14 @@ function PLAYER:MakeSurvivor()
 		self:SetAuxGravity(SurvivorClass.Gravity)
 	end
 	self:SetFootstep(false)
-	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 1.5))
+	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 2.0))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
 end
 function PLAYER:SetSurvivor(Survivor)
 	self.Survivor = Survivor
 	net.Start("SendSurvivor")
-		net.WriteString(self:SteamID())
+		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteBool(Survivor)
 	net.Broadcast()
 end
@@ -655,7 +687,7 @@ end
 -------------------------Infection--------------------------
 -------------------------EmitSound--------------------------
 function PLAYER:ZPEmitSound(SoundPath, DelayTime, Force)
-	if SoundPath != nil then
+	if SoundPath then
 		if self:ZPCanEmitSound() || Force then
 			self.ZPEmit = CurTime() + DelayTime
 			self:EmitSound(SoundPath)
@@ -669,8 +701,8 @@ end
 -----------------------Special Lights-----------------------
 function PLAYER:SetLight(Light)
 	net.Start("SendLight")
-		net.WriteString(self:SteamID())
-		net.WriteBool(Light != nil)
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteBool(!!Light)
 		if Light then
 			net.WriteColor(Light)
 		end
@@ -681,6 +713,19 @@ function PLAYER:GetLight()
 	return self.Light
 end
 -----------------------Special Lights-----------------------
+-----------------------Screen Filter------------------------
+function PLAYER:SetScreenFilter(ScreenFilter)
+	net.Start("SendScreenFilter")
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteBool(!!ScreenFilter)
+		if ScreenFilter then
+			net.WriteColor(ScreenFilter)
+		end
+	net.Broadcast()
+
+	self.ScreenFilter = ScreenFilter
+end
+---------------------------Filter---------------------------
 net.Receive("SendVoice", function(len, ply)
 	ply:SetTalking(net.ReadBool())
 end)
@@ -699,3 +744,6 @@ util.AddNetworkString("SendLight")
 util.AddNetworkString("SendFoostep")
 util.AddNetworkString("SendAbilityPower")
 util.AddNetworkString("SendMaxAbilityPower")
+util.AddNetworkString("SendBreath")
+util.AddNetworkString("SendMaxBreath")
+util.AddNetworkString("SendScreenFilter")

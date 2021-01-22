@@ -1,6 +1,7 @@
 ZOMBIE_KNIFE = "zp_weapon_fists"
 
 INFECTION_BOMB = "weapon_frag"
+INFECTION_BOMB_ENTITY = "npc_grenade_frag"
 
 ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
 
@@ -49,9 +50,14 @@ HumanWinSounds = {"zombieplague/win_humans1.mp3",
 	
 ZombieWinSounds = {"zombieplague/win_zombies1.mp3",
 	"zombieplague/win_zombies2.mp3",
-	"zombieplague/win_zombies3.mp3",}
+	"zombieplague/win_zombies3.mp3"}
 	
-DrawSounds = {}
+DrawSounds = {"ambient/atmosphere/cave_hit1.wav",
+	"ambient/atmosphere/cave_hit2.wav",
+	"ambient/atmosphere/cave_hit3.wav",
+	"ambient/atmosphere/cave_hit4.wav",
+	"ambient/atmosphere/cave_hit5.wav",
+	"ambient/atmosphere/cave_hit6.wav"}
 
 ZombieDeathSounds = {"npc/zombie/zombie_die1.wav",
 	"npc/zombie/zombie_die2.wav",
@@ -64,6 +70,23 @@ ZombieIdle = {"zombieplague/zombie_brains1.mp3",
 ZombieMadnessSounds = {"zombieplague/zombie_madness1.mp3"}
 	
 HumanTaunts = {}
+
+HumanDrownSounds = {"player/pl_drown1.wav",
+	"player/pl_drown2.wav",
+	"player/pl_drown3.wav"}
+
+ZombieDrownSounds = {"player/pl_drown1.wav",
+"player/pl_drown2.wav",
+"player/pl_drown3.wav"}
+
+HumanSuffocateSound = {"player/pl_pain5.wav",
+	"player/pl_pain6.wav",
+	"player/pl_pain7.wav"}
+
+ZombieSuffocateSound = {"player/pl_pain5.wav",
+	"player/pl_pain6.wav",
+	"player/pl_pain7.wav"}
+
 
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
@@ -110,6 +133,18 @@ end
 for k, SoundPath in pairs(ZombieIdle) do
 	resource.AddFile("sound/" .. SoundPath)
 end
+for k, SoundPath in pairs(HumanDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieDrownSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(HumanSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(ZombieSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
 
 resource.AddFile("sound/" .. NIGHTVISION_ON_SOUND)
 resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
@@ -131,13 +166,14 @@ ConvarManager:CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realisti
 
 ConvarManager:CreateConVar("zp_nemesis_health_mode", 1, 8, "cvar used to set nemesis' health mode.")
 ConvarManager:CreateConVar("zp_nemesis_health_player", 250, 8, "cvar used to set how much health nemesis will earn per player.")
-ConvarManager:CreateConVar("zp_nemesis_health", 3000, 8, "cvar used to the health of nemesis.")
+ConvarManager:CreateConVar("zp_nemesis_health", 5000, 8, "cvar used to the health of nemesis.")
 
 ConvarManager:CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")
 ConvarManager:CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set how much health survivor will earn per player.")
 ConvarManager:CreateConVar("zp_survivor_health", 300, 8, "cvar used to the health of survivor.")
 
 ConvarManager:CreateConVar("zp_zombie_footstep", 1, 8, "cvar used to set if zombies will emit footstep sounds.") 
+ConvarManager:CreateConVar("zp_zombie_screen_filter", 1, 8, "cvar used to set if zombie will have a \"red\" effect in his screen")
 
 ConvarManager:CreateConVar("zp_admin_human_model", 0, 8, "cvar used to set if admin will receive a special human player model.")
 ConvarManager:CreateConVar("zp_admin_zombie_model", 0, 8, "cvar used to set if admin will receive a special zombie player model.")

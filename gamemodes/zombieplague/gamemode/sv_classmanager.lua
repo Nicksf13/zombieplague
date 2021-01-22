@@ -97,7 +97,7 @@ function ClassManager:NewZombieClass()
 		MaxHealth = 2000,
 		PModel = "models/player/zombie_classic.mdl",
 		Speed = 270,
-		RunSpeed = 270,
+		RunSpeed = 290,
 		CrouchSpeed = 0.4,
 		Gravity = 0.7,
 		Breath = 100,
@@ -128,6 +128,7 @@ function ClassManager:OpenZPClassMenu(ply, IsHuman)
 	net.Start("OpenBackMenu")
 		net.WriteString(IsHuman and "SendHumanClass" or "SendZombieClass")
 		net.WriteTable(Pretty)
+		net.WriteBool(false)
 	net.Send(ply)
 end
 net.Receive("RequestAbility", function(len, ply)

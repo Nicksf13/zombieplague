@@ -106,6 +106,27 @@ function PLAYER:GetMaxAbilityPower()
 	return self.MaxAbilityPower or -1
 end
 
+function PLAYER:SetBreath(Breath)
+	self.Breath = Breath
+end
+function PLAYER:GetBreath()
+	return self.Breath or 100
+end
+
+function PLAYER:SetMaxBreath(MaxBreath)
+	self.MaxBreath = MaxBreath
+end
+function PLAYER:GetMaxBreath()
+	return self.MaxBreath or 100
+end
+
+function PLAYER:SetScreenFilter(ScreenFilter)
+	self.ScreenFilter = ScreenFilter
+end
+function PLAYER:GetScreenFilter()
+	return self.ScreenFilter
+end
+
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
@@ -122,49 +143,49 @@ hook.Add("PlayerEndVoice", "ZPStartTalking", function(ply)
 end)
 
 net.Receive("SendAmmoPacks", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetAmmoPacks(net.ReadInt(32))
 	end
 end)
 net.Receive("SendBatteryCharge", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetBattery(net.ReadFloat())
 	end
 end)
 net.Receive("SendMaxBatteryCharge", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetMaxBatteryCharge(net.ReadFloat())
 	end
 end)
 net.Receive("SendZombieClass", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetZombieClass(net.ReadString())
 	end
 end)
 net.Receive("SendHumanClass", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetHumanClass(net.ReadString())
 	end
 end)
 net.Receive("SendNemesis", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetNemesis(net.ReadBool())
 	end
 end)
 net.Receive("SendSurvivor", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetSurvivor(net.ReadBool())
 	end
 end)
 net.Receive("SendFoostep", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetFootstep(net.ReadBool())
 	end
@@ -173,7 +194,7 @@ net.Receive("SendNightvision", function()
 	SetNightvision(net.ReadBool())
 end)
 net.Receive("SendLight", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		if net.ReadBool() then
 			ply:SetLight(net.ReadColor())
@@ -183,14 +204,36 @@ net.Receive("SendLight", function()
 	end
 end)
 net.Receive("SendAbilityPower", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetAbilityPower(net.ReadInt(16))
 	end
 end)
 net.Receive("SendMaxAbilityPower", function()
-	local ply = player.GetBySteamID(net.ReadString())
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
 	if IsValid(ply) then
 		ply:SetMaxAbilityPower(net.ReadInt(16))
+	end
+end)
+net.Receive("SendBreath", function()
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetBreath(net.ReadFloat())
+	end
+end)
+net.Receive("SendMaxBreath", function()
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetMaxBreath(net.ReadFloat())
+	end
+end)
+net.Receive("SendScreenFilter", function()
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
+	if IsValid(ply) then
+		if net.ReadBool() then
+			ply:SetScreenFilter(net.ReadColor())
+		else
+			ply:SetScreenFilter(nil)
+		end
 	end
 end)

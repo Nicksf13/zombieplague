@@ -6,6 +6,9 @@ include("cl_player.lua")
 include("cl_hud.lua")
 include("cl_language.lua")
 include("cl_menu.lua")
+include("cl_keymanager.lua")
+include("cl_derma.lua")
+include("cl_scoreboard.lua")
 
 function GM:PlayerFootstep(ply)
 	return !ply:GetFootstep() -- Since true = no footsteps, false = footsteps
@@ -16,7 +19,7 @@ net.Receive("SendServerStatus", function()
 	RoundManager:SetRoundState(Info.RoundState)
 	RoundManager:SetRound(Info.Round)
 	for k, TempPly in pairs(Info.Players) do
-		local ply = player.GetBySteamID(TempPly.SteamID)
+		local ply = PlayerManager:DiscoverPlayerByTextID(TempPly.ID)
 		if IsValid(ply) then
 			ply:SetMaxBatteryCharge(TempPly.Battery)
 			ply:SetAmmoPacks(TempPly.AmmoPacks)
@@ -24,6 +27,8 @@ net.Receive("SendServerStatus", function()
 			ply:SetHumanClass(TempPly.HumanClass)
 			ply:SetLight(TempPly.Light)
 			ply:SetFootstep(TempPly.Footstep)
+			ply:SetAbilityPower(TempPly.AbilityPower)
+			ply:SetMaxAbilityPower(TempPly.MaxAbilityPower)
 		end
 	end
 end)

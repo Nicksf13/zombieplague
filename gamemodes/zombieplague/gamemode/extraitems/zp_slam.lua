@@ -4,7 +4,7 @@ ExtraItem.Price = 6
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("weapon_slam")
 	if IsValid(Weap) then
-		ply:GiveAmmo(1, "slam", true) 
+		ply:GiveAmmo(3, "slam", true) 
 	else
 		ply:Give("weapon_slam")
 	end

@@ -1,11 +1,11 @@
 ZPClass.Name = "ZombieJumperClassName"
 ZPClass.Description = "ZombieJumperClassDescription"
-ZPClass.MaxHealth = 150
+ZPClass.MaxHealth = 1000
 ZPClass.PModel = "models/player/zombie_classic.mdl"
-ZPClass.Speed = 240
-ZPClass.RunSpeed = 260
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 280
 ZPClass.CrouchSpeed = 0.5
-ZPClass.Gravity = 1
+ZPClass.Gravity = 0.7
 ZPClass.Breath = 50
 
 local ActivationAction = function(ply)
