@@ -10,7 +10,7 @@
 	    1
 		{
 			"name"		"zp_zombie_footstep"
-			"text"		"Zombie footsteps"
+			"text"		"zp_zombie_footstep_cvar"
 			"type"		"CheckBox"
 			"default"	"1"
 		}
@@ -18,7 +18,7 @@
 		2
 		{
 			"name"		"zp_realistic_mode"
-			"text"		"Realistic Mode"
+			"text"		"zp_realistic_mode_cvar"
 			"type"		"CheckBox"
 			"default"	"0"
 		}
@@ -26,7 +26,7 @@
 		3
 		{
 			"name"		"zp_can_hear_death"
-			"text"		"Hear Death"
+			"text"		"zp_can_hear_death_cvar"
 			"type"		"CheckBox"
 			"default"	"1"
 		}
@@ -34,7 +34,7 @@
 		4
 		{
 			"name"		"zp_chat_all"
-			"text"		"Global Chat"
+			"text"		"zp_chat_all_cvar"
 			"type"		"CheckBox"
 			"default"	"1"
 		}
@@ -42,7 +42,7 @@
 		5
 		{
 			"name"		"zp_voice_all"
-			"text"		"Global Voice Chat"
+			"text"		"zp_voice_all_cvar"
 			"type"		"CheckBox"
 			"default"	"1"
 		}
@@ -50,7 +50,7 @@
 		6
 		{
 			"name"		"zp_min_players"
-			"text"		"Minimum Players"
+			"text"		"zp_min_players_cvar"
 			"type"		"Numeric"
 			"default"	"2"
 		}
@@ -58,7 +58,7 @@
 		7
 		{
 			"name"		"zp_newround_delay"
-			"text"		"Delay before rounds"
+			"text"		"zp_newround_delay_cvar"
 			"type"		"Numeric"
 			"default"	"10"
 		}
@@ -66,7 +66,7 @@
 		8
 		{
 			"name"		"zp_infection_delay"
-			"text"		"Delay before infection"
+			"text"		"zp_infection_delay_cvar"
 			"type"		"Numeric"
 			"default"	"10"
 		}
@@ -74,7 +74,7 @@
 		9
 		{
 			"name"		"zp_max_rounds"
-			"text"		"Rounds before voting"
+			"text"		"zp_max_rounds_cvar"
 			"type"		"Numeric"
 			"default"	"10"
 		}
@@ -82,7 +82,7 @@
 		10
 		{
 			"name"		"zp_round_time"
-			"text"		"Rounds Time"
+			"text"		"zp_round_time_cvar"
 			"type"		"Numeric"
 			"default"	"300"
 		}
@@ -90,7 +90,7 @@
 		11
 		{
 			"name"		"zp_spectate_team_ony"
-			"text"		"Team Spectate"
+			"text"		"zp_spectate_team_only_cvar"
 			"type"		"CheckBox"
 			"default"	"1"
 		}
