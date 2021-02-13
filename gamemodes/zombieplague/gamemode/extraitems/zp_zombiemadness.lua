@@ -6,5 +6,5 @@ function ExtraItem:OnBuy(ply)
 	ply:ZombieMadness(5)
 end
 function ExtraItem:CanBuy(ply)
-	return !RoundManager:IsSpecialRound() && ply:Alive()
+	return ply:Alive()
 end

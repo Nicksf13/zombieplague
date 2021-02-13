@@ -11,5 +11,5 @@ function ExtraItem:OnBuy(ply)
 	end
 end
 function ExtraItem:CanBuy(ply)
-	return !RoundManager:IsSpecialRound() && ply:Alive()
+	return ply:Alive()
 end
