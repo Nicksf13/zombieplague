@@ -21,3 +21,4 @@ Dictionary:RegisterPhrase("es-ar", "ExtraItemOrbitalStrikeName", "Orbital Strike
 Dictionary:RegisterPhrase("russian", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
 Dictionary:RegisterPhrase("ukrainian", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
 Dictionary:RegisterPhrase("tchinese", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
+Dictionary:RegisterPhrase("ja", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
