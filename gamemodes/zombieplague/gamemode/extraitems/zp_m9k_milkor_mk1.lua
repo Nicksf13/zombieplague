@@ -21,3 +21,4 @@ Dictionary:RegisterPhrase("es-ar", "ExtraItemMilkorMK1Name", "Milkor MK1", false
 Dictionary:RegisterPhrase("russian", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
 Dictionary:RegisterPhrase("ukrainian", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
 Dictionary:RegisterPhrase("tchinese", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
+Dictionary:RegisterPhrase("ja", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
