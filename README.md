@@ -45,7 +45,7 @@ Nemesis Round - Everybody except one random player (that is going to be the neme
 Survivor Round - Everybody except one random player (that is going to be the survivor) will be<br>  zombie. Survivor should kill every zombie (Survivor cause more damage).<br> 
 
 -----------------------Multi Language support-----------------------<br> 
-By default this gamemode supports US English, Brazilian Portuguese, Argentine Spanish, Russian, Ukrainian and Traditional Chinese.<br> 
+By default this gamemode supports US English, Brazilian Portuguese, Argentine Spanish, Russian, Ukrainian, Traditional Chinese and Japanese.<br> 
 But You can add more languages on languages folder.<br> 
 
 -----------------------Extra items-----------------------<br> 
