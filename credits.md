@@ -6,3 +6,4 @@ Blueberry - Updated READ.ME on github's project, also give me some ideas<br>
 PacUGC3 - Made the Spanish translation<br>
 辣鸡 | LaGi - Made the Tradicional Chinese translation<br>
 nikarovxd - Made the Japanese translation
+Refirser - Made the Korean translation
