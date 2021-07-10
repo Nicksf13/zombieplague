@@ -638,6 +638,9 @@ function PLAYER:MakeNemesis()
 		self:SetCrouchedWalkSpeed(NemesisClass.CrouchedSpeed)
 		self:SetAuxGravity(NemesisClass.Gravity)
 	end
+	if !cvars.Bool("zp_nemesis_override_player_mode", false) then
+		self:SetModel(NemesisClass.PlayerModel)
+	end
 	self:SetFootstep(true)
 	self:SetDamageAmplifier(cvars.Number("zp_nemesis_damage", 10))
 	self:SetLight(NEMESIS_COLOR)
@@ -668,6 +671,9 @@ function PLAYER:MakeSurvivor()
 		self:SetRunSpeed(SurvivorClass.RunSpeed)
 		self:SetCrouchedWalkSpeed(SurvivorClass.CrouchedSpeed)
 		self:SetAuxGravity(SurvivorClass.Gravity)
+	end
+	if !cvars.Bool("zp_survivor_override_player_mode", false) then
+		self:SetModel(SurvivorClass.PlayerModel)
 	end
 	self:SetFootstep(false)
 	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 2.0))
