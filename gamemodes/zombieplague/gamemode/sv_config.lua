@@ -12,13 +12,15 @@ NemesisClass = {Health = 5000,
 		Speed = 270,
 		RunSpeed = 270,
 		CrouchedSpeed = 1,
-		Gravity = 0.5
+		Gravity = 0.5,
+		PlayerModel = "models/player/zombie_soldier.mdl"
 	}
 SurvivorClass = {Health = 250,
 		Speed = 230,
 		RunSpeed = 270,
 		CrouchedSpeed = 0.5,
-		Gravity = 0.8
+		Gravity = 0.8,
+		PlayerModel = "models/player/combine_super_soldier.mdl"
 	}
 
 ---------------------------------Sounds---------------------------------
@@ -167,10 +169,12 @@ ConvarManager:CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realisti
 ConvarManager:CreateConVar("zp_nemesis_health_mode", 1, 8, "cvar used to set nemesis' health mode.")
 ConvarManager:CreateConVar("zp_nemesis_health_player", 500, 8, "cvar used to set how much health nemesis will earn per player.")
 ConvarManager:CreateConVar("zp_nemesis_health", 5000, 8, "cvar used to the health of nemesis.")
+ConvarManager:CreateConVar("zp_nemesis_override_player_mode", 0, 8, "cvar used to set if nemesis' player model will be a fixed model")
 
 ConvarManager:CreateConVar("zp_survivor_health_mode", 1, 8, "cvar used to set survivor's health mode.")
 ConvarManager:CreateConVar("zp_survivor_health_player", 50, 8, "cvar used to set how much health survivor will earn per player.")
 ConvarManager:CreateConVar("zp_survivor_health", 300, 8, "cvar used to the health of survivor.")
+ConvarManager:CreateConVar("zp_survivor_override_player_mode", 0, 8, "cvar used to set if survivor's player model will be a fixed model")
 
 ConvarManager:CreateConVar("zp_zombie_footstep", 1, 8, "cvar used to set if zombies will emit footstep sounds.") 
 ConvarManager:CreateConVar("zp_zombie_screen_filter", 1, 8, "cvar used to set if zombie will have a \"red\" effect in his screen")
