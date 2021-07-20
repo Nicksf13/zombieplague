@@ -17,7 +17,7 @@ WeaponManager:AddWeaponMultiplier("m9k_oribital_cannon", 5)
 
 Dictionary:RegisterPhrase("en-us", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
 Dictionary:RegisterPhrase("pt-br", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
+Dictionary:RegisterPhrase("es-ar", "ExtraItemOrbitalStrikeName", "Golpe Orbital", false)
 Dictionary:RegisterPhrase("ru", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
 Dictionary:RegisterPhrase("uk", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
 Dictionary:RegisterPhrase("tchinese", "ExtraItemOrbitalStrikeName", "Orbital Strike", false)
