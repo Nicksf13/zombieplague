@@ -16,8 +16,8 @@ NemesisClass = {Health = 5000,
 		PlayerModel = "models/player/zombie_soldier.mdl"
 	}
 SurvivorClass = {Health = 250,
-		Speed = 230,
-		RunSpeed = 270,
+		Speed = 270,
+		RunSpeed = 230,
 		CrouchedSpeed = 0.5,
 		Gravity = 0.8,
 		PlayerModel = "models/player/combine_super_soldier.mdl"
