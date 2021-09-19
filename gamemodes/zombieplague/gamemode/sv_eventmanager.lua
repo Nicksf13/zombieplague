@@ -457,8 +457,10 @@ hook.Add("HalfSecondTickManager", "ZPBreathManager", function()
 			if WaterShouldDrain() && ply:WaterLevel() > 2 then
 				TotalDrain = TotalDrain + cvars.Number("zp_water_drain", 1)
 			end
-			if RunShouldDrain(ply) && ply:KeyDown(IN_SPEED) && (ply:KeyDown(IN_FORWARD) || ply:KeyDown(IN_BACK) || ply:KeyDown(IN_MOVELEFT) || ply:KeyDown(IN_MOVERIGHT)) then
-				TotalDrain = TotalDrain + cvars.Number("zp_run_drain", 1)
+			if ply:IsHuman() then
+				if RunShouldDrain(ply) && ply:KeyDown(IN_SPEED) && (ply:KeyDown(IN_FORWARD) || ply:KeyDown(IN_BACK) || ply:KeyDown(IN_MOVELEFT) || ply:KeyDown(IN_MOVERIGHT)) then
+					TotalDrain = TotalDrain + cvars.Number("zp_run_drain", 1)
+				end
 			end
 			
 			if TotalDrain > 0 then

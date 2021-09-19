@@ -189,4 +189,4 @@ local Language = {PrettyName = "Українська",
 		}
 	}
 }
-Dictionary:AddLanguage("ukrainian", Language)
+Dictionary:AddLanguage("uk", Language)

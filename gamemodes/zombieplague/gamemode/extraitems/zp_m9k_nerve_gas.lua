@@ -16,8 +16,9 @@ end
 
 Dictionary:RegisterPhrase("en-us", "ExtraItemNerveGasName", "Nerve Gas", false)
 Dictionary:RegisterPhrase("pt-br", "ExtraItemNerveGasName", "Nerve Gas", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemNerveGasName", "Nerve Gas", false)
-Dictionary:RegisterPhrase("russian", "ExtraItemNerveGasName", "Nerve Gas", false)
-Dictionary:RegisterPhrase("ukrainian", "ExtraItemNerveGasName", "Nerve Gas", false)
+Dictionary:RegisterPhrase("es-ar", "ExtraItemNerveGasName", "Gas de nervios", false)
+Dictionary:RegisterPhrase("ru", "ExtraItemNerveGasName", "Nerve Gas", false)
+Dictionary:RegisterPhrase("uk", "ExtraItemNerveGasName", "Nerve Gas", false)
 Dictionary:RegisterPhrase("tchinese", "ExtraItemNerveGasName", "Nerve Gas", false)
 Dictionary:RegisterPhrase("ja", "ExtraItemNerveGasName", "Nerve Gas", false)
+Dictionary:RegisterPhrase("ko", "ExtraItemNerveGasName", "Nerve Gas", false)
