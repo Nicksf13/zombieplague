@@ -1,6 +1,7 @@
 BOT_MODE = true
 
 include("shared.lua")
+include("sv_utils.lua")
 include("sv_commands.lua")
 include("sv_convar.lua")
 include("sv_config.lua")
