@@ -2,7 +2,7 @@ ExtraItemsManager = {ZombiesExtraItems = {}, HumansExtraItems = {}, PostRoundEve
 ITEM_HUMAN = 0
 ITEM_ZOMBIE = 1
 function ExtraItemsManager:Search()
-	local Files = file.Find("zombieplague/gamemode/extraitems/*.lua", "LUA")
+	local Files = Utils:RecursiveFileSearch("zombieplague/gamemode/extraitems", ".lua")
 	if Files then
 		for k, File in pairs(Files) do
 			ExtraItem = {}
@@ -13,11 +13,11 @@ function ExtraItemsManager:Search()
 			function ExtraItem:ShouldBeEnabled()
 				return true
 			end
-			include("zombieplague/gamemode/extraitems/" .. File)
+			include(File)
 			
 			if ExtraItem:ShouldBeEnabled() then
 				if !ExtraItem.ID || !ExtraItem.Name || !ExtraItem.Price || !ExtraItem.OnBuy then
-					print("Invalid Extra Item: '" .. File .. "'")
+					Utils:Print(WARNING_MESSAGE, "Invalid Extra Item: '" .. File .. "'")
 				else
 					self:AddExtraItem(ExtraItem, ExtraItem.Type)
 				end
