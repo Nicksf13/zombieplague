@@ -19,25 +19,27 @@ function WeaponManager:SearchWeapons()
 	for k, Weapon in pairs(weapons.GetList()) do
 		table.insert(self.ServerWeapons, Weapon.ClassName)
 	end
-	local Files = file.Find("zombieplague/gamemode/weapons/*.lua", "LUA")
-	for k, File in pairs(Files) do
-		Weapon = WeaponManager:CreateNewWeapon()
 
-		include("zombieplague/gamemode/weapons/" .. File)
-		
-		if Weapon:ShouldBeEnabled() && WeaponManager:ServerHasWeapon(Weapon.WeaponID) then
+	local Files = Utils:RecursiveFileSearch("zombieplague/gamemode/weapons", ".lua")
+	if Files then
+		for k, File in pairs(Files) do
+			Weapon = WeaponManager:CreateNewWeapon()
+
+			include(File)
+			
 			if !Weapon.PrettyName then
-				print("Cannot load: '" .. File .. "', unknown 'Pretty Name'!")
+				Utils:Print(WARNING_MESSAGE, "Cannot load: '" .. File .. "', unknown 'Pretty Name'!")
 			elseif !Weapon.WeaponID then
-				print("Cannot load: '" .. File .. "', unknown 'WeaponID'!")
-			elseif WeaponManager:IsValidWeaponType(Weapon.WeaponType) then
+				Utils:Print(WARNING_MESSAGE, "Cannot load: '" .. File .. "', unknown 'WeaponID'!")
+			elseif !WeaponManager:IsValidWeaponType(Weapon.WeaponType) then
+				Utils:Print(WARNING_MESSAGE, "Cannot load: '" .. File .. "', Invalid weapon type!")
+			elseif WeaponManager:ServerHasWeapon(Weapon.WeaponID) && Weapon:ShouldBeEnabled() then
 				self:AddWeapon(Weapon, Weapon.WeaponType)
-			else
-				print("Invalid weapon type!")
 			end
 		end
 	end
 end
+
 function WeaponManager:ServerHasWeapon(WeaponClass)
 	for k, Weapon in pairs(self.ServerWeapons) do
 		if Weapon == WeaponClass then

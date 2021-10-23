@@ -15,7 +15,7 @@ RoundManager.PlayersToReward[TEAM_ZOMBIES] = {}
 function RoundManager:SearchRounds()
 	RoundManager:AddDefaultRounds() -- Cleanest way to do this
 
-	local Files = file.Find("zombieplague/gamemode/rounds/*.lua", "LUA")
+	local Files = Utils:RecursiveFileSearch("zombieplague/gamemode/rounds", ".lua")
 	if Files then
 		for k, File in pairs(Files) do
 			local RoundToAdd = {}
@@ -25,11 +25,11 @@ function RoundManager:SearchRounds()
 			RoundToAdd.Respawn = false
 			RoundToAdd.ShouldBeEnabled = function()return true end
 			RoundToAdd.Order = 100
-			include("zombieplague/gamemode/rounds/" .. File)
+			include(Files)
 			
 			if RoundToAdd:ShouldBeEnabled() then
 				if !RoundToAdd.StartFunction || !RoundToAdd.Name then
-					print("Invalid round format: '" .. File .. "'!")
+					Utils:Print(WARNING_MESSAGE, "Invalid round format: '" .. File .. "'!")
 				else
 					RoundManager:AddRoundType(RoundToAdd)
 				end

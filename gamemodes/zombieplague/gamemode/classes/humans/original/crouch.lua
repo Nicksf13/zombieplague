@@ -1,0 +1,10 @@
+ZPClass.Name = "HumanCrouchClassName"
+ZPClass.Description = "HumanCrouchClassDescription"
+ZPClass.MaxHealth = 50
+ZPClass.Armor = 0
+ZPClass.PModel = "models/player/swat.mdl"
+ZPClass.Speed = 220
+ZPClass.RunSpeed = 100
+ZPClass.CrouchSpeed = 1.5
+ZPClass.Gravity = 0.8
+ClassManager:AddZPClass("CrouchHuman", ZPClass, TEAM_HUMANS)

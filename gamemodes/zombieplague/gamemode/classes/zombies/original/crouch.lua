@@ -1,0 +1,10 @@
+ZPClass.Name = "ZombieCrouchClassName"
+ZPClass.Description = "ZombieCrouchClassDescription"
+ZPClass.MaxHealth = 500
+ZPClass.PModel = "models/player/corpse1.mdl"
+ZPClass.Speed = 260
+ZPClass.RunSpeed = 280
+ZPClass.CrouchSpeed = 1.7
+ZPClass.Gravity = 0.7
+ZPClass.Breath = 50
+ClassManager:AddZPClass("CrouchZombie", ZPClass, TEAM_ZOMBIES)

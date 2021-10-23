@@ -3,21 +3,19 @@ ClassManager = {
 	HumanClasses = {}
 }
 function ClassManager:SearchClasses()
-	include("zombieplague/gamemode/classes/zpclass_defaultclasses.lua")
-	
-	local Files = file.Find("zombieplague/gamemode/classes/zombies/*.lua", "LUA")
+	local Files = Utils:RecursiveFileSearch("zombieplague/gamemode/classes/zombies", ".lua")
 	if Files then
 		for k, File in pairs(Files) do
 			ZPClass = ClassManager:NewZombieClass()
-			include("zombieplague/gamemode/classes/zombies/" .. File)
+			include(File)
 		end
 	end
 	
-	Files = file.Find("zombieplague/gamemode/classes/humans/*.lua", "LUA")
+	Files = Utils:RecursiveFileSearch("zombieplague/gamemode/classes/humans", ".lua")
 	if Files then
 		for k, File in pairs(Files) do
 			ZPClass = ClassManager:NewHumanClass()
-			include("zombieplague/gamemode/classes/humans/" .. File)
+			include(File)
 		end
 	end
 end
@@ -58,7 +56,7 @@ function ClassManager:AddZPClass(ClassID, ZPClass, TeamID)
 
 		resource.AddFile(ZPClass.PModel)
 	else
-		print("Invalid ZP class: " .. ClassID)
+		Utils:Print(WARNING_MESSAGE, "Invalid ZP class: " .. ClassID)
 	end
 end
 function ClassManager:GetZPClass(ID, TeamID)
