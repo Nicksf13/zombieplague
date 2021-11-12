@@ -737,6 +737,19 @@ function PLAYER:SetScreenFilter(ScreenFilter)
 
 	self.ScreenFilter = ScreenFilter
 end
+---------------------frags for damage-----------------------
+hook.Add("EntityTakeDamage", "zzzzzzzzzzzFragsForDamage", function(ply, dmg)
+	if ply:IsPlayer() and ply:IsZombie() then
+		local att = dmg:GetAttacker()
+		if IsValid(att) and att:IsPlayer() and att:IsHuman() then
+			att["FFD"] = (att["FFD"] or 0) + dmg:GetDamage()
+			if (att["FFD"] > 750) then
+				att["FFD"] = 0
+				att:AddFrags(1)
+			end
+		end
+	end
+end)
 ---------------------------Filter---------------------------
 net.Receive("SendVoice", function(len, ply)
 	ply:SetTalking(net.ReadBool())

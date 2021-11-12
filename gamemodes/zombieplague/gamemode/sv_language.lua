@@ -1,4 +1,4 @@
-Dictionary = {Languages = {}}
+Dictionary = Dictionary or {Languages = {}}
 
 function Dictionary:SearchLanguages()
 	local Files = file.Find("zombieplague/gamemode/languages/*.lua", "LUA")
@@ -23,10 +23,15 @@ function Dictionary:GetLanguageBook(LanguageID)
 	return Dictionary.Languages["en-us"]
 end
 function Dictionary:GetServerSideLanguageBook(LanguageID)
-	return Dictionary:GetLanguageBook(LanguageID).Values.Server
+	print(LanguageID)
+	return Dictionary:GetLanguageBook(LanguageID or "en-us")["Values"]["Server"]
 end
 function Dictionary:GetClientSideLanguageBook(LanguageID)
-	return {ID = LanguageID, Value = Dictionary:GetLanguageBook(LanguageID).Values.Client}
+	local id = LanguageID or "en-us"
+	return {
+		ID = id,
+		Value = Dictionary:GetLanguageBook(id)["Values"]["Client"]
+	}
 end
 function Dictionary:RegisterPhrase(LanguageAlias, PhraseID, Phrase, Client)
 	local Language
