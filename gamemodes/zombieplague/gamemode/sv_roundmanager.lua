@@ -496,11 +496,15 @@ function RoundManager:AddDefaultRounds()
 end
 hook.Add("PostPlayerDeath", "RoundEndCheck", function(ply)
 	if RoundManager:GetRoundState() == ROUND_PLAYING then
-		local OnDeathFunction = RoundManager:GetCurrentRoundPlaying().OnDeathFunction
-		if OnDeathFunction then
-			OnDeathFunction(ply)
+		local round = RoundManager:GetCurrentRoundPlaying()
+		if round then
+			local OnDeathFunction = round["OnDeathFunction"]
+			if OnDeathFunction then
+				OnDeathFunction(ply)
+			end
 		end
-		timer.Create("ZPEndRound" .. CurTime(), 0.1, 1, RoundManager.CheckRoundEnd)
+
+		timer.Create("ZPEndRound" .. CurTime(), 0.1, 1, RoundManager["CheckRoundEnd"])
 	end
 end)
 net.Receive("SendRounds", function(len, ply)
