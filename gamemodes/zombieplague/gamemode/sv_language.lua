@@ -23,7 +23,6 @@ function Dictionary:GetLanguageBook(LanguageID)
 	return Dictionary.Languages["en-us"]
 end
 function Dictionary:GetServerSideLanguageBook(LanguageID)
-	print(LanguageID)
 	return Dictionary:GetLanguageBook(LanguageID or "en-us")["Values"]["Server"]
 end
 function Dictionary:GetClientSideLanguageBook(LanguageID)
