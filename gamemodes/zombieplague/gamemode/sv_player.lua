@@ -737,8 +737,8 @@ function PLAYER:SetScreenFilter(ScreenFilter)
 
 	self.ScreenFilter = ScreenFilter
 end
----------------------frags for damage-----------------------
-hook.Add("EntityTakeDamage", "zzzzzzzzzzzFragsForDamage", function(ply, dmg)
+---------------------Frags For Damage-----------------------
+hook.Add("EntityTakeDamage", "zzzFragsForDamage", function(ply, dmg)
 	if ply:IsPlayer() and ply:IsZombie() then
 		local att = dmg:GetAttacker()
 		if IsValid(att) and att:IsPlayer() and att:IsHuman() then
