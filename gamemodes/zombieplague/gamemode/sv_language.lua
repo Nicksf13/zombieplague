@@ -143,6 +143,7 @@ function Dictionary:Init()
 				ScoreBoardTitleZombies = "Zombies",
 				ScoreBoardTitleSpectators = "Spectators",
 				ScoreBoardHeaderName = "Name",
+				ScoreBoardHeaderPoints = "Points",
 				ScoreBoardHeaderKills = "Kills",
 				ScoreBoardHeaderDeaths = "Deaths",
 				ScoreBoardHeaderStatus = "Status",

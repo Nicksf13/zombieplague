@@ -154,7 +154,7 @@ resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
 ---------------------------------Sounds---------------------------------
 -------------------------------Ammo Pack--------------------------------
 ConvarManager:CreateConVar("zp_ap_total", 1, 8, "cvar used to set how many ammo packs humans will win after cause x damage.")
-ConvarManager:CreateConVar("zp_ap_damage", 500, 8, "cvar used to set how much damage humans should cause to earn zp_ap_total ammo packs.")
+ConvarManager:CreateConVar("zp_ap_damage", 500, 8, "cvar used to set how much damage humans should cause to earn zp_ap_total ammo packs, set 0 to disable.")
 
 ConvarManager:CreateConVar("zp_ap_zombies", 1, 8, "cvar used to set if Zombies should earn ammo packs when infected players.")
 ConvarManager:CreateConVar("zp_ap_zombies_total", 1, 8, "cvar used to set the amount of ammo packs the zombie will win after infect a player.")
@@ -162,7 +162,15 @@ ConvarManager:CreateConVar("zp_ap_zombies_total", 1, 8, "cvar used to set the am
 ConvarManager:CreateConVar("zp_ap_kill_human", 5, 8, "cvar used to set how many ammo packs player will win if killed an human.")
 ConvarManager:CreateConVar("zp_ap_kill_zombie", 5, 8, "cvar used to set how many ammo packs player will win if killed a zombie.")
 -------------------------------Ammo Pack--------------------------------
-
+-----------------------------Point system-------------------------------
+ConvarManager:CreateConVar("zp_point_damage_amount_to_point", 1500, 8, "cvar used to set how much damage humans should cause to earn zp_point_amount_received points, set 0 to disable.")
+ConvarManager:CreateConVar("zp_point_amount_received", 1, 8, "cvar used to set how many points a human will receive after causing X damage.")
+ConvarManager:CreateConVar("zp_point_points_per_zombie_kill", 1, 8, "cvar used to set how many points a human will receive after killing a zombie.")
+ConvarManager:CreateConVar("zp_point_points_per_human_kill", 1, 8, "cvar used to set how many points a zombie will receive after killing a human.")
+ConvarManager:CreateConVar("zp_point_points_per_infection", 1, 8, "cvar used to set how many points a zombie will receive after infecting a human.")
+ConvarManager:CreateConVar("zp_point_points_per_cure", 1, 8, "cvar used to set how many points a human will receive after curing a zombie.")
+ConvarManager:CreateConVar("zp_point_negative_points_per_suicide", 1, 8, "cvar used to set how many points someone who suicided will be penalized.")
+-----------------------------Point system-------------------------------
 ---------------------------------Configs--------------------------------
 ConvarManager:CreateConVar("zp_realistic_mode", 0, 8, "cvar used to set realistic mode on Zombie Plague.")
 

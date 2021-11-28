@@ -121,8 +121,10 @@ end)
 function GM:EntityTakeDamage(Target, DmgInfo)
 	local Attacker = DmgInfo:GetAttacker()
 	if Attacker:IsPlayer() then
-		if !RoundManager:IsRealisticMod() && RoundManager:GetRoundState() != ROUND_PLAYING then
-			return true
+		if !RoundManager:IsRealisticMod() then
+			if Target:IsPlayer() && RoundManager:GetRoundState() != ROUND_PLAYING then
+				return true
+			end
 		end
 		hook.Call("ZPDamageAttackerIsPlayer", GAMEMODE, Attacker, Target, DmgInfo)
 	end
@@ -305,6 +307,7 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 		ply:EmitSound(SafeTableRandom(ZombieDeathSounds))
 		if ply != killer && killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
+			killer:AddPoints(cvars.Number("zp_point_points_per_zombie_kill", 100))
 
 			ply:Spectate(OBS_MODE_CHASE)
 			ply:SpectateEntity(killer)
@@ -312,11 +315,17 @@ hook.Add("PlayerDeath", "ZPPlayerDeath", function(ply, wep, killer)
 	else
 		if ply != killer && killer:IsPlayer() then
 			killer:GiveAmmoPacks(cvars.Number("zp_ap_kill_zombie", 5))
+			killer:AddPoints(cvars.Number("zp_point_points_per_human_kill", 30))
 
 			ply:Spectate(OBS_MODE_CHASE)
 			ply:SpectateEntity(killer)
 		end
 	end
+
+	if(ply == killer) then
+		ply:RemovePoints(cvars.Number("zp_point_negative_points_per_suicide", 100))
+	end
+
 
 	hook.Call("ZPResetAbilityEvent" .. ply:SteamID64(), GAMEMODE)
 end)

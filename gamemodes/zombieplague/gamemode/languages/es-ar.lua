@@ -81,6 +81,8 @@ local Language = {PrettyName = "Español Latino",
 			ScoreBoardTitleZombies = "Zombies",
 			ScoreBoardTitleSpectators = "Espectadores",
 			ScoreBoardHeaderName = "Nombre",
+			--Translated with Google
+			ScoreBoardHeaderPoints = "Puntos",
 			ScoreBoardHeaderKills = "Kills",
 			ScoreBoardHeaderDeaths = "Muertes",
 			ScoreBoardHeaderStatus = "Estado",

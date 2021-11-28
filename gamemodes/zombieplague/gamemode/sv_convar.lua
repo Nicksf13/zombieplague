@@ -6,10 +6,18 @@ function ConvarManager:CreateConVar(Convar, Value, CvarEnum, Description)
 end
 
 Commands:AddCommand("cvars", "List all cvars available for zombieplague", function(ply)
-    SendConsoleMessage(ply, "Convars server list:")
+    local SortedTable = {}
     for k, Cvar in pairs(ConvarManager.Convars) do
-        SendConsoleMessage(ply, k .. " - " .. Cvar)
+        table.insert(SortedTable, {Name=k, Description=Cvar})
     end
+
+    table.sort(SortedTable, function(CmdA, CmdB) return CmdA.Name < CmdB.Name end)
+
+    SendConsoleMessage(ply, "Convars server list:")
+    for k, Cvar in pairs(SortedTable) do
+        SendConsoleMessage(ply, Cvar.Name .. " - " .. Cvar.Description)
+    end
+
     SendColorMessage(ply, "ConVars has been printed on the console", Color(255, 255, 0))
 end, "", true)
 
