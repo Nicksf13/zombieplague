@@ -13,6 +13,7 @@ function InfectionManager:Infect(Infected, Attacker)
 	
 	Attacker:AddFrags(1)
 	Infected:AddDeaths(1)
+	Attacker:AddPoints(cvars.Number("zp_point_points_per_infection", 10))
 	
 	if !RoundManager:IsRealisticMod() then
 		for k, ply in pairs(player.GetAll()) do
@@ -44,6 +45,8 @@ function InfectionManager:Cure(Cured, Attacker)
 			end
 		end
 	end
+
+	Attacker:AddPoints(cvars.Number("zp_point_points_per_cure", 50))
 	
 	hook.Call("ZPCureEvent", GAMEMODE, Cured, Attacker)
 	hook.Call("ZPResetAbilityEvent" .. Cured:SteamID64(), GAMEMODE)

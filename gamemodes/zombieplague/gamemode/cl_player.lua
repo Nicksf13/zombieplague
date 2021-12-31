@@ -127,6 +127,13 @@ function PLAYER:GetScreenFilter()
 	return self.ScreenFilter
 end
 
+function PLAYER:SetPoints(Points)
+	self.Points = Points
+end
+function PLAYER:GetPoints()
+	return self.Points or 0
+end
+
 hook.Add("PlayerStartVoice", "ZPStartTalking", function(ply)
 	if ply == LocalPlayer() then
 		net.Start("SendVoice")
@@ -235,5 +242,11 @@ net.Receive("SendScreenFilter", function()
 		else
 			ply:SetScreenFilter(nil)
 		end
+	end
+end)
+net.Receive("SendPoints", function()
+	local ply = PlayerManager:DiscoverPlayerByTextID(net.ReadString())
+	if IsValid(ply) then
+		ply:SetPoints(net.ReadInt(32))
 	end
 end)

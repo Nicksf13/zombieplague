@@ -80,6 +80,8 @@ local Language = {PrettyName = "한국어",
 				ScoreBoardTitleZombies = "좀비",
 				ScoreBoardTitleSpectators = "관전자",
 				ScoreBoardHeaderName = "이름",
+				--Translated with Google
+				ScoreBoardHeaderPoints = "포인트들",
 				ScoreBoardHeaderKills = "사살",
 				ScoreBoardHeaderDeaths = "사망",
 				ScoreBoardHeaderStatus = "상태",
