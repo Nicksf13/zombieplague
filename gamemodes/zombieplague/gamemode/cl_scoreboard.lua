@@ -62,10 +62,10 @@ function ScoreBoardManager:FillScroll(Scroll)
     Scroll.TotalSpectators = table.Count(team.GetPlayers(TEAM_SPECTATOR))
 
     if Scroll.TotalHumans > 0 then
-        ScoreBoardManager:AddComponent(ScoreBoardManager:CreateTeamPlayerTable(TEAM_HUMANS), 0)
+        ScoreBoardManager:AddComponent(ScoreBoardManager:CreateTeamPlayerTable(TEAM_HUMANS), 10)
     end
     if Scroll.TotalZombies > 0 then
-        ScoreBoardManager:AddComponent(ScoreBoardManager:CreateTeamPlayerTable(TEAM_ZOMBIES), 0)
+        ScoreBoardManager:AddComponent(ScoreBoardManager:CreateTeamPlayerTable(TEAM_ZOMBIES), 10)
     end
     if Scroll.TotalSpectators > 0 then
         ScoreBoardManager:AddComponent(ScoreBoardManager:CreateTeamPlayerTable(TEAM_SPECTATOR), 0)
@@ -120,7 +120,7 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
 
     local Header = ScoreBoardManager:CreatePlayerLine(
         Dictionary:GetPhrase("ScoreBoardHeaderName"),
-        Dictionary:GetPhrase("ScoreBoardHeaderKills"),
+        Dictionary:GetPhrase("ScoreBoardHeaderPoints"),
         Dictionary:GetPhrase("ScoreBoardHeaderDeaths"),
         Dictionary:GetPhrase("ScoreBoardHeaderStatus"),
         Dictionary:GetPhrase("ScoreBoardHeaderPing"),
@@ -131,11 +131,15 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
     Table:AddComponent(Header, 0)
     Table:AddComponent(ScoreBoardManager:CreateLine(4, ScrWidth - (self.CompPosX * 2), 2, TeamColor), 0)
 
-    for k, ply in pairs(team.GetPlayers(Team)) do
+    local PlayersSorted = team.GetPlayers(Team)
+
+    table.sort(PlayersSorted, function(PlyA, PlyB) return PlyA:GetPoints() > PlyB:GetPoints() end)
+
+    for k, ply in pairs(PlayersSorted) do
         if ply && IsValid(ply) then
             local NewPlayerLine = ScoreBoardManager:CreatePlayerLine(
                 function() return (ply && IsValid(ply)) and ply:Name() or "" end,
-                function() return (ply && IsValid(ply)) and ply:Frags() or "" end,
+                function() return (ply && IsValid(ply)) and ply:GetPoints() or "" end,
                 function() return (ply && IsValid(ply)) and ply:Deaths() or "" end,
                 function()
                     if !ply || !IsValid(ply) then
@@ -161,15 +165,15 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
     Table:SetSize(ScrWidth, Table.TotalComponentHeight)
 end
 
-function ScoreBoardManager:CreatePlayerLine(Name, Frags, Deaths, Status, Ping, PlyMuted, TextFont, TeamColor)
+function ScoreBoardManager:CreatePlayerLine(Name, Points, Deaths, Status, Ping, PlyMuted, TextFont, TeamColor)
     local PlayerLine = vgui.Create("DPanel")
     PlayerLine:SetSize(ScrWidth, 20)
     PlayerLine.Paint = function()end
 
-    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Name, TextFont, TeamColor, 0, 200))
-    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Frags, TextFont, TeamColor, 220, 80))
-    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Deaths, TextFont, TeamColor, 300, 80))
-    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Status, TextFont, TeamColor, 380, 80))
+    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Name, TextFont, TeamColor, 0, 190))
+    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Points, TextFont, TeamColor, 200, 80))
+    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Deaths, TextFont, TeamColor, 290, 80))
+    PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Status, TextFont, TeamColor, 380, 70))
     PlayerLine:Add(ScoreBoardManager:CreateCenteredLabel(Ping, TextFont, TeamColor, 460, 80))
     
     if type(PlyMuted) != "string" && IsValid(PlyMuted) && PlyMuted != LocalPlayer() then

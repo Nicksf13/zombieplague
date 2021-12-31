@@ -206,12 +206,27 @@ function PLAYER:ShouldTakeFallDamage()
 	return (FallDamage == FALL_DMG_ALL) || (self:IsZombie() && FALL_DMG_ZOMBIES) || (self:IsHuman() && FALL_DMG_HUMANS)
 end
 function PLAYER:AddTotalDamage(TotalDamage)
-	TotalDamage = self:GetTotalDamage() + TotalDamage
-	local AmmoPacks = math.floor(TotalDamage / cvars.Number("zp_ap_damage", 500))
-	if AmmoPacks > 0 then
-		self:GiveAmmoPacks(AmmoPacks)
+	local DamageToAP = cvars.Number("zp_ap_damage", 500)
+
+	if(DamageToAP > 0) then
+		local ExcedingAPTotalDamage = (self:GetTotalDamage() % DamageToAP) + TotalDamage
+		local AmmoPacks = math.floor(ExcedingAPTotalDamage / DamageToAP)
+		if AmmoPacks > 0 then
+			self:GiveAmmoPacks(AmmoPacks)
+		end
 	end
-	self:SetTotalDamage(TotalDamage % cvars.Number("zp_ap_damage", 500))
+
+	local DamageToPoints = cvars.Number("zp_point_damage_amount_to_point", 750)
+
+	if(DamageToPoints > 0) then
+		local ExcedingPointsTotalDamage = (self:GetTotalDamage() % DamageToPoints) + TotalDamage
+		local Points = math.floor(ExcedingPointsTotalDamage / DamageToPoints)
+		if Points > 0 then
+			self:AddPoints(Points * cvars.Number("zp_point_amount_received", 5))
+		end
+	end
+
+	self:SetTotalDamage(self:GetTotalDamage() + TotalDamage)
 end
 function PLAYER:SetTotalDamage(TotalDamage)
 	self.TotalDamage = TotalDamage
@@ -737,7 +752,25 @@ function PLAYER:SetScreenFilter(ScreenFilter)
 
 	self.ScreenFilter = ScreenFilter
 end
----------------------------Filter---------------------------
+-----------------------Screen Filter------------------------
+-----------------------Player Points------------------------
+function PLAYER:AddPoints(PointsToAdd)
+	self:SetPoints(self:GetPoints() + PointsToAdd)
+end
+function PLAYER:RemovePoints(PointsToRemove)
+	self:SetPoints(self:GetPoints() - PointsToRemove)
+end
+function PLAYER:SetPoints(Points)
+	net.Start("SendPoints")
+		net.WriteString(PlayerManager:GetPlayerID(self))
+		net.WriteInt(Points, 32)
+	net.Broadcast()
+	self.Points = Points
+end
+function PLAYER:GetPoints()
+	return self.Points or 0
+end
+-----------------------Player Points------------------------
 net.Receive("SendVoice", function(len, ply)
 	ply:SetTalking(net.ReadBool())
 end)
@@ -759,3 +792,4 @@ util.AddNetworkString("SendMaxAbilityPower")
 util.AddNetworkString("SendBreath")
 util.AddNetworkString("SendMaxBreath")
 util.AddNetworkString("SendScreenFilter")
+util.AddNetworkString("SendPoints")

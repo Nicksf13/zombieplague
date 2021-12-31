@@ -81,6 +81,8 @@ local Language = {PrettyName = "繁體中文",
 				ScoreBoardTitleZombies = "殭屍",
 				ScoreBoardTitleSpectators = "觀戰者",
 				ScoreBoardHeaderName = "名稱",
+				--Translated with Google
+				ScoreBoardHeaderPoints = "積分",
 				ScoreBoardHeaderKills = "擊殺數",
 				ScoreBoardHeaderDeaths = "死亡數",
 				ScoreBoardHeaderStatus = "狀態",
