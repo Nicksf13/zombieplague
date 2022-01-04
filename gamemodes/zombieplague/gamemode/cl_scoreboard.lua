@@ -135,7 +135,7 @@ function ScoreBoardManager:FillTable(Table, TitleText, TitleFont, Team)
 
     table.sort(PlayersSorted, function(PlyA, PlyB) return PlyA:GetPoints() > PlyB:GetPoints() end)
 
-    for k, ply in pairs(PlayersSorted) do
+    for i, ply in ipairs(PlayersSorted) do
         if ply && IsValid(ply) then
             local NewPlayerLine = ScoreBoardManager:CreatePlayerLine(
                 function() return (ply && IsValid(ply)) and ply:Name() or "" end,

@@ -1,25 +1,25 @@
 AddCSLuaFile("cl_message.lua")
 function BroadcastMessage(text)
-	for k, ply in pairs(player.GetAll()) do
+	for i, ply in ipairs(player.GetAll()) do
 		SendColorMessage(ply, text, Color(255, 255, 255))
 	end
 end
 function BroadcastColorMessage(text, Clr, Exclude)
-	for k, ply in pairs(player.GetAll()) do
+	for i, ply in ipairs(player.GetAll()) do
 		if !Exclude || !table.HasValue(Exclude, ply) then
 			SendColorMessage(ply, text, Clr)
 		end
 	end
 end
 function BroadcastSound(SoundPath, Exclude)
-	for k, ply in pairs(player.GetAll()) do
+	for i, ply in ipairs(player.GetAll()) do
 		if !Exclude || !table.HasValue(Exclude, ply) then
 			SendSound(ply, SoundPath)
 		end
 	end
 end
 function BroadcastNotifyMessage(txt, time, Clr)
-	for k, ply in pairs(player.GetAll()) do
+	for i, ply in ipairs(player.GetAll()) do
 		SendNotifyMessage(ply, txt, time, Clr)
 	end
 end
