@@ -282,7 +282,7 @@ end
 hook.Add("TickManager", "ZPReloadManager", function()
 	local ClipMode = cvars.Number("zp_clip_mode", 0)
 	if ClipMode == WMODE_INFINITE_CLIP || ClipMode == WMODE_INFINITE then
-		for k, ply in pairs(player.GetAll()) do
+		for i, ply in ipairs(player.GetAll()) do
 			if ply:Alive() && ply:IsHuman() then
 				local ActiveWeapon = ply:GetActiveWeapon()
 				if IsValid(ActiveWeapon) && WeaponManager:IsChosenWeapon(ActiveWeapon:GetClass()) then
@@ -442,7 +442,7 @@ Commands:AddCommand("zp", "Open Zombie Plague's menu.", function(ply, args)
 end)
 hook.Add("SecondTickManager", "ZPHealthRegenerator", function()
 	if cvars.Bool("zp_health_should_regen", true) then
-		for k, ply in pairs(RoundManager:GetAliveZombies()) do
+		for i, ply in ipairs(RoundManager:GetAliveZombies()) do
 			if CurTime() - ply:GetLastDamage() > cvars.Number("zp_health_regen_time_delay", 20) && ply:Health() < ply:GetMaxHealth() then
 				local TotalHealth = ply:Health() + cvars.Number("zp_health_regen", 10)
 				ply:SetHealth((TotalHealth > ply:GetMaxHealth() and ply:GetMaxHealth() or TotalHealth))
@@ -451,7 +451,7 @@ hook.Add("SecondTickManager", "ZPHealthRegenerator", function()
 	end
 end)
 hook.Add("SecondTickManager", "ZPAFKManager", function()
-	for k, ply in pairs(RoundManager:GetAliveZombies()) do
+	for i, ply in ipairs(RoundManager:GetAliveZombies()) do
 		if CurTime() - ply:GetLastMove() > math.random(15, 30) then
 			ply:ZPEmitSound(SafeTableRandom(ZombieIdle), 2, true)
 			ply:SetLastMove(CurTime())
@@ -460,7 +460,7 @@ hook.Add("SecondTickManager", "ZPAFKManager", function()
 end)
 hook.Add("HalfSecondTickManager", "ZPBreathManager", function()
 	local TotalDrain
-	for k, ply in pairs(RoundManager:GetPlayersToPlay()) do
+	for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
 		if ply:Alive() then
 			TotalDrain = 0
 			if WaterShouldDrain() && ply:WaterLevel() > 2 then
@@ -498,7 +498,7 @@ hook.Add("ZPSuffocate", "ZPBreathDamage", function(ply)
 	end
 end)
 hook.Add("TickManager", "GravityManager", function()
-	for k, ply in pairs(RoundManager:GetPlayersToPlay()) do
+	for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
 		if ply:GetGravity() != ply:GetAuxGravity() then
 			ply:SetGravity(ply:GetAuxGravity())
 		end
@@ -509,7 +509,7 @@ hook.Add("ZPCureEvent", "GetCuredEffect", function(ply)
 end)
 hook.Add("TickManager", "DrainManager", function()
 	local TotalDrain
-	for k, ply in pairs(RoundManager:GetAliveHumans()) do
+	for i, ply in ipairs(RoundManager:GetAliveHumans()) do
 		TotalDrain = 0
 		if FlashlightShouldDrain() && ply:FlashlightIsOn() then
 			TotalDrain = TotalDrain + cvars.Number("zp_battery_flashlight_drain", 1)

@@ -5,7 +5,7 @@ MapConfig.Start = function()
 	RunConsoleCommand("sv_gravity", 450)
 
 	hook.Add("ZPNewRound", "ze_zombie_respawn", function()
-		for k, ply in pairs(RoundManager:GetAliveZombies()) do
+		for i, ply in ipairs(RoundManager:GetAliveZombies()) do
 			ply:Spawn()
 		end
 	end)

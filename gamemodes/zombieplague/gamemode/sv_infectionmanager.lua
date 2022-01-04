@@ -16,7 +16,7 @@ function InfectionManager:Infect(Infected, Attacker)
 	Attacker:AddPoints(cvars.Number("zp_point_points_per_infection", 10))
 	
 	if !RoundManager:IsRealisticMod() then
-		for k, ply in pairs(player.GetAll()) do
+		for i, ply in ipairs(player.GetAll()) do
 			if Infected != Attacker then
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeInfect", ply), Infected:Name(), Attacker:Name()))
 			else
@@ -37,7 +37,7 @@ function InfectionManager:Cure(Cured, Attacker)
 	Cured:Cure()
 	Attacker:AddFrags(1)
 	if !RoundManager:IsRealisticMod() then
-		for k, ply in pairs(player.GetAll()) do
+		for i, ply in ipairs(player.GetAll()) do
 			if Cured != Attacker then
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeGetCured", ply), Cured:Name(), Attacker:Name()))
 			else

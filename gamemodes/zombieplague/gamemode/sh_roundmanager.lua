@@ -29,7 +29,7 @@ function RoundManager:IsRealisticMod()
 end
 function RoundManager:LastHuman()
 	local i = 0
-	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
+	for _, ply in ipairs(team.GetPlayers(TEAM_HUMANS)) do
 		if ply:Alive() then
 			i = i + 1
 			if i > 1 then
@@ -41,7 +41,7 @@ function RoundManager:LastHuman()
 end
 function RoundManager:LastZombie()
 	local i = 0
-	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
+	for _, ply in ipairs(team.GetPlayers(TEAM_ZOMBIES)) do
 		if ply:Alive() then
 			i = i + 1
 			if i > 1 then
@@ -52,7 +52,7 @@ function RoundManager:LastZombie()
 	return i == 1
 end
 function RoundManager:NoHumans()
-	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
+	for i, ply in ipairs(team.GetPlayers(TEAM_HUMANS)) do
 		if ply:Alive() then
 			return false
 		end
@@ -60,7 +60,7 @@ function RoundManager:NoHumans()
 	return true
 end
 function RoundManager:NoZombies()
-	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
+	for i, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
 		if ply:Alive() then
 			return false
 		end
@@ -69,7 +69,7 @@ function RoundManager:NoZombies()
 end
 function RoundManager:CountHumansAlive()
 	local i = 0
-	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
+	for _, ply in ipairs(team.GetPlayers(TEAM_HUMANS)) do
 		if ply:Alive() then
 			i = i + 1
 		end
@@ -78,7 +78,7 @@ function RoundManager:CountHumansAlive()
 end
 function RoundManager:CountZombiesAlive()
 	local i = 0
-	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
+	for _, ply in ipairs(team.GetPlayers(TEAM_ZOMBIES)) do
 		if ply:Alive() then
 			i = i + 1
 		end
@@ -87,7 +87,7 @@ function RoundManager:CountZombiesAlive()
 end
 function RoundManager:GetAliveHumans()
 	local AliveHumans = {}
-	for k, ply in pairs(team.GetPlayers(TEAM_HUMANS)) do
+	for i, ply in ipairs(team.GetPlayers(TEAM_HUMANS)) do
 		if ply:Alive() then
 			table.insert(AliveHumans, ply)
 		end
@@ -96,7 +96,7 @@ function RoundManager:GetAliveHumans()
 end
 function RoundManager:GetAliveZombies()
 	local AliveZombies = {}
-	for k, ply in pairs(team.GetPlayers(TEAM_ZOMBIES)) do
+	for i, ply in ipairs(team.GetPlayers(TEAM_ZOMBIES)) do
 		if ply:Alive() then
 			table.insert(AliveZombies, ply)
 		end
