@@ -4,6 +4,8 @@
 	"title"		"Zombie Plague"
 	"maps"		"^zm_|^zs_"
 	"menusystem"	"1"
+	"category"      "pvp"
+	"workshopid"    "1115250691"
 
 	"settings"
 	{
