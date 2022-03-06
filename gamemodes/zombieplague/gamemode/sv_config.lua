@@ -5,8 +5,8 @@ INFECTION_BOMB_ENTITY = "npc_grenade_frag"
 
 ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
 
-AdminHumanPlayerModel = ""
-AdminZombiePlayerModel = ""
+AdminHumanPlayerModel = "models/player/combine_super_soldier.mdl"
+AdminZombiePlayerModel = "models/player/zombie_soldier.mdl"
 
 NemesisClass = {Health = 5000,
 		Speed = 270,
