@@ -65,7 +65,7 @@ hook.Add("Think", "ZPSpecialLights", function()
 		end
 	end
 	
-	for k, ply in pairs(player.GetAll()) do
+	for i, ply in ipairs(player.GetAll()) do
 		local NColor = ply:GetLight()
 		if NColor then
 			local dlight = DynamicLight(ply:EntIndex())
