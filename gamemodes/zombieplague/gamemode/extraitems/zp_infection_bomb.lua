@@ -2,6 +2,7 @@ ExtraItem.ID = "ZPInfectionBomb"
 ExtraItem.Name = "ExtraItemInfectionBombName"
 ExtraItem.Price = 7
 ExtraItem.Type = ITEM_ZOMBIE
+ExtraItem.BuySounds = { "weapons/bugbait/bugbait_squeeze1.wav" }
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon(INFECTION_BOMB)
 	if IsValid(Weap) then

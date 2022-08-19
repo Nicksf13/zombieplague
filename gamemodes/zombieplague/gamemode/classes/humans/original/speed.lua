@@ -7,6 +7,7 @@ ZPClass.Speed = 270
 ZPClass.RunSpeed = 100
 ZPClass.CrouchSpeed = 0.4
 ZPClass.Gravity = 1
+ZPClass.JumpPower = 170
 ZPClass.Battery = 50
 ZPClass.Breath = 150
 ClassManager:AddZPClass("SpeedHuman", ZPClass, TEAM_HUMANS)

@@ -86,7 +86,7 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 					table.insert(ExtraItemsManager.PostRoundEvents, ExtraItem.RemoveFunction)
 				end
 				if ExtraItem.BuySounds then
-					SendSound(ply, SafeTableRandom(ExtraItem.BuySounds))
+					SendSound(ply, ExtraItem.BuySounds[ math.random( #ExtraItem.BuySounds ) ])
 				end
 				ply:TakeAmmoPacks(ExtraItem.Price)
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), Dictionary:GetPhrase(ExtraItem.Name, ply)))

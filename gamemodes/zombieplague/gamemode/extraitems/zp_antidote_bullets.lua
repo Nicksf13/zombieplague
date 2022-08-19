@@ -1,6 +1,7 @@
 ExtraItem.ID = "ZPAntidoteBullets"
 ExtraItem.Name = "ExtraItemAntidoteBulletsName"
 ExtraItem.Price = 30
+ExtraItem.BuySounds = { "items/medshot4.wav" }
 function ExtraItem:OnBuy(ply)
 	ply.AntidoteBullets = (ply.AntidoteBullets or 0) + 5
 	hook.Add("EntityFireBullets", "EntityFireBullets"..ply:SteamID64(), function(Attacker)
@@ -30,6 +31,9 @@ function ExtraItem:OnBuy(ply)
 		if !ShouldIgnore && Attacker == ply && !RoundManager:IsSpecialRound() then
 			if !RoundManager:LastZombie() then
 				InfectionManager:Cure(Target, Attacker)
+				Attacker:GiveAmmoPacks(cvars.Number("zp_ap_cure_zombie", 3))
+				Attacker:AddPoints(cvars.Number("zp_point_points_per_zombie_cure", 1))
+				Attacker:AddFrags(1)
 			end
 		end
 	end)

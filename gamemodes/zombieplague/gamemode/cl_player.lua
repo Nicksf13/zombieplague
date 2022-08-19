@@ -250,3 +250,22 @@ net.Receive("SendPoints", function()
 		ply:SetPoints(net.ReadInt(32))
 	end
 end)
+
+net.Receive("ZPKillNotice", function(len, ply) 
+	local KEnt = net.ReadEntity()
+	local IEnt = net.ReadEntity()
+	local VEnt = net.ReadEntity()
+
+	local KEntName = nil
+	local IEntClass = "default"
+	local VEntName = nil
+
+	if IsValid(KEnt) then KEntName = KEnt:GetName() end
+	if IsValid(IEnt) then IEntClass = KEnt:GetClass() end
+	if IsValid(VEnt) then VEntName = VEnt:GetName() end
+
+	if IsValid(KEnt) then KEntTeam = KEnt:Team() end
+	if IsValid(VEnt) then VEntTeam = VEnt:Team() end
+
+	GAMEMODE:AddDeathNotice( KEntName, KEntTeam, IEntClass, VEntName, VEntTeam )
+end)

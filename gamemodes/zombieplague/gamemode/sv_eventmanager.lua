@@ -24,7 +24,7 @@ ConvarManager:CreateConVar("zp_health_regen_time_delay", 20, 8, "cvar used to se
 ConvarManager:CreateConVar("zp_health_regen", 10, 8, "cvar used to set how much health zombies will regen.")
 ConvarManager:CreateConVar("zp_clip_mode", 0, 8, "cvar used to set the clip mode of the weapons.")
 ConvarManager:CreateConVar("zp_zombie_should_run", 1, 8, "cvar used to enable zombies to run")
-ConvarManager:CreateConVar("zp_spectate_team_ony", 1, 8, "cvar used to define if the spectator can only see his teammates")
+ConvarManager:CreateConVar("zp_spectate_team_ony", 0, 8, "cvar used to define if the spectator can only see his teammates")
 
 FALL_DMG_NONE = 0
 FALL_DMG_ZOMBIES = 1
@@ -425,12 +425,14 @@ timer.Create("SecondTickManager", 1, 0, function()
 	hook.Call("SecondTickManager")
 end)
 net.Receive("RequestSpectator", function(len, ply)
-	if ply:Team() != TEAM_SPECTATOR then
-		RoundManager:RemovePlayerToPlay(ply)
-		ply:KillSilent()
-		ply:Spectate(OBS_MODE_ROAMING)
-	else
-		RoundManager:AddPlayerToPlay(ply)
+	if RoundManager:GetRoundState() != ROUND_PLAYING then
+		if ply:Team() != TEAM_SPECTATOR then
+			RoundManager:RemovePlayerToPlay(ply)
+			ply:KillSilent()
+			ply:Spectate(OBS_MODE_ROAMING)
+		else
+			RoundManager:AddPlayerToPlay(ply)
+		end
 	end
 end)
 net.Receive("RequestNightvision", function(len, ply)
@@ -547,7 +549,7 @@ hook.Add("PlayerBatteryOver", "ZPBatteryOver", function(ply)
 		ply:SetNightvision(false)
 	end
 end)
-hook.Add("ZPLastHumanEvent", "LastHumanHealth", function()
+--[[hook.Add("ZPLastHumanEvent", "LastHumanHealth", function()
 	local Mode = cvars.Number("zp_last_human_reward_mode", 0)
 	local LastHuman = table.Random(RoundManager:GetAliveHumans())
 	if Mode == 1 then
@@ -557,6 +559,7 @@ hook.Add("ZPLastHumanEvent", "LastHumanHealth", function()
 	end
 end)
 hook.Add("ZPLastZombieEvent", "LastZombieHealth", function()
+	/*
 	local Mode = cvars.Number("zp_last_zombie_reward_mode", 0)
 	local LastZombie = table.Random(RoundManager:GetAliveZombies())
 	if Mode == 1 then
@@ -564,7 +567,8 @@ hook.Add("ZPLastZombieEvent", "LastZombieHealth", function()
 	elseif Mode == 2 then
 		LastZombie:SetHealth(LastZombie:Health() + cvars.Number("zp_last_zombie_reward_health", 25))
 	end
-end)
+	*/
+end) ]]--
 
 util.AddNetworkString("RequestSpectator")
 util.AddNetworkString("RequestNightvision")

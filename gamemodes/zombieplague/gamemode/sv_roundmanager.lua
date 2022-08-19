@@ -1,6 +1,6 @@
 ConvarManager:CreateConVar("zp_min_players", 2, 8, "cvar used to define minimun players to start the round.")
 ConvarManager:CreateConVar("zp_newround_delay", 10, 8, "cvar used to define new round time delay.")
-ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define infection time delay.")
+ConvarManager:CreateConVar("zp_infection_delay", 15, 8, "cvar used to define infection time delay.")
 ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
 ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 ConvarManager:CreateConVar("zp_should_winning_reward", 1, 8, "cvar used to define if ZP will reward the round winners")
@@ -120,9 +120,30 @@ function RoundManager:Prepare()
 	end
 	return false
 end
+
 function RoundManager:TryNewRound()
 	if RoundManager:Prepare() then
-		RoundManager:SetTimer(cvars.Number("zp_infection_delay",  10), RoundManager.NewRound)
+		RoundManager:SetTimer(cvars.Number("zp_infection_delay",  13), RoundManager.NewRound)
+		for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
+			ply.prefreezewalkspeed = ply:GetWalkSpeed()
+			ply.prefreezerunspeed = ply:GetRunSpeed()
+			ply.prefreezeswspeed = ply:GetSlowWalkSpeed()
+
+			ply:SetRunSpeed(0.001)
+			ply:SetWalkSpeed(0.001)
+			ply:SetSlowWalkSpeed(0.001)
+
+		end
+		timer.Create("zp_preround_freeze", 5, 1, function()
+			for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
+				ply:SetWalkSpeed(ply.prefreezewalkspeed)
+				ply:SetRunSpeed(ply.prefreezerunspeed)
+				ply:SetSlowWalkSpeed(ply.prefreezeswspeed)
+
+			end
+			BroadcastSound(SafeTableRandom(UnfreezeSounds))
+		end)
+		
 	else
 		RoundManager:WaitPlayers()
 	end
@@ -200,6 +221,7 @@ function RoundManager:StartRound(RoundToStart, ply)
 	RoundToStart.StartFunction(ply)
 	self:SetSpecialRound(RoundToStart.SpecialRound)
 	self:SetRespawn(RoundToStart.Respawn)
+	
 	if RoundToStart.StartSound then
 		BroadcastSound(SafeTableRandom(RoundToStart.StartSound))
 	end
@@ -344,6 +366,7 @@ function RoundManager:AddDefaultRounds()
 		local PlayersToPlay = RoundManager:GetPlayersToPlay(true)
 		local FirstZombie = (ply and ply or table.Random(PlayersToPlay))
 		FirstZombie:Infect()
+		FirstZombie:SetHealth(FirstZombie:GetMaxHealth() + (FirstZombie:GetMaxHealth() * 0.25))
 		for i, ply in ipairs(PlayersToPlay) do
 			self:AddPlayerToBeRewarded(ply)
 			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundSimple", ply), 5, Color(0, 255, 0))
@@ -483,6 +506,7 @@ function RoundManager:AddDefaultRounds()
 			table.RemoveByValue(Players, v)
 			if i % 2 == 0 then
 				v:Infect()
+				v:SetHealth(v:GetMaxHealth() + (v:GetMaxHealth() / 50))
 			end
 			i = i + 1
 
