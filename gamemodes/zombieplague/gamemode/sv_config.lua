@@ -11,8 +11,9 @@ AdminZombiePlayerModel = "models/player/zombie_soldier.mdl"
 NemesisClass = {Health = 5000,
 		Speed = 270,
 		RunSpeed = 270,
-		CrouchedSpeed = 1,
+		CrouchedSpeed = 0.7,
 		Gravity = 0.5,
+		Ability = false,
 		PlayerModel = "models/player/zombie_soldier.mdl"
 	}
 SurvivorClass = {Health = 250,
@@ -90,6 +91,13 @@ ZombieSuffocateSound = {"player/pl_pain5.wav",
 	"player/pl_pain7.wav"}
 
 
+UnfreezeSounds = {
+	"radio/moveout.wav",
+	"radio/locknload.wav",
+	"radio/go.wav",
+	"radio/com_go.wav"
+}
+
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
 
@@ -148,6 +156,9 @@ for k, SoundPath in pairs(ZombieSuffocateSound) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 
+for k, SoundPath in pairs(UnfreezeSounds) do
+	resource.AddFile("sound/" .. SoundPath)
+end
 resource.AddFile("sound/" .. NIGHTVISION_ON_SOUND)
 resource.AddFile("sound/" .. NIGHTVISION_OFF_SOUND)
 
@@ -191,9 +202,9 @@ ConvarManager:CreateConVar("zp_admin_human_model", 0, 8, "cvar used to set if ad
 ConvarManager:CreateConVar("zp_admin_zombie_model", 0, 8, "cvar used to set if admin will receive a special zombie player model.")
 
 ConvarManager:CreateConVar("zp_voice_all", 1, 8, "cvar used to set if players will hear other team players.")
-ConvarManager:CreateConVar("zp_can_hear_death", 0, 8, "cvar used to set if players will hear death players")
+ConvarManager:CreateConVar("zp_can_hear_death", 1, 8, "cvar used to set if players will hear death players")
 ConvarManager:CreateConVar("zp_chat_all", 1, 8, "cvar used to set if players will read other team players.")
-ConvarManager:CreateConVar("zp_can_see_death", 0, 8, "cvar used to set if players will read death players")
+ConvarManager:CreateConVar("zp_can_see_death", 1, 8, "cvar used to set if players will read death players")
 
 ConvarManager:CreateConVar("zp_maps_to_vote", 7, 8, "cvar used to set how many maps will be displayed on votemap")
 ConvarManager:CreateConVar("zp_map_prop_damage_multiplier", 1, 8, "cvar used to set the map prop multiplier")

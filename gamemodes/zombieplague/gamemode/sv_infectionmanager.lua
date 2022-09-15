@@ -1,5 +1,6 @@
 InfectionManager = {}
 --Main function to infect a player, ZPInfectionEvent are called here
+	util.AddNetworkString("PlayerInfectedSomeone")
 function InfectionManager:Infect(Infected, Attacker)
 	if cvars.Bool("zp_ap_zombies", false) then
 		Attacker:GiveAmmoPacks(cvars.Number("zp_ap_zombies_total", 1))
@@ -16,13 +17,21 @@ function InfectionManager:Infect(Infected, Attacker)
 	Attacker:AddPoints(cvars.Number("zp_point_points_per_infection", 10))
 	
 	if !RoundManager:IsRealisticMod() then
-		for i, ply in ipairs(player.GetAll()) do
+		--for i, ply in ipairs(player.GetAll()) do
+		net.Start("ZPKillNotice")
 			if Infected != Attacker then
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeInfect", ply), Infected:Name(), Attacker:Name()))
+				--SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeInfect", ply), Infected:Name(), Attacker:Name()))
+					net.WriteEntity(Attacker)
+					net.WriteEntity(nil)
+					net.WriteEntity(Infected)
 			else
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeSelfInfect", ply), Infected:Name()))
+				--SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeSelfInfect", ply), Infected:Name()))
+					net.WriteEntity(Attacker)
+					net.WriteEntity(nil)
+					net.WriteEntity(Infected)
 			end
-		end
+		net.Broadcast()
+		--end
 	end
 	
 	hook.Call("ZPInfectionEvent", GAMEMODE, Infected, Attacker)
@@ -39,6 +48,7 @@ function InfectionManager:Cure(Cured, Attacker)
 	if !RoundManager:IsRealisticMod() then
 		for i, ply in ipairs(player.GetAll()) do
 			if Cured != Attacker then
+
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeGetCured", ply), Cured:Name(), Attacker:Name()))
 			else
 				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeAntidote", ply), Cured:Name()))

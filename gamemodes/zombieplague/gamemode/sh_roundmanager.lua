@@ -70,7 +70,7 @@ end
 function RoundManager:CountHumansAlive()
 	local i = 0
 	for _, ply in ipairs(team.GetPlayers(TEAM_HUMANS)) do
-		if ply:Alive() then
+		if ply:Alive() and ply:GetObserverMode() == 0 then
 			i = i + 1
 		end
 	end
@@ -79,7 +79,7 @@ end
 function RoundManager:CountZombiesAlive()
 	local i = 0
 	for _, ply in ipairs(team.GetPlayers(TEAM_ZOMBIES)) do
-		if ply:Alive() then
+		if ply:Alive() and ply:GetObserverMode() == 0 then
 			i = i + 1
 		end
 	end

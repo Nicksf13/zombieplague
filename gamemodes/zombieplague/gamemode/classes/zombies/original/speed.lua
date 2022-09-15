@@ -1,9 +1,9 @@
 ZPClass.Name = "ZombieSpeedClassName"
 ZPClass.Description = "ZombieSpeedClassDescription"
-ZPClass.MaxHealth = 500
+ZPClass.MaxHealth = 750
 ZPClass.PModel = "models/player/zombie_fast.mdl"
-ZPClass.Speed = 320
-ZPClass.RunSpeed = 340
+ZPClass.Speed = 340
+ZPClass.RunSpeed = 100
 ZPClass.CrouchSpeed = 0.5
 ZPClass.Gravity = 0.7
 ZPClass.Breath = 250

@@ -65,7 +65,8 @@ local Language = {PrettyName = "Українська",
 			ExtraItemExtraAmmoName = "Додаткові набої",
 			RoundsLeft = "%d раундів залишилося!",
 			FinalRound = "Фінальний раунд!",
-			SaveSelection = "Зберегти вибір?"
+			SaveSelection = "Зберегти вибір?",
+			RandomSelection = "Випадкова зброя?"
 		},
 		Client = {
 			ClassClass = "Клас",

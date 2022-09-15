@@ -17,6 +17,7 @@ include("sv_extraitems.lua")
 include("sv_votemap.lua")
 include("sv_mapmanager.lua")
 include("sv_bank.lua")
+include("sv_antistuck.lua")
 
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("sh_bank.lua")

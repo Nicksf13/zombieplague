@@ -75,10 +75,12 @@ function WeaponManager:CreateNewWeapon()
 	Weapon.Order = 100
 	function Weapon:GiveWeapon(ply)
 		local Weap = ply:Give(self.WeaponID)
+		local Amount = 10
+		if ply:IsSurvivor() then Amount = 100 end
 		if Weap:GetMaxClip1() then
-			ply:GiveAmmo(Weap:GetMaxClip1() * 10, Weap:GetPrimaryAmmoType(), true) 
+			ply:GiveAmmo(Weap:GetMaxClip1() * Amount, Weap:GetPrimaryAmmoType(), true) 
 		else
-			ply:GiveAmmo(Weap:GetMaxClip2() * 10, Weap:GetSecondaryAmmoType(), true) 
+			ply:GiveAmmo(Weap:GetMaxClip2() * Amount, Weap:GetSecondaryAmmoType(), true) 
 		end
 	end
 	function Weapon:ShouldBeEnabled()
@@ -166,6 +168,7 @@ function WeaponManager:OpenWeaponMenu(ply, WeaponType)
 		net.WriteTable(FixedOptions)
 	net.Send(ply)
 end
+
 function WeaponManager:IsWeaponTypeSet(ply, WeaponType)
 	if WeaponType == WEAPON_PRIMARY then
 		return ply:GetPrimaryWeapon() != nil

@@ -1,6 +1,7 @@
 ExtraItem.ID = "ZPExtraAmmo"
 ExtraItem.Name = "ExtraItemExtraAmmoName"
 ExtraItem.Price = 3
+ExtraItem.BuySounds = { 'items/ammo_pickup.wav' }
 function ExtraItem:OnBuy(ply)
 	for k, Weap in pairs(ply:GetWeapons()) do
 		if WeaponManager:IsChoosableWeapon(Weap:GetClass()) then

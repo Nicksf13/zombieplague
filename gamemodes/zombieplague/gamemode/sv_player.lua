@@ -165,7 +165,7 @@ function PLAYER:ZombieMadness(ZombieMadnessTime)
 	self.selfOldRunSpeed = self:GetRunSpeed()
 	self:SetWalkSpeed(200)
 	self:SetRunSpeed(200)
-
+	self:SetHealth(self:Health() + 500)
 	local ZombieMadnessIdentifier = "ZPZombieMadness" .. self:SteamID64()
 	local ZombieMadnessDuration = ZombieMadnessTime and ZombieMadnessTime or 5
 	if timer.Exists(ZombieMadnessIdentifier) then
@@ -512,6 +512,7 @@ function PLAYER:Infect(SilentInfection)
 	self:SetJumpPower(ZombieClass.JumpPower)
 	self:SetDamageAmplifier(ZombieClass.DamageAmplifier)
 	self:SetFootstep((RoundManager:IsRealisticMod() || cvars.Bool("zp_zombie_footstep", false)) && ZombieClass.Footstep)
+	
 	if self:FlashlightIsOn() then
 		self:Flashlight(false)
 	end
@@ -660,6 +661,12 @@ function PLAYER:MakeNemesis()
 	self:SetDamageAmplifier(cvars.Number("zp_nemesis_damage", 10))
 	self:SetLight(NEMESIS_COLOR)
 	self:SetNemesis(true)
+
+	//Reset to configs values
+	self:SetWalkSpeed(NemesisClass.Speed)
+	self:SetRunSpeed(NemesisClass.RunSpeed)
+	self:SetCrouchedWalkSpeed(NemesisClass.CrouchedSpeed)
+	self:SetGravity(NemesisClass.Gravity)
 end
 function PLAYER:SetNemesis(Nemesis)
 	self.Nemesis = Nemesis
@@ -694,6 +701,11 @@ function PLAYER:MakeSurvivor()
 	self:SetDamageAmplifier(cvars.Number("zp_survivor_damage", 2.0))
 	self:SetLight(SURVIVOR_COLOR)
 	self:SetSurvivor(true)
+
+	local PrimWPN = self:GetPrimaryWeapon()
+	local SecWPN = self:GetSecondaryWeapon()
+	if IsValid(PrimWPN) then self:GiveAmmo(PrimWPN:GetMaxClip1() * 10, PrimWPN:GetPrimaryAmmoType(), true) end
+	if IsValid(SecWPN) then self:GiveAmmo(SecWPN:GetMaxClip1() * 10, SecWPN:GetPrimaryAmmoType(), true) end
 end
 function PLAYER:SetSurvivor(Survivor)
 	self.Survivor = Survivor
@@ -793,3 +805,4 @@ util.AddNetworkString("SendBreath")
 util.AddNetworkString("SendMaxBreath")
 util.AddNetworkString("SendScreenFilter")
 util.AddNetworkString("SendPoints")
+util.AddNetworkString("ZPKillNotice")

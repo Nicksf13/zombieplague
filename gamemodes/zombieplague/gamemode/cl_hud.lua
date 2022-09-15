@@ -243,3 +243,19 @@ end, function(ply)
 end, function()
 	return true
 end)
+
+local function InfectKillIcon()
+
+	local Infected	= net.ReadEntity()
+	local Attacker	= net.ReadEntity()
+
+	if ( !IsValid( Infected ) ) then return end
+	if ( !IsValid( Attacker ) ) then 
+		GAMEMODE:AddDeathNotice( nil, nil, "", Infected:Name(), Infected:Team() )
+		return
+	end
+
+	--GAMEMODE:AddDeathNotice( attacker:Name(), attacker:Team(), inflictor, victim:Name(), victim:Team() )
+end
+
+net.Receive( "PlayerInfectedSomeone", InfectKillIcon )
