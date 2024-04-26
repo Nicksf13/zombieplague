@@ -113,9 +113,6 @@ function Dictionary:Init()
 				AmmoPackGiverMessage = "You gave %d to %s!",
 				CommandInvalidArgument = "Invalid argument for this command!",
 				CommandNotAccess = "You don't have access to this command!",
-				ExtraItemAntidoteBulletsName = "Antidote Bullets",
-				ExtraItemAntidoteBulletsLeft = "You have %d Antidote Bullets left.",
-				ExtraItemAntidoteBulletsLost = "You have lost your Antidote Bullets",
 				ExtraItemAntidoteName = "Antidote",
 				ExtraItemArmorName = "Armor",
 				ExtraItemInfectionBombName = "Infection Bomb",
@@ -125,6 +122,7 @@ function Dictionary:Init()
 				ExtraItemZombieMadnessName = "Zombie Madness",
 				ExtraItemRPGName = "RPG",
 				ExtraItemExtraAmmoName = "Extra Ammo",
+				ExtraItemAntidoteGrenade = "Antidote Grenade",
 				RoundsLeft = "%d round(s) left!",
 				FinalRound = "Final round!",
 				SaveSelection = "Save selection?"
