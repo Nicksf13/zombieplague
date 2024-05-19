@@ -229,6 +229,7 @@ function Dictionary:Init()
 				HUDCustomizerRight = "Right",
 				HUDCustomizerTop = "Top",
 				HUDCustomizerBottom = "Bottom",
+				HUDSpectatingPlayer = "Spectating",
 				KeyBindingApply = "Apply",
 				KeyBindingCancel = "Cancel",
 				KeyBindingDefault = "Reset keys",

@@ -193,6 +193,13 @@ function HudManager:CreateHudComponentInfo(XPos, YPos)
 end
 
 HudManager:LoadHudInformation()
+HudManager:CreateHudInfo("HUDZPSpectatingPlayer", function()
+	return Dictionary:GetPhrase("HUDSpectatingPlayer")
+end, function(ply)
+	return ply:Name()
+end, function()
+	return !LocalPlayer():Alive()
+end)
 HudManager:CreateHudInfo("HUDZPClass", function()
 	return Dictionary:GetPhrase("ClassClass")
 end, function(ply)

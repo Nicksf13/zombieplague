@@ -497,7 +497,14 @@ function PLAYER:Infect(SilentInfection)
 	self:SetTeam(TEAM_ZOMBIES)
 	self:StripWeapons()
 	
-	local ZombieClass = self:IsBot() and SafeTableRandom(ClassManager:GetZombieClasses()) or self:GetZombieClass()
+	local ZombieClass
+	if(self:IsBot()) then
+		ZombieClass = SafeTableRandom(ClassManager:GetZombieClasses())
+		self:SetZombieClass(ZombieClass)
+	else
+		ZombieClass = self:GetZombieClass()
+	end
+	
 	if ZombieClass.Scale then
 		self:SetModelScale(ZombieClass.Scale, 0)
 	end
@@ -550,8 +557,15 @@ function PLAYER:MakeHuman()
 	
 	self:SetTeam(TEAM_HUMANS)
 	self:StripWeapons()
-	
-	local HumanClass = self:IsBot() and SafeTableRandom(ClassManager:GetHumanClasses()) or self:GetHumanClass()
+
+	local HumanClass
+	if(self:IsBot()) then
+		HumanClass = SafeTableRandom(ClassManager:GetHumanClasses())
+		self:SetHumanClass(HumanClass)
+	else
+		HumanClass = self:GetHumanClass()
+	end
+
 	self:SetMaxHealth(HumanClass.MaxHealth)
 	if HumanClass.Armor then
 		self:SetArmor(HumanClass.Armor)

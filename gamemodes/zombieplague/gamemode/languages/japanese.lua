@@ -168,6 +168,8 @@ local Language = {PrettyName = "日本語",
 				HUDCustomizerRight = "正しい",
 				HUDCustomizerTop = "上",
 				HUDCustomizerBottom = "下",
+				-- Google translated
+				HUDSpectatingPlayer = "観察する",
 				KeyBindingApply = "適用する",
 				KeyBindingCancel = "キャンセル",
 				KeyBindingDefault = "キーをリセットする",

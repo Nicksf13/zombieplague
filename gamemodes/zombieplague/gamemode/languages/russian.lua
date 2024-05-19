@@ -167,6 +167,8 @@ local Language = {PrettyName = "Русский",
 			HUDCustomizerRight = "Правая сторона",
 			HUDCustomizerTop = "Верх",
 			HUDCustomizerBottom = "Низ",
+			-- Google translated
+			HUDSpectatingPlayer = "Наблюдение",
 			KeyBindingApply = "Применить",
 			KeyBindingCancel = "Отменить",
 			KeyBindingDefault = "Сброс",

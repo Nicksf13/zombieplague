@@ -167,6 +167,8 @@ local Language = {PrettyName = "Українська",
 			HUDCustomizerRight = "Праворуч",
 			HUDCustomizerTop = "Верх",
 			HUDCustomizerBottom = "Низ",
+			-- Google translated
+			HUDSpectatingPlayer = "спостерігаючи",
 			KeyBindingApply = "Застосувати",
 			KeyBindingCancel = "Скасувати",
 			KeyBindingDefault = "Відновити стандартні опції",

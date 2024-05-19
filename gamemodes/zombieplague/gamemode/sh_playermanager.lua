@@ -1,7 +1,7 @@
 PlayerManager = {}
 
 function PlayerManager:GetPlayerID(ply)
-	return ply:IsBot() and ply:GetName() or ply:SteamID()
+	return ply:SteamID64()
 end
 function PlayerManager:DiscoverPlayerByTextID(TextID)
 	for i, ply in ipairs(player.GetAll()) do
