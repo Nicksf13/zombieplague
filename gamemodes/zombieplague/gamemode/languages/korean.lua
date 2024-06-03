@@ -166,6 +166,8 @@ local Language = {PrettyName = "한국어",
 				HUDCustomizerRight = "Right",
 				HUDCustomizerTop = "Top",
 				HUDCustomizerBottom = "Bottom",
+				-- Google translated
+				HUDSpectatingPlayer = "관찰하다",
 				KeyBindingApply = "적용",
 				KeyBindingCancel = "취소",
 				KeyBindingDefault = "Reset keys",

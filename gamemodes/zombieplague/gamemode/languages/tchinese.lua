@@ -166,6 +166,8 @@ local Language = {PrettyName = "繁體中文",
                 HUDCustomizerRight = "右",
                 HUDCustomizerTop = "上",
                 HUDCustomizerBottom = "下",
+				-- Google translated
+				HUDSpectatingPlayer = "觀察",
                 KeyBindingApply = "應用",
                 KeyBindingCancel = "取消",
                 KeyBindingDefault = "重置按鍵",
