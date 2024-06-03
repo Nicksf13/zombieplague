@@ -37,6 +37,3 @@ end
 function ExtraItem:CanBuy(ply)
     return !RoundManager:IsSpecialRound() && !RoundManager:LastZombie() && ply:Alive() && !ply:HasWeapon('weapon_bugbait')
 end
-Dictionary:RegisterPhrase("en-us", "ExtraItemAntidoteGrenade", "Antidote Grenade", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemAntidoteGrenade", "Антидотная граната", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemAntidoteGrenade", "Антидотна граната", false)
