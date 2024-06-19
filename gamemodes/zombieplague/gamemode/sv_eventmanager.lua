@@ -78,7 +78,7 @@ hook.Add("ZPZombieTakeDamage", "HandleZombieDamage", function(Target, DmgInfo)
 	elseif DmgInfo:IsDamageType(DMG_BURN) then
 		Target:ZPEmitSound(SafeTableRandom(BurnDamageSounds), 1)
 	else
-		Target:ZPEmitSound(SafeTableRandom(Target:IsNemesis() and NemesisDamageSounds or NemesisDamageSounds), 1)
+		Target:ZPEmitSound(SafeTableRandom(Target:IsNemesis() and NemesisDamageSounds or GenericDamageSounds), 1)
 	end
 end)
 hook.Add("ZPZombieInflictedDamageOnPlayer", "HandleZombieCausingDamage", function(Attacker, Target, DmgInfo)
@@ -150,6 +150,10 @@ function GM:PlayerShouldTakeDamage(ply, Attacker)
 		return false
 	end
 	if Attacker:IsPlayer() then
+		if cvars.Bool("zp_friendly_fire", false) then
+			return true
+		end
+		
 		return Attacker:Team() != ply:Team()
 	end
 	return true
