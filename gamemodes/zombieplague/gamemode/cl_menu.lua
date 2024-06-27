@@ -233,10 +233,39 @@ net.Receive("OpenBackMenu", function()
 	MMenu.NetworkString = net.ReadString()
 	local ReceivedOptions = net.ReadTable()
 	local HasFixedOptions = net.ReadBool()
+
 	local FixedOptions = {}
 	if HasFixedOptions then
 		FixedOptions = net.ReadTable()
 	end
+	
+	if MMenu.NetworkString == "SendPrimaryWeapon" then
+		local ShouldSaveWeapon = FixedOptions.ShouldSaveWeapon.Value
+		WeaponChooseMenu:CreateDFrameMenu(Dictionary:GetPhrase("MenuPrimaryWeaponChoose"), ReceivedOptions, ShouldSaveWeapon, MMenu.NetworkString)
+		return
+	elseif MMenu.NetworkString == "SendSecondaryWeapon" then
+		local ShouldSaveWeapon = FixedOptions.ShouldSaveWeapon.Value
+		WeaponChooseMenu:CreateDFrameMenu(Dictionary:GetPhrase("MenuSecondaryWeaponChoose"), ReceivedOptions, ShouldSaveWeapon, MMenu.NetworkString)
+		return
+	elseif MMenu.NetworkString == "SendMeleeWeapon" then
+		local ShouldSaveWeapon = FixedOptions.ShouldSaveWeapon.Value
+		WeaponChooseMenu:CreateDFrameMenu(Dictionary:GetPhrase("MenuMeleeWeaponChoose"), ReceivedOptions, ShouldSaveWeapon, MMenu.NetworkString)
+		return
+	elseif MMenu.NetworkString == "SendZombieClass" then
+		net.Start("RequestZombieClasses")
+		net.SendToServer()
+
+		return
+	elseif MMenu.NetworkString == "SendHumanClass" then
+		net.Start("RequestHumanClasses")
+		net.SendToServer()
+
+		return
+	elseif MMenu.NetworkString == "BuyExtraItem" then
+		ExtraItemsMenu:CreateDFrameMenu("Extra Items", ReceivedOptions, MMenu.NetworkString)
+		return
+	end
+	
 	
 	local MenuOptions = {}
 

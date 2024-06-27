@@ -107,6 +107,3 @@ function OptionMenu:CreateWarningPopup(TitleText, Text, YesText, YesFunction, No
 	
 	table.insert(self.WarningPopups, WarningPopup)
 end
-
-include("zombieplague/gamemode/vgui/vgui_hudcustomizer.lua")
-include("zombieplague/gamemode/vgui/vgui_keybinding.lua")

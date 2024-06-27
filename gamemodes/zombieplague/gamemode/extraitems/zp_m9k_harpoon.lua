@@ -1,6 +1,8 @@
 ExtraItem.ID = "ZPHarpoon"
 ExtraItem.Name = "ExtraItemHarpoonName"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 15
+ExtraItem.WorldModel = "models/weapons/w_harpooner.mdl"
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_harpoon")
 	if IsValid(Weap) then
