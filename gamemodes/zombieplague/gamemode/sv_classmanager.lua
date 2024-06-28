@@ -255,10 +255,6 @@ net.Receive("RequestHumanClasses", function(len, ply)
 	net.Send(ply)
 end)
 
-hook.Add("InitPostEntity", "RemoveSkyLight", function()
-	engine.LightStyle(0, "a")
-end)
-
 util.AddNetworkString("RequestZombieMenu")
 util.AddNetworkString("RequestZombieClasses")
 util.AddNetworkString("RequestHumanMenu")
