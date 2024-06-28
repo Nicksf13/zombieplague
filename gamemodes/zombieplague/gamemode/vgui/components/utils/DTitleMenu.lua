@@ -39,7 +39,7 @@ function TitleMenu:Init()
     end
     function self:CreateTitle()
         local TitleLabel = vgui.Create("DLabel", self)
-        TitleLabel:SetFont(InterfaceConfiguration["Title"].Font)
+        TitleLabel:SetFont("Trebuchet24")
         TitleLabel:SetPos(10, 5)
         TitleLabel:SetSize(300, 40)
     
