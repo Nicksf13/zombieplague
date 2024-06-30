@@ -19,7 +19,7 @@ function ExtraItem:OnBuy(ply)
                             explosion:Fire('Explode')
                             explosion:Remove()
                             for k, v in ipairs(player.GetAll()) do
-                                if !RoundManager:LastZombie() and ent:GetPos():DistToSqr(v:GetPos()) <= 20000 and ply ~= v and v:Team() == TEAM_ZOMBIES and !v:IsNemesis() then
+                                if !RoundManager:IsSpecialRound() && !RoundManager:LastZombie() and ent:GetPos():DistToSqr(v:GetPos()) <= 20000 and ply ~= v and v:Team() == TEAM_ZOMBIES and !v:IsNemesis() then
                                     InfectionManager:Cure(v, ply)
                                     ply:GiveAmmoPacks(cvars.Number("zp_ap_cure_zombie", 3))
                                 end
