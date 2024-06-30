@@ -1,5 +1,7 @@
 ExtraItem.ID = "ZPRPG7"
 ExtraItem.Name = "ExtraItemRPG7Name"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
+ExtraItem.WorldModel = "models/weapons/w_rl7.mdl"
 ExtraItem.Price = 20
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_rpg7")

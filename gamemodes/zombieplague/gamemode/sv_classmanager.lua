@@ -19,13 +19,18 @@ function ClassManager:SearchClasses()
 		end
 	end
 end
-function ClassManager:GetZombieClasses()
-	return ClassManager.ZombieClasses
-end
 function ClassManager:GetHumanClasses()
 	return ClassManager.HumanClasses
 end
-
+function ClassManager:GetZombieClasses()
+	return ClassManager.ZombieClasses
+end
+function ClassManager:GetZPClasses()
+	return {
+		HumanClasses = table.Copy(ClassManager:GetHumanClasses()),
+		ZombieClasses = table.Copy(ClassManager:GetZombieClasses())
+	}
+end
 function ClassManager:CreateClassAbility(DrainOnActivation, ActivationAction, ResetAction, ResetDelay)
 	local Ability = {
 		DrainOnActivation = DrainOnActivation,
@@ -86,6 +91,8 @@ function ClassManager:NewHumanClass()
 		DamageAmplifier = 1,
 		FallFunction = function()return true end,
 		ShouldBeEnabled = function()return true end,
+		AnimationId = "walk_smg1",
+		IdleAnimationId = "walk_all",
 		Order = 100
 	}
 end
@@ -104,6 +111,8 @@ function ClassManager:NewZombieClass()
 		DamageAmplifier = 1,
 		FallFunction = function()return false end,
 		ShouldBeEnabled = function()return true end,
+		AnimationId = "walk_fist",
+		IdleAnimationId = "walk_all",
 		Order = 100
 	}
 	function ZombieClass:WeaponGive(ply)
@@ -174,9 +183,85 @@ end)
 net.Receive("RequestHumanMenu", function(len, ply)
 	ClassManager:OpenZPClassMenu(ply, true)
 end)
+net.Receive("RequestZombieClasses", function(len, ply)
+	local Classes = ClassManager:GetZombieClasses()
+	local PrettierClasses = {}
+
+	local CurrentClass = ply:GetNextZombieClass(true) and ply:GetNextZombieClass(true) or ply:GetZombieClass()
+
+	for ClassKey, Class in pairs(Classes) do
+		local PrettierClass = {
+			ClassID = ClassKey,
+			Name = Class.Name,
+			Description = Class.Description,
+			MaxHealth = Class.MaxHealth,
+			PModel = Class.PModel,
+			Speed = Class.Speed,
+			RunSpeed = Class.RunSpeed,
+			CrouchSpeed = Class.CrouchSpeed,
+			Gravity = Class.Gravity,
+			Breath = Class.Breath,
+			Footstep = Class.Footstep,
+			JumpPower = Class.JumpPower,
+			DamageAmplifier = Class.DamageAmplifier,
+			Ability = Class.Ability and true or false,
+			FallDamage = Class:FallFunction(),
+			AnimationId = Class.AnimationId,
+			IdleAnimationId = Class.IdleAnimationId,
+			IsPlayerClass = (Class.Name == CurrentClass.Name)
+		}
+
+		PrettierClasses[ClassKey] = PrettierClass
+	end
+
+	net.Start("SendZombieClasses")
+		net.WriteTable(PrettierClasses)
+	net.Send(ply)
+end)
+net.Receive("RequestHumanClasses", function(len, ply)
+	local Classes = ClassManager:GetHumanClasses()
+	local PrettierClasses = {}
+
+	local CurrentClass = ply:GetNextHumanClass(true) and ply:GetNextHumanClass(true) or ply:GetHumanClass()
+
+	for ClassKey, Class in pairs(Classes) do
+		local PrettierClass = {
+			ClassID = ClassKey,
+			Name = Class.Name,
+			Description = Class.Description,
+			MaxHealth = Class.MaxHealth,
+			Armor = Class.Armor,
+			PModel = Class.PModel,
+			Speed = Class.Speed,
+			RunSpeed = Class.RunSpeed,
+			CrouchSpeed = Class.CrouchSpeed,
+			Gravity = Class.Gravity,
+			Breath = Class.Breath,
+			Footstep = Class.Footstep,
+			JumpPower = Class.JumpPower,
+			DamageAmplifier = Class.DamageAmplifier,
+			Ability = Class.Ability and true or false,
+			FallDamage = Class:FallFunction(),
+			AnimationId = Class.AnimationId,
+			IdleAnimationId = Class.IdleAnimationId,
+			IsPlayerClass = (Class.Name == CurrentClass.Name)
+		}
+
+		PrettierClasses[ClassKey] = PrettierClass
+	end
+
+	net.Start("SendHumanClasses")
+		net.WriteTable(PrettierClasses)
+	net.Send(ply)
+end)
 
 util.AddNetworkString("RequestZombieMenu")
+util.AddNetworkString("RequestZombieClasses")
 util.AddNetworkString("RequestHumanMenu")
+util.AddNetworkString("RequestHumanClasses")
+util.AddNetworkString("RequestZPClasses")
 util.AddNetworkString("RequestAbility")
 util.AddNetworkString("SendHumanClass")
+util.AddNetworkString("SendHumanClasses")
 util.AddNetworkString("SendZombieClass")
+util.AddNetworkString("SendZombieClasses")

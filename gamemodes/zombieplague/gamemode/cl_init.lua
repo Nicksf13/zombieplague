@@ -11,6 +11,17 @@ include("cl_keymanager.lua")
 include("cl_derma.lua")
 include("cl_scoreboard.lua")
 
+include("zombieplague/gamemode/vgui/components/vgui_keybinding.lua")
+include("zombieplague/gamemode/vgui/components/vgui_hudcustomizer.lua")
+include("zombieplague/gamemode/vgui/components/utils/DTitlemenu.lua")
+include("zombieplague/gamemode/vgui/components/utils/DCenteredLabel.lua")
+include("zombieplague/gamemode/vgui/components/utils/DTitledModelPanel.lua")
+include("zombieplague/gamemode/vgui/components/utils/DFilterScrollPanel.lua")
+
+include("zombieplague/gamemode/vgui/components/menus/cl_weaponchoosemenu.lua")
+include("zombieplague/gamemode/vgui/components/menus/cl_classchoosemenu.lua")
+include("zombieplague/gamemode/vgui/components/menus/cl_extraitemsmenu.lua")
+
 function GM:PlayerFootstep(ply)
 	return !ply:GetFootstep() -- Since true = no footsteps, false = footsteps
 end

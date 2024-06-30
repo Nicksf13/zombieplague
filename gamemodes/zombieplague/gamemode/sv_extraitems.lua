@@ -1,12 +1,17 @@
 ExtraItemsManager = {ZombiesExtraItems = {}, HumansExtraItems = {}, PostRoundEvents = {}}
 ITEM_HUMAN = 0
 ITEM_ZOMBIE = 1
+
+EXTRA_ITEM_CATEGORY_BUFF = "ExtraItemCategoryBuff"
+EXTRA_ITEM_CATEGORY_WEAPON = "ExtraItemCategoryWeapon"
+EXTRA_ITEM_CATEGORY_UTILITY = "ExtraItemCategoryUtility"
 function ExtraItemsManager:Search()
 	local Files = Utils:RecursiveFileSearch("zombieplague/gamemode/extraitems", ".lua")
 	if Files then
 		for k, File in pairs(Files) do
 			ExtraItem = {}
 			ExtraItem.Order = 100
+			ExtraItem.WorldModel = "models/weapons/w_medkit.mdl"
 			function ExtraItem:CanBuy(ply)
 				return ply:Alive()
 			end
@@ -15,15 +20,40 @@ function ExtraItemsManager:Search()
 			end
 			include(File)
 			
-			if ExtraItem:ShouldBeEnabled() then
-				if !ExtraItem.ID || !ExtraItem.Name || !ExtraItem.Price || !ExtraItem.OnBuy then
-					Utils:Print(WARNING_MESSAGE, "Invalid Extra Item: '" .. File .. "'")
-				else
-					self:AddExtraItem(ExtraItem, ExtraItem.Type)
-				end
+			if ExtraItemsManager:ValidateExtraItem(ExtraItem, File) && ExtraItem:ShouldBeEnabled() then
+				self:AddExtraItem(ExtraItem, ExtraItem.Type)
 			end
 		end
 	end
+end
+function ExtraItemsManager:ValidateExtraItem(ExtraItem, File)
+	if !ExtraItem.ID then
+		Utils:Print(WARNING_MESSAGE, "No 'ID' was found for file: '" .. File .. "'")
+
+		return false
+	end
+	if !ExtraItem.Name then
+		Utils:Print(WARNING_MESSAGE, "No 'Name' was found for file: '" .. File .. "'")
+
+		return false
+	end
+	if !ExtraItem.Category then
+		Utils:Print(WARNING_MESSAGE, "No 'Category' was found for file: '" .. File .. "'")
+
+		return false
+	end
+	if !ExtraItem.Price then
+		Utils:Print(WARNING_MESSAGE, "No 'Price' was found for file: '" .. File .. "'")
+
+		return false
+	end
+	if !ExtraItem.OnBuy then
+		Utils:Print(WARNING_MESSAGE, "No 'OnBuy' was found for file: '" .. File .. "'")
+
+		return false
+	end
+
+	return true
 end
 function ExtraItemsManager:AddExtraItem(ExtraItem, Type)
 	if Type == ITEM_ZOMBIE then
@@ -50,7 +80,11 @@ function ExtraItemsManager:GetAvailableExtraItems(ply)
 	for k, ExtraItem in pairs(ExtraItems) do
 		if ExtraItem:CanBuy(ply) then
 			PrettyItems[ExtraItem.ID] = {
-				Description = Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price,
+				Name = Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price,
+				Description = ExtraItem.Description and Dictionary:GetPhrase(ExtraItem.Description, ply) or nil,
+				Category = Dictionary:GetPhrase(ExtraItem.Category, ply),
+				WorldModel = ExtraItem.WorldModel,
+				Price = ExtraItem.Price,
 				Order = ExtraItem.Order
 			}
 		end

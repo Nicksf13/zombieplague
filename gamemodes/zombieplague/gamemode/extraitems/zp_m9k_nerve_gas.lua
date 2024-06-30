@@ -1,6 +1,9 @@
 ExtraItem.ID = "ZPNerveGas"
 ExtraItem.Name = "ExtraItemNerveGasName"
+ExtraItem.Description = "Some description"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 20
+ExtraItem.WorldModel = "models/weapons/w_grenade.mdl"
 ExtraItem.Type = ITEM_ZOMBIE
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_nerve_gas")

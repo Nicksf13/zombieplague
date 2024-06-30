@@ -1,6 +1,8 @@
 ExtraItem.ID = "ZPMatador"
 ExtraItem.Name = "ExtraItemMatadorName"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 20
+ExtraItem.WorldModel = "models/weapons/w_GDCW_MATADOR_RL.mdl"
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_matador")
 	if IsValid(Weap) then

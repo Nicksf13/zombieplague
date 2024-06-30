@@ -27,6 +27,7 @@ local ResetAction = function(ply)
 	ply:SetModel(ZPClass.PModel)
 	ply:SetupHands()
 	ply:SetAuxGravity(ZPClass.Gravity)
+	ply:StripWeapon(ZOMBIE_KNIFE)
 end
 ZPClass.Ability = ClassManager:CreateClassAbility(true, ActivationAction, ResetAction, 30)
 ZPClass.Ability.CanUseAbility = function()
