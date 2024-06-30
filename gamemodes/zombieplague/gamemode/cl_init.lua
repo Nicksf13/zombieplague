@@ -1,6 +1,7 @@
 include("shared.lua")
 
 include("cl_roundmanager.lua")
+include("cl_soundmanager.lua")
 include("cl_message.lua")
 include("cl_player.lua")
 include("cl_hud.lua")
