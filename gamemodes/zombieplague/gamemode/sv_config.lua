@@ -89,6 +89,13 @@ ZombieSuffocateSound = {"player/pl_pain5.wav",
 	"player/pl_pain6.wav",
 	"player/pl_pain7.wav"}
 
+UnfreezeSounds = {
+	"radio/moveout.wav",
+	"radio/locknload.wav",
+	"radio/go.wav",
+	"radio/com_go.wav"
+}
+
 
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
@@ -145,6 +152,9 @@ for k, SoundPath in pairs(HumanSuffocateSound) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 for k, SoundPath in pairs(ZombieSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(UnfreezeSounds) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 
