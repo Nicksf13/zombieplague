@@ -28,7 +28,7 @@ SWEP.DrawAmmo = false
 
 SWEP.HitDistance = 40
 
-local HitSound = Sound( "Flesh.ImpactHard" )
+local HitSound = Sound("Flesh.ImpactHard")
 
 function SWEP:Initialize()
 
