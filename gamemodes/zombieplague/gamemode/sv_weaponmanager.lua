@@ -140,11 +140,22 @@ function WeaponManager:IsChosenWeapon(Weapon)
 	return false
 end
 function WeaponManager:GetWeaponMenu(ply, WeaponType)
+	local WeaponByType
+
+	if WeaponType == WEAPON_PRIMARY then
+		WeaponByType = ply:GetPrimaryWeapon()
+	elseif WeaponType == WEAPON_SECONDARY then
+		WeaponByType = ply:GetSecondaryWeapon()
+	else
+		WeaponByType = ply:GetMeleeWeapon()
+	end
+
 	local PrettyWeapons = {}
 	for k, Weapon in pairs(self:GetWeaponsTableByWeaponType(WeaponType)) do
 		PrettyWeapons[Weapon.WeaponID] = {
 			Description = Weapon.PrettyName,
-			Order = Weapon.Order
+			Order = Weapon.Order,
+			IsSelected = Weapon.WeaponID == (WeaponByType and WeaponByType.WeaponID or nil)
 		}
 	end
 

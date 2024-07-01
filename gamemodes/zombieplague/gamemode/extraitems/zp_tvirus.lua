@@ -1,5 +1,6 @@
 ExtraItem.ID = "ZPTVirus"
 ExtraItem.Name = "ExtraItemTVirusName"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_UTILITY
 ExtraItem.Price = 15
 function ExtraItem:OnBuy(ply)
 	if RoundManager:GetRoundState() == ROUND_PLAYING then

@@ -16,9 +16,11 @@ end
 function PLAYER:SetNextZombieClass(NextZombieClass)
 	self.NextZombieClass = NextZombieClass
 end
-function PLAYER:GetNextZombieClass()
+function PLAYER:GetNextZombieClass(AvoidEraseNextClass)
 	local NextZombieClass = self.NextZombieClass
-	self.NextZombieClass = nil
+	if !AvoidEraseNextClass then
+		self.NextZombieClass = nil
+	end
 	return NextZombieClass
 end
 function PLAYER:SetHumanClass(HumanClass)
@@ -37,9 +39,11 @@ end
 function PLAYER:SetNextHumanClass(NextHumanClass)
 	self.NextHumanClass = NextHumanClass
 end
-function PLAYER:GetNextHumanClass()
+function PLAYER:GetNextHumanClass(AvoidEraseNextClass)
 	local NextHumanClass = self.NextHumanClass
-	self.NextHumanClass = nil
+	if !AvoidEraseNextClass then
+		self.NextHumanClass = nil
+	end
 	return NextHumanClass
 end
 function PLAYER:GetZPClass()

@@ -1,5 +1,6 @@
 ExtraItem.ID = "ZPAntidote"
 ExtraItem.Name = "ExtraItemAntidoteName"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_UTILITY
 ExtraItem.Price = 20
 ExtraItem.Type = ITEM_ZOMBIE
 function ExtraItem:OnBuy(ply)

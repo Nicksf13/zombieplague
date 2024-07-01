@@ -1,6 +1,8 @@
 ExtraItem.ID = "ZPM202"
 ExtraItem.Name = "ExtraItemM202Name"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 40
+ExtraItem.WorldModel = "models/weapons/w_rocket_launcher.mdl"
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_m202")
 	if IsValid(Weap) then

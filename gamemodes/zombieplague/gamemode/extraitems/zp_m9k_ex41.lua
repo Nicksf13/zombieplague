@@ -1,6 +1,9 @@
 ExtraItem.ID = "ZPEX41"
 ExtraItem.Name = "ExtraItemEX41Name"
+ExtraItem.Description = "Someth9inmg"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 30
+ExtraItem.WorldModel = "models/weapons/w_ex41.mdl"
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_ex41")
 	if IsValid(Weap) then

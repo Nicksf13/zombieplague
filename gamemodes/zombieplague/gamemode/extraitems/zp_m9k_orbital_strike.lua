@@ -1,6 +1,8 @@
 ExtraItem.ID = "ZPOrbitalStrike"
 ExtraItem.Name = "ExtraItemOrbitalStrikeName"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 30
+ExtraItem.WorldModel = "models/weapons/w_binos.mdl"
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_orbital_strike")
 	if IsValid(Weap) then

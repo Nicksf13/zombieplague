@@ -1,6 +1,6 @@
 ZPClass.Name = "ZombieCrouchClassName"
 ZPClass.Description = "ZombieCrouchClassDescription"
-ZPClass.MaxHealth = 500
+ZPClass.MaxHealth = 750
 ZPClass.PModel = "models/player/corpse1.mdl"
 ZPClass.Speed = 260
 ZPClass.RunSpeed = 280

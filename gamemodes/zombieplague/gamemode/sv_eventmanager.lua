@@ -1,4 +1,4 @@
-ConvarManager:CreateConVar("zp_friendly_fire", 1, 8, "cvar used to enable friendly fire")
+ConvarManager:CreateConVar("zp_friendly_fire", 0, 8, "cvar used to enable friendly fire")
 ConvarManager:CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
 ConvarManager:CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
 ConvarManager:CreateConVar("zp_survivor_damage", 2.0, 8, "cvar used to set how stronger survivor will be.")
@@ -77,7 +77,7 @@ hook.Add("ZPZombieTakeDamage", "HandleZombieDamage", function(Target, DmgInfo)
 	elseif DmgInfo:IsDamageType(DMG_BURN) then
 		Target:ZPEmitSound(SafeTableRandom(BurnDamageSounds), 1)
 	else
-		Target:ZPEmitSound(SafeTableRandom(Target:IsNemesis() and NemesisDamageSounds or GenericDamageSounds), 1)
+		Target:ZPEmitSound(SafeTableRandom(Target:IsNemesis() and NemesisDamageSounds or NemesisDamageSounds), 1)
 	end
 end)
 hook.Add("ZPZombieInflictedDamageOnPlayer", "HandleZombieCausingDamage", function(Attacker, Target, DmgInfo)
@@ -140,11 +140,7 @@ function GM:PlayerShouldTakeDamage(ply, Attacker)
 		return false
 	end
 	if Attacker:IsPlayer() then
-		if cvars.Bool("zp_friendly_fire", false) then
-			return true
-		end
-		
-		return Attacker:Team() != ply:Team()
+		return cvars.Bool("zp_friendly_fire", false) and true or Attacker:Team() != ply:Team()
 	end
 	return true
 end

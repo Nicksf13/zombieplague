@@ -1,6 +1,8 @@
 ExtraItem.ID = "ZPMilkorMK1"
 ExtraItem.Name = "ExtraItemMilkorMK1Name"
+ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 35
+ExtraItem.WorldModel = "models/weapons/w_milkor_mgl1.mdl"
 function ExtraItem:OnBuy(ply)
 	local Weap = ply:GetWeapon("m9k_milkormgl")
 	if IsValid(Weap) then
