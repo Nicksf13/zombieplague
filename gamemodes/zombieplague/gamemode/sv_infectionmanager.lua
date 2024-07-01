@@ -1,7 +1,7 @@
 InfectionManager = {}
 --Main function to infect a player, ZPInfectionEvent are called here
 function InfectionManager:Infect(Infected, Attacker)
-	if cvars.Bool("zp_ap_zombies", false) then
+	if cvars.Bool("zp_ap_zombies", false) && Infected != Attacker then
 		Attacker:GiveAmmoPacks(cvars.Number("zp_ap_zombies_total", 1))
 	end
 	

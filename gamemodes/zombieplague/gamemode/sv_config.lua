@@ -1,7 +1,7 @@
 ZOMBIE_KNIFE = "zp_weapon_fists"
 
-INFECTION_BOMB = "weapon_frag"
-INFECTION_BOMB_ENTITY = "npc_grenade_frag"
+INFECTION_BOMB = "zp_infection_bomb_launcher"
+ANTIDOTE_GRENADE = "zp_antidote_grenade_launcher"
 
 ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
 

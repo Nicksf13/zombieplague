@@ -251,6 +251,9 @@ function Dictionary:Init()
 				ZombiePlagueOptions = "Options menu",
 				PopupYes = "Yes",
 				PopupNo = "No",
+				ZPGrenadeExplodeOnHit = "Projectile set to explode on hit",
+				ZPGrenadeArmOnHit = "Projectile set to arm on hit, will explode %d second(s) after",
+				ZPGrenadeTimeMode = "Projectile will explode %d after shot"
 				VGUIWeaponChooseMenuSaveSelection = "Save selection?",
 				VGUIMenuAllCategories = "All Categories",
 				VGUIMenuFilter = "Filter",
