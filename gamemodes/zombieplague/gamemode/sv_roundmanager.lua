@@ -1,6 +1,7 @@
 ConvarManager:CreateConVar("zp_min_players", 2, 8, "cvar used to define minimun players to start the round.")
 ConvarManager:CreateConVar("zp_newround_delay", 10, 8, "cvar used to define new round time delay.")
-ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define infection time delay.")
+ConvarManager:CreateConVar("zp_freeze_time", 5, 8, "cvar used to define how long players will be freezed.")
+ConvarManager:CreateConVar("zp_infection_delay", 15, 8, "cvar used to define infection time delay.")
 ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
 ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 ConvarManager:CreateConVar("zp_should_winning_reward", 1, 8, "cvar used to define if ZP will reward the round winners")
@@ -122,7 +123,28 @@ function RoundManager:Prepare()
 end
 function RoundManager:TryNewRound()
 	if RoundManager:Prepare() then
-		RoundManager:SetTimer(cvars.Number("zp_infection_delay",  10), RoundManager.NewRound)
+		local NewRoundTime = cvars.Number("zp_infection_delay",  15) + cvars.Number("zp_freeze_time",  5)
+		for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
+			ply.PreFreezeWalkSpeed = ply:GetWalkSpeed()
+			ply.PreFreezeRunSpeed = ply:GetRunSpeed()
+			ply.PreFreezesWSpeed = ply:GetSlowWalkSpeed()
+
+			ply:SetRunSpeed(0.001)
+			ply:SetWalkSpeed(0.001)
+			ply:SetSlowWalkSpeed(0.001)
+		end
+
+		RoundManager:SetTimer(cvars.Number("zp_freeze_time",  5), function()
+			print("Entrei aqui")
+			for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
+				ply:SetWalkSpeed(ply.PreFreezeWalkSpeed)
+				ply:SetRunSpeed(ply.PreFreezeRunSpeed)
+				ply:SetSlowWalkSpeed(ply.PreFreezesWSpeed)
+			end
+			BroadcastSound(SafeTableRandom(UnfreezeSounds))
+
+			RoundManager:SetTimer(NewRoundTime, RoundManager.NewRound)
+		end)
 	else
 		RoundManager:WaitPlayers()
 	end
