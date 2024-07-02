@@ -206,8 +206,6 @@ function GM:PlayerSpawn(ply)
 
 			hook.Call("PlayerSetModel", GAMEMODE, ply)
 			hook.Call("PlayerLoadout", GAMEMODE, ply)
-
-			ply:Give("zp_infection_grenade_launcher")
 		end
 	else
 		ply:KillSilent()

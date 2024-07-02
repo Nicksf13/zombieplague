@@ -1,7 +1,6 @@
 SWEP.PrintName			= "Antitode Grenade Launcher"
 SWEP.Author			= "The Fire Fuchs"
 SWEP.Instructions		= "Cures an enemy"
-SWEP.Base = "weapon_base"
 SWEP.Spawnable = true
 SWEP.AdminOnly = true
 SWEP.UseHands = true
@@ -80,6 +79,7 @@ function SWEP:ShootGrenade()
 
 	if !Owner:IsValid() then return end
 
+	self:EmitSound(self.ShootSound)
 	if CLIENT then return end
 
 	local Ent = ents.Create("zp_antidote_grenade")

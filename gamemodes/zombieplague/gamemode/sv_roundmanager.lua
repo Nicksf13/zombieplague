@@ -60,7 +60,6 @@ function RoundManager:AddRoundType(RoundID, RoundType)
 	end
 	if RoundType.Sound then
 		for k, Sound in pairs(RoundType.Sound) do
-			PrintTable(RoundType.Sound)
 			local SoundPath = Sound.Path
 			resource.AddFile("sound/" .. Sound.Path)
 		end

@@ -2,7 +2,7 @@ ExtraItem.ID = "ZPAntidoteGrenade"
 ExtraItem.Name = "ExtraItemAntidoteGrenade"
 ExtraItem.Category = EXTRA_ITEM_CATEGORY_WEAPON
 ExtraItem.Price = 20
-ExtraItem.WorldModel = "models/weapons/w_bugbait.mdl"
+ExtraItem.WorldModel = "models/healthvial.mdl"
 ExtraItem.BuySounds = { "items/medshot4.wav" }
 function ExtraItem:OnBuy(ply)
     local Weap = ply:GetWeapon(ANTIDOTE_GRENADE)
