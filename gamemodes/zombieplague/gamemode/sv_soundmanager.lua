@@ -1,8 +1,6 @@
 SoundManager = {}
 
 function SoundManager:EmitLoopSound(SoundId, Sound)
-    print(Sound.Path)
-    print(Sound.Duration)
     net.Start("EmitLoopSound")
         net.WriteString(SoundId)
         net.WriteString(Sound.Path)

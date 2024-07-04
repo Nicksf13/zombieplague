@@ -140,7 +140,7 @@ end
 function RoundManager:TryNewRound()
 	if RoundManager:Prepare() then
 		local NewRoundTime = cvars.Number("zp_infection_delay",  15) + cvars.Number("zp_freeze_time",  5)
-		for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
+		for i, ply in ipairs(RoundManager:GetAliveHumans()) do
 			ply.PreFreezeWalkSpeed = ply:GetWalkSpeed()
 			ply.PreFreezeRunSpeed = ply:GetRunSpeed()
 			ply.PreFreezesWSpeed = ply:GetSlowWalkSpeed()
@@ -151,8 +151,7 @@ function RoundManager:TryNewRound()
 		end
 
 		RoundManager:SetTimer(cvars.Number("zp_freeze_time",  5), function()
-			print("Entrei aqui")
-			for i, ply in ipairs(RoundManager:GetPlayersToPlay()) do
+			for i, ply in ipairs(RoundManager:GetAliveHumans()) do
 				ply:SetWalkSpeed(ply.PreFreezeWalkSpeed)
 				ply:SetRunSpeed(ply.PreFreezeRunSpeed)
 				ply:SetSlowWalkSpeed(ply.PreFreezesWSpeed)
