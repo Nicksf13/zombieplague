@@ -1,5 +1,41 @@
 local PLAYER = FindMetaTable("Player")
 
+function PLAYER:IsPathFinderValid()
+	return self.PathFinder && IsValid(self.PathFinder)
+end
+function PLAYER:GetPathFinder()
+    if !self:IsPathFinderValid() then
+        self.PathFinder = ents.Create("ent_pathfinder")
+		self.PathFinder:SetOwner(self)
+		self.PathFinder:Spawn()
+    end
+
+    return self.PathFinder
+end
+function PLAYER:IsDistanceCalculatorValid()
+	return self.DistanceCalculator && IsValid(self.DistanceCalculator)
+end
+function PLAYER:GetDistanceCalculator()
+	if !self:IsDistanceCalculatorValid() then
+        self.DistanceCalculator = ents.Create("ent_pathfinder")
+		self.DistanceCalculator:SetOwner(self)
+		self.DistanceCalculator:Spawn()
+    end
+
+    return self.DistanceCalculator
+end
+function PLAYER:SetHumanBotBehavior(HumanBotBehavior)
+	self.HumanBotBehavior = HumanBotBehavior
+end
+function PLAYER:GetHumanBotBehavior()
+	return self.HumanBotBehavior
+end
+function PLAYER:SetZombieBotBehavior(ZombieBotBehavior)
+	self.ZombieBotBehavior = ZombieBotBehavior
+end
+function PLAYER:GetZombieBotBehavior()
+	return self.ZombieBotBehavior
+end
 function PLAYER:SetZombieClass(ZombieClass)
 	self.ZombieClass = ZombieClass
 	net.Start("SendZombieClass")

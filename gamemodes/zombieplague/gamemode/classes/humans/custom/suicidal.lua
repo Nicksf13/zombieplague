@@ -2,8 +2,8 @@ ZPClass.Name = "HumanSuicidalClassName"
 ZPClass.Description = "HumanSuicidalClassDescription"
 ZPClass.MaxHealth = 50
 ZPClass.PModel = "models/player/guerilla.mdl"
-ZPClass.Speed = 220
-ZPClass.RunSpeed = 100
+ZPClass.Speed = 180
+ZPClass.RunSpeed = 220
 ZPClass.CrouchSpeed = 0.5
 ZPClass.Gravity = 0.9
 ZPClass.Breath = 50
@@ -13,7 +13,7 @@ local ActivationAction = function(ply)
 	ply:SetWalkSpeed(290)
 	ply:SetRunSpeed(290)
 
-	local TimerNameWithSteamID64 = ply:SteamID64() .. "SuicideExplode"
+	local TimerNameWithSteamID64 = ply:SteamID64() .. "SuicidalExplode"
 	timer.Create(TimerNameWithSteamID64, 0.5, 12, function()
 		local RepsLeft = timer.RepsLeft(TimerNameWithSteamID64)
 		if RepsLeft == 0 then
@@ -46,5 +46,5 @@ ZPClass.Ability.CanUseAbility = function()
 end
 
 if(ZPClass:ShouldBeEnabled()) then
-	ClassManager:AddZPClass("SuicideHuman", ZPClass, TEAM_HUMANS)
+	ClassManager:AddZPClass("SuicidalHuman", ZPClass, TEAM_HUMANS)
 end

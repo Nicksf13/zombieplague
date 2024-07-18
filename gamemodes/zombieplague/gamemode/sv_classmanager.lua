@@ -60,13 +60,13 @@ function ClassManager:AddZPClass(ClassID, ZPClass, TeamID)
 	end
 end
 function ClassManager:GetZPClass(ID, TeamID)
-	return ((TeamID == TEAM_HUMANS) and ClassManager.HumanClasses or ClassManager.ZombieClasses)[ID] or SafeTableRandom(ZPTeamClasses)
+	return (TeamID == TEAM_HUMANS) and ClassManager.HumanClasses[ID] or ClassManager.ZombieClasses[ID]
 end
-function ClassManager:SetZPClass(ply, ClassID, TeamID)
+function ClassManager:SetZPClass(Ply, ClassID, TeamID)
 	if TeamID == TEAM_HUMANS then
-		ply:SetHumanClass(ClassManager:GetHumanClass(ClassID))
+		Ply:SetNextHumanClass(ClassManager:GetZPClass(ClassID, TEAM_HUMANS))
 	else
-		ply:SetZombieClass(ClassManager:GetZombieClass(ClassID))
+		Ply:SetNextZombieClass(ClassManager:GetZPClass(ClassID, TEAM_ZOMBIES))
 	end
 end
 function ClassManager:NewHumanClass()
@@ -75,8 +75,8 @@ function ClassManager:NewHumanClass()
 		MaxHealth = 100,
 		Armor = 20,
 		PModel = "models/player/gasmask.mdl",
-		Speed = 230,
-		RunSpeed = 100,
+		Speed = 200,
+		RunSpeed = 230,
 		CrouchSpeed = 0.4,
 		Gravity = 1,
 		Battery = 100,

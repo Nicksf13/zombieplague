@@ -28,22 +28,8 @@ Commands:AddCommand("commands", "Print the server's commands.", function(ply, ar
 	end
 	SendConsoleMessage(ply, StringCommands .. "------------------------------------------------------------")
 end)
-if BOT_MODE then
-	Commands:AddCommand("bot", "Add a bot to the server", function(ply, args)
-		RunConsoleCommand("bot")
-
-		timer.Create("bot", 1, 1, function()
-			local PlayersToPlay = RoundManager:GetPlayersToPlay()
-			for k, Bot in pairs(player.GetBots()) do
-				if !table.HasValue(PlayersToPlay, Bot) then
-					RoundManager:AddPlayerToPlay(Bot)
-				end
-			end
-		end)
-	end, "", true, function(ply) return ply:IsSuperAdmin() end)
-end
 hook.Add("PlayerSay", "Commands", function(ply, txt)
-	local args = string.Explode(" ", string.lower(txt))
+	local args = string.Explode(" ", txt)
 	if string.sub(args[1], 1, 1) == "/" || string.sub(args[1], 1, 1) == "!" then
 		local Command = Commands.CommandList[string.sub(args[1], 2, string.len(args[1]))]
 		table.remove(args, 1)
