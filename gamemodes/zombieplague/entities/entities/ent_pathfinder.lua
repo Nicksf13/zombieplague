@@ -59,7 +59,7 @@ function ENT:StuckInSamePlaceTime()
 	return 0
 end
 function ENT:IsStuckInSamePlace()
-	return self:StuckInSamePlaceTime() > 5
+	return self:StuckInSamePlaceTime() > 2
 end
 function ENT:GetPath()
 	if !self.Path || !self.Path:IsValid() then
@@ -71,6 +71,12 @@ function ENT:GetPath()
 	end
 
 	return self.Path
+end
+function ENT:SetTimeEnteredCurrentSegment(TimeEnteredCurrentSegment)
+	self.TimeEnteredCurrentSegment = TimeEnteredCurrentSegment
+end
+function ENT:GetTimeEnteredCurrentSegment()
+	return self.TimeEnteredCurrentSegment or 0
 end
 function ENT:GetCurrentSegment()
 	local Segments = self:GetPath():GetAllSegments()
@@ -165,7 +171,7 @@ function ENT:ChaseTargetPos()
 	self:ComputePath(Path, self:GetTargetPos())
 
 	if (!Path:IsValid()) then
-		return PATH_INVALID
+		return
 	end
 
 	while(self:GetTargetPos() && Path:IsValid()) do
@@ -173,15 +179,8 @@ function ENT:ChaseTargetPos()
 			self:ComputePath(Path, self:GetTargetPos())
 		end
 
-		if (self.loco:IsStuck()) then
-			self:HandleStuck()
-			return PATH_STUCK
-		end
-
 		coroutine.yield()
 	end
-
-	return PATH_OK
 end
 function ENT:Health()
 	return nil

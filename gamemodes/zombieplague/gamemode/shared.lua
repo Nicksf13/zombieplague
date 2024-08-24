@@ -28,8 +28,8 @@ function GM:CreateTeams()
 	team.SetUp(TEAM_HUMANS, "Humans", Color(71, 141, 255, 255), false)
 	team.SetUp(TEAM_ZOMBIES, "Zombies", Color(255, 56, 56, 255), false)
 
-	team.SetSpawnPoint(TEAM_ZOMBIES, "info_player_terrorist")
-	team.SetSpawnPoint(TEAM_HUMANS, "info_player_counterterrorist")
+	team.SetSpawnPoint(TEAM_ZOMBIES, {"info_player_terrorist", "info_player_start"})
+	team.SetSpawnPoint(TEAM_HUMANS, {"info_player_counterterrorist", "info_player_start"})
 
 	team.SetColor(TEAM_SPECTATOR, Color(0, 255, 0))
 end

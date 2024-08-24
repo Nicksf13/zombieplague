@@ -121,18 +121,18 @@ function BotManager:HandleStartCommand(Bot, Mv, Cmd)
         Keys = Behavior:AttackBehavior(Bot, Enemy, Keys)
     end
 
-    Keys = BotManager:HandleLadderMovement(Bot, NextPos, ViewAngle, Keys)
+    if NextPos then
+        local MovimentAngle = ((NextPos + Bot:GetCurrentViewOffset()) - ShootPosition):Angle()
+        Mv:SetMoveAngles(MovimentAngle)
+
+        Keys = BotManager:HandleLadderMovement(Bot, NextPos, ViewAngle, Keys)
+    end
 
     if !ViewAngle then
         ViewAngle = Bot:EyeAngles()
     end
 
     Bot:SetEyeAngles(ViewAngle)
-
-    if NextPos then
-        local MovimentAngle = ((NextPos + Bot:GetCurrentViewOffset()) - ShootPosition):Angle()
-        Mv:SetMoveAngles(MovimentAngle)
-    end
 
     --Breaks breakable entities, very useful for getting a path
     local TraceResult = util.QuickTrace(Bot:EyePos(), Bot:GetForward() * 30, Bot)
@@ -463,7 +463,7 @@ function ZombieBotBehavior:MovementBehavior(Bot)
 
     if CurrentEnemy then
         PathFinder:SetTargetPos(CurrentEnemy:GetPos())
-    elseif !PathFinder:GetTargetPos() && !PathFinder:IsInTargetPos() then
+    elseif !PathFinder:GetTargetPos() then
         local RandomHidingSpot = BotManager:FindRandomHidingSpot()
 
         PathFinder:SetTargetPos(RandomHidingSpot)
@@ -633,12 +633,4 @@ Commands:AddCommand({"bot"}, "Add a simple bot", function(Ply, Args)
             RoundManager:AddPlayerToPlay(Bot)
         end
     end
-end)
-
-Commands:AddCommand("bot_nav_start", "Start nav editing", function(ply, args)
-	RunConsoleCommand("nav_edit", 1)
-
-    hook.Add("PlayerButtonDown", "CheckHiddingSpot", function(ply, button)
-        BotManager:FindHidingSpots()
-    end)
 end)

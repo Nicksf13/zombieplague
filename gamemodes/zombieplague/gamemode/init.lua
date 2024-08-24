@@ -1,5 +1,3 @@
-BOT_MODE = true
-
 include("shared.lua")
 include("sv_commands.lua")
 include("sv_convar.lua")
@@ -18,6 +16,7 @@ include("sv_votemap.lua")
 include("sv_mapmanager.lua")
 include("sv_bank.lua")
 include("sv_botmanager.lua")
+include("sv_entitymanager.lua")
 
 AddCSLuaFile("shared.lua")
 AddCSLuaFile("sh_bank.lua")
@@ -33,6 +32,7 @@ AddCSLuaFile("cl_menu.lua")
 AddCSLuaFile("cl_keymanager.lua")
 AddCSLuaFile("cl_derma.lua")
 AddCSLuaFile("cl_scoreboard.lua")
+AddCSLuaFile("cl_entitymanager.lua")
 AddCSLuaFile("zombieplague/gamemode/vgui/vgui_keybinding.lua")
 AddCSLuaFile("zombieplague/gamemode/vgui/vgui_hudcustomizer.lua")
 
