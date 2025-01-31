@@ -201,15 +201,15 @@ function ENT:HasArrivedOnTargetPos()
 	return self:GetPos():Distance2D(self:GetTargetPos()) < 20
 end
 function ENT:Think()
-	local Owner = self:GetOwner()
+	local Creator = self:GetCreator()
 
-	if Owner then
-		if self:GetPos() != Owner:GetPos() then
-			self:SetPos(Owner:GetPos())
+	if IsValid(Creator) then
+		if self:GetPos() != Creator:GetPos() then
+			self:SetPos(Creator:GetPos())
 		end
 	
-		if self:GetAngles() != Owner:EyeAngles() then
-			self:SetAngles(Owner:EyeAngles())
+		if self:GetAngles() != Creator:EyeAngles() then
+			self:SetAngles(Creator:EyeAngles())
 		end
 	end
 

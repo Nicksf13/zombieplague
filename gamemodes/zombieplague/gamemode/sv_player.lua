@@ -6,7 +6,7 @@ end
 function PLAYER:GetPathFinder()
     if !self:IsPathFinderValid() then
         self.PathFinder = ents.Create("ent_pathfinder")
-		self.PathFinder:SetOwner(self)
+		self.PathFinder:SetCreator(self)
 		self.PathFinder:Spawn()
     end
 
@@ -18,7 +18,7 @@ end
 function PLAYER:GetDistanceCalculator()
 	if !self:IsDistanceCalculatorValid() then
         self.DistanceCalculator = ents.Create("ent_pathfinder")
-		self.DistanceCalculator:SetOwner(self)
+		self.DistanceCalculator:SetCreator(self)
 		self.DistanceCalculator:Spawn()
     end
 
@@ -42,6 +42,18 @@ function PLAYER:SetZombieClass(ZombieClass)
 		net.WriteString(PlayerManager:GetPlayerID(self))
 		net.WriteString(ZombieClass.Name)
 	net.Broadcast()
+end
+function PLAYER:SetNextTargetChooseTime(NextTargetChooseTime)
+	self.NextTargetChooseTime = NextTargetChooseTime
+end
+function PLAYER:GetNextTargetChooseTime()
+	return self.NextTargetChooseTime or 0
+end
+function PLAYER:SetNextCriticalHealthActionTime(NextCriticalHealthActionTime)
+	self.NextCriticalHealthActionTime = NextCriticalHealthActionTime
+end
+function PLAYER:GetNextCriticalHealthActionTime()
+	return self.NextCriticalHealthActionTime or 0
 end
 function PLAYER:GetZombieClass()
 	if !self.ZombieClass then
@@ -202,7 +214,7 @@ function PLAYER:ZombieMadness(ZombieMadnessTime)
 	self:SetWalkSpeed(200)
 	self:SetRunSpeed(200)
 
-	local ZombieMadnessIdentifier = "ZPZombieMadness" .. self:SteamID64()
+	local ZombieMadnessIdentifier = self:ZombieMadnessIdentifier()
 	local ZombieMadnessDuration = ZombieMadnessTime and ZombieMadnessTime or 5
 	if timer.Exists(ZombieMadnessIdentifier) then
 		ZombieMadnessDuration = ZombieMadnessDuration + timer.TimeLeft(ZombieMadnessIdentifier)
@@ -219,6 +231,9 @@ function PLAYER:ZombieMadness(ZombieMadnessTime)
 	end)
 
 	return ZombieMadnessIdentifier
+end
+function PLAYER:ZombieMadnessIdentifier()
+	return "ZPZombieMadness" .. self:SteamID64()
 end
 ---------------------------Damage---------------------------
 function PLAYER:TakeLastDamage()

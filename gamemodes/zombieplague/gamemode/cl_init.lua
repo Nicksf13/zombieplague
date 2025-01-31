@@ -9,7 +9,6 @@ include("cl_menu.lua")
 include("cl_keymanager.lua")
 include("cl_derma.lua")
 include("cl_scoreboard.lua")
-include("cl_entitymanager.lua")
 
 function GM:PlayerFootstep(ply)
 	return !ply:GetFootstep() -- Since true = no footsteps, false = footsteps

@@ -13,7 +13,14 @@ NATIVE_WEAPONS = {
 	"weapon_stunstick"
 }
 
-WeaponManager = {PrimaryWeapons = {}, SecondaryWeapons = {}, MeleeWeapons = {}, WeaponsMultiplier = {}, ServerWeapons = NATIVE_WEAPONS}
+WeaponManager = {
+	PrimaryWeapons = {},
+	SecondaryWeapons = {},
+	MeleeWeapons = {},
+	WeaponsMultiplier = {},
+	WeaponsBotShootRange = {},
+	ServerWeapons = NATIVE_WEAPONS
+}
 
 function WeaponManager:SearchWeapons()
 	for k, Weapon in pairs(weapons.GetList()) do
@@ -73,6 +80,7 @@ function WeaponManager:CreateNewWeapon()
 	Weapon.WeaponType = WEAPON_PRIMARY
 	Weapon.DamageMultiplier = 1
 	Weapon.Order = 100
+	Weapon.BotShootRange = 1000
 	function Weapon:GiveWeapon(ply)
 		local Weap = ply:Give(self.WeaponID)
 		if Weap:GetMaxClip1() then
@@ -87,6 +95,18 @@ function WeaponManager:CreateNewWeapon()
 
 	return Weapon
 end
+function WeaponManager:GetBotShootRange(Bot)
+	local ActiveWeapon = Bot:GetActiveWeapon()
+
+	if ActiveWeapon then
+		return self.WeaponsBotShootRange[ActiveWeapon:GetClass()]
+	end
+
+	return 1000
+end
+function WeaponManager:AddWeaponBotShootRange(WeaponID, Range)
+	self.WeaponsBotShootRange[WeaponID] = Range
+end
 function WeaponManager:GetWeaponMultiplier(Weapon)
 	return self.WeaponsMultiplier[Weapon]
 end
@@ -97,6 +117,7 @@ function WeaponManager:AddWeapon(Weapon, WeaponType)
 	table.insert(self:GetWeaponsTableByWeaponType(WeaponType), Weapon)
 
 	WeaponManager:AddWeaponMultiplier(Weapon.ProjectileID and Weapon.ProjectileID or Weapon.WeaponID, Weapon.DamageMultiplier)
+	WeaponManager:AddWeaponBotShootRange(Weapon.WeaponID, Weapon.BotShootRange)
 end
 function WeaponManager:GetPrimaryWeapons()
 	return self.PrimaryWeapons

@@ -1,0 +1,1 @@
+ZombieBotBehavior.ID = "DefaultZombieBehavior"

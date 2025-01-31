@@ -139,6 +139,16 @@ function GM:EntityTakeDamage(Target, DmgInfo)
 		Target:TakeLastDamage()
 	end
 end
+hook.Add("PostEntityTakeDamage", "DamageEvent", function(Target, DmgInfo, WasDamageTaken)
+	if Target:IsPlayer() then
+		if Target:IsZombie() then
+			hook.Call("ZombiePostEntityTakeDamage", GAMEMODE, Target, DmgInfo, WasDamageTaken)
+		end
+		if Target:IsHuman() then
+			hook.Call("HumanPostEntityTakeDamage", GAMEMODE, Target, DmgInfo, WasDamageTaken)
+		end
+	end
+end)
 function GM:GetFallDamage(ply, speed)
 	return (ply:ShouldTakeFallDamage() and math.max(0, math.ceil(0.2418*speed - 141.75)) or 0) -- https://wiki.garrysmod.com/page/GM/GetFallDamage
 end

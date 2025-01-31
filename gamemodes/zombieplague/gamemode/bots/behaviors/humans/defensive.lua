@@ -1,0 +1,1 @@
+HumanBotBehavior.ID = "DefensiveHumanBehavior"

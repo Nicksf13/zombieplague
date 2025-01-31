@@ -24,12 +24,15 @@ SURVIVOR_COLOR = Color(0, 0, 255)
 
 ZombieKnifeSound = {"zombieplague/knife_slash1.mp3", "zombieplague/knife_slash2.mp3"}
 
+TEAM_ZOMBIES_SPAWN_POINTS = {"info_player_terrorist", "info_player_start"}
+TEAM_HUMANS_SPAWN_POINTS = {"info_player_counterterrorist", "info_player_start"}
+
 function GM:CreateTeams()
 	team.SetUp(TEAM_HUMANS, "Humans", Color(71, 141, 255, 255), false)
 	team.SetUp(TEAM_ZOMBIES, "Zombies", Color(255, 56, 56, 255), false)
 
-	team.SetSpawnPoint(TEAM_ZOMBIES, {"info_player_terrorist", "info_player_start"})
-	team.SetSpawnPoint(TEAM_HUMANS, {"info_player_counterterrorist", "info_player_start"})
+	team.SetSpawnPoint(TEAM_ZOMBIES, TEAM_ZOMBIES_SPAWN_POINTS)
+	team.SetSpawnPoint(TEAM_HUMANS, TEAM_HUMANS_SPAWN_POINTS)
 
 	team.SetColor(TEAM_SPECTATOR, Color(0, 255, 0))
 end
