@@ -11,8 +11,9 @@ AdminZombiePlayerModel = "models/player/zombie_soldier.mdl"
 NemesisClass = {Health = 5000,
 		Speed = 270,
 		RunSpeed = 270,
-		CrouchedSpeed = 1,
+		CrouchedSpeed = 0.7,
 		Gravity = 0.5,
+		Ability = false,
 		PlayerModel = "models/player/zombie_soldier.mdl"
 	}
 SurvivorClass = {Health = 250,
@@ -47,48 +48,87 @@ InfectionSounds = {"zombieplague/zombie_infec1.mp3",
 	
 CureSounds = {"items/smallmedkit1.wav"}
 
-HumanWinSounds = {"zombieplague/win_humans1.mp3",
-	"zombieplague/win_humans2.mp3"}
+HumanWinSounds = {
+	"zombieplague/win_humans1.mp3",
+	"zombieplague/win_humans2.mp3"
+}
 	
-ZombieWinSounds = {"zombieplague/win_zombies1.mp3",
+ZombieWinSounds = {
+	"zombieplague/win_zombies1.mp3",
 	"zombieplague/win_zombies2.mp3",
-	"zombieplague/win_zombies3.mp3"}
+	"zombieplague/win_zombies3.mp3"
+}
 	
-DrawSounds = {"ambient/atmosphere/cave_hit1.wav",
+DrawSounds = {
+	"ambient/atmosphere/cave_hit1.wav",
 	"ambient/atmosphere/cave_hit2.wav",
 	"ambient/atmosphere/cave_hit3.wav",
 	"ambient/atmosphere/cave_hit4.wav",
 	"ambient/atmosphere/cave_hit5.wav",
-	"ambient/atmosphere/cave_hit6.wav"}
+	"ambient/atmosphere/cave_hit6.wav"
+}
 
-ZombieDeathSounds = {"npc/zombie/zombie_die1.wav",
+ZombieDeathSounds = {
+	"npc/zombie/zombie_die1.wav",
 	"npc/zombie/zombie_die2.wav",
 	"npc/zombie/zombie_die3.wav",
-	"npc/zombie/zombie_pain4.wav"}
+	"npc/zombie/zombie_pain4.wav"
+}
 
-ZombieIdle = {"zombieplague/zombie_brains1.mp3",
-	"zombieplague/zombie_brains2.mp3"}
+ZombieIdle = {
+	"zombieplague/zombie_brains1.mp3",
+	"zombieplague/zombie_brains2.mp3"
+}
 	
-ZombieMadnessSounds = {"zombieplague/zombie_madness1.mp3"}
+ZombieMadnessSounds = {
+	"zombieplague/zombie_madness1.mp3"
+}
 	
 HumanTaunts = {}
 
-HumanDrownSounds = {"player/pl_drown1.wav",
+HumanDrownSounds = {
+	"player/pl_drown1.wav",
 	"player/pl_drown2.wav",
-	"player/pl_drown3.wav"}
+	"player/pl_drown3.wav"
+}
 
-ZombieDrownSounds = {"player/pl_drown1.wav",
-"player/pl_drown2.wav",
-"player/pl_drown3.wav"}
+ZombieDrownSounds = {
+	"player/pl_drown1.wav",
+	"player/pl_drown2.wav",
+	"player/pl_drown3.wav"
+}
 
-HumanSuffocateSound = {"player/pl_pain5.wav",
+HumanSuffocateSound = {
+	"player/pl_pain5.wav",
 	"player/pl_pain6.wav",
-	"player/pl_pain7.wav"}
+	"player/pl_pain7.wav"
+}
 
-ZombieSuffocateSound = {"player/pl_pain5.wav",
+ZombieSuffocateSound = {
+	"player/pl_pain5.wav",
 	"player/pl_pain6.wav",
-	"player/pl_pain7.wav"}
+	"player/pl_pain7.wav"
+}
 
+CountDownSound = {
+	"zombieplague/1_one.wav",
+	"zombieplague/2_two.wav",
+	"zombieplague/3_three.wav",
+	"zombieplague/4_four.wav",
+	"zombieplague/5_five.wav",
+	"zombieplague/6_six.wav",
+	"zombieplague/7_seven.wav",
+	"zombieplague/8_eight.wav",
+	"zombieplague/9_nine.wav",
+	"zombieplague/10_ten.wav",
+}
+
+UnfreezeSounds = {
+	"radio/moveout.wav",
+	"radio/locknload.wav",
+	"radio/go.wav",
+	"radio/com_go.wav"
+}
 
 NIGHTVISION_ON_SOUND = "zombieplague/nightvision.mp3"
 NIGHTVISION_OFF_SOUND = "zombieplague/nightvision.mp3"
@@ -145,6 +185,12 @@ for k, SoundPath in pairs(HumanSuffocateSound) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 for k, SoundPath in pairs(ZombieSuffocateSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(CountDownSound) do
+	resource.AddFile("sound/" .. SoundPath)
+end
+for k, SoundPath in pairs(UnfreezeSounds) do
 	resource.AddFile("sound/" .. SoundPath)
 end
 

@@ -103,3 +103,12 @@ function RoundManager:GetAliveZombies()
 	end
 	return AliveZombies
 end
+function RoundManager:GetAlivePlayers()
+	local AlivePlayers = RoundManager:GetAliveHumans()
+
+	for K, Ply in pairs(RoundManager:GetAliveZombies()) do
+		table.insert(AlivePlayers, Ply)
+	end
+
+	return AlivePlayers
+end
