@@ -91,7 +91,7 @@
 		
 		11
 		{
-			"name"		"zp_spectate_team_ony"
+			"name"		"zp_spectate_team_only"
 			"text"		"#zp_spectate_team_only_cvar"
 			"type"		"CheckBox"
 			"default"	"1"
