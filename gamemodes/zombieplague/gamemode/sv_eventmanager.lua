@@ -1,4 +1,4 @@
-ConvarManager:CreateConVar("zp_friendly_fire", 1, 8, "cvar used to enable friendly fire")
+ConvarManager:CreateConVar("zp_friendly_fire", 0, 8, "cvar used to enable friendly fire")
 ConvarManager:CreateConVar("zp_infection_bomb_radius", 20000, 8, "cvar used to calculate infection bomb radius")
 ConvarManager:CreateConVar("zp_falldamage", 1, 8, "cvar used to set fall damage for players (1 - None, 2 - Only zombies, 3 - Only Humans, 4 - Everyone)")
 ConvarManager:CreateConVar("zp_nemesis_damage", 10, 8, "cvar used to set how stronger nemesis will be.")
