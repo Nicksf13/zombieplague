@@ -431,7 +431,11 @@ end)
 net.Receive("RequestSpectator", function(len, ply)
 	if ply:Team() != TEAM_SPECTATOR then
 		RoundManager:RemovePlayerToPlay(ply)
-		ply:KillSilent()
+		if RoundManager:GetRoundState() == ROUND_PLAYING then
+			ply:Kill()
+		else
+			ply:KillSilent()
+		end
 		ply:Spectate(OBS_MODE_ROAMING)
 	else
 		RoundManager:AddPlayerToPlay(ply)

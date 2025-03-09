@@ -41,7 +41,7 @@ hook.Add("HUDPaint", "HUDZombiePlague", function()
 
 	local TimerConfig = HudManager:GetComponentConfig("Timer")
 	local TimerProperties = {
-		Text = string.FormattedTime(RoundManager:GetTimer(), "%02i:%02i" ),
+		Text = string.FormattedTime(math.ceil(RoundManager:GetTimer()), "%02i:%02i"),
 		TextFont = TimerConfig.Font,
 		TextColor = TimerConfig.Text,
 		TextMargin = 6

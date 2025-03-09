@@ -1,6 +1,7 @@
 ConvarManager:CreateConVar("zp_min_players", 2, 8, "cvar used to define minimun players to start the round.")
 ConvarManager:CreateConVar("zp_newround_delay", 10, 8, "cvar used to define new round time delay.")
 ConvarManager:CreateConVar("zp_infection_delay", 10, 8, "cvar used to define infection time delay.")
+ConvarManager:CreateConVar("zp_freeze_time_delay", 10, 8, "cvar used to define freeze time delay.")
 ConvarManager:CreateConVar("zp_max_rounds", 10, 8, "cvar used to define the total of rounds.")
 ConvarManager:CreateConVar("zp_round_time", 300, 8, "cvar used to define round time")
 ConvarManager:CreateConVar("zp_should_winning_reward", 1, 8, "cvar used to define if ZP will reward the round winners")
@@ -120,9 +121,66 @@ function RoundManager:Prepare()
 	end
 	return false
 end
+function RoundManager:FreezeTime()
+	for Key, Ply in pairs(RoundManager:GetAlivePlayers()) do
+		RoundManager:FreezePlayer(Ply)
+	end
+
+	local FreezeDelayTime = cvars.Number("zp_freeze_time_delay",  10)
+
+	RoundManager:SetTimer(FreezeDelayTime, function()
+		for Key, Ply in pairs(player.GetAll()) do
+			RoundManager:UnfreezePlayer(Ply)
+		end
+
+		local InfectionDelayTime = cvars.Number("zp_infection_delay",  10)
+		if InfectionDelayTime > 0 then
+			local TimerSoundIdentifier = "TimerSound"
+			local Count = InfectionDelayTime
+
+			if Count > #CountDownSound then
+				Count = #CountDownSound
+			end
+
+			local TimeToWait = (InfectionDelayTime - #CountDownSound)
+			if TimeToWait < 0 then
+				TimeToWait = 0
+			end
+
+			timer.Create("NoSoundInfectionDelayTimer", TimeToWait, 1, function()
+				BroadcastSound(SafeTableRandom(UnfreezeSounds))
+				BroadcastSound(CountDownSound[Count])
+
+				timer.Create(TimerSoundIdentifier, 1, Count, function()
+					local RepsLeft = timer.RepsLeft(TimerSoundIdentifier)
+
+					if RepsLeft > 0 then
+						BroadcastSound(CountDownSound[RepsLeft])
+					end
+				end)
+			end)
+		end
+
+		RoundManager:SetTimer(cvars.Number("zp_infection_delay",  10), RoundManager.NewRound)
+	end)
+end
+function RoundManager:FreezePlayer(Ply)
+	Ply:SetWalkSpeed(1)
+	Ply:SetRunSpeed(1)
+	Ply:SetCrouchedWalkSpeed(1)
+	Ply:SetJumpPower(1)
+end
+function RoundManager:UnfreezePlayer(Ply)
+	local ZPClass = Ply:IsHuman() and Ply:GetHumanClass() or Ply:GetZombieClass()
+
+	Ply:SetWalkSpeed(ZPClass.Speed)
+	Ply:SetRunSpeed(ZPClass.RunSpeed)
+	Ply:SetCrouchedWalkSpeed(ZPClass.CrouchSpeed)
+	Ply:SetJumpPower(ZPClass.JumpPower)
+end
 function RoundManager:TryNewRound()
 	if RoundManager:Prepare() then
-		RoundManager:SetTimer(cvars.Number("zp_infection_delay",  10), RoundManager.NewRound)
+		RoundManager:FreezeTime()
 	else
 		RoundManager:WaitPlayers()
 	end
