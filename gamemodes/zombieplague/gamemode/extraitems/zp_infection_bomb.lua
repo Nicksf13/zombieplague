@@ -11,5 +11,7 @@ function ExtraItem:OnBuy(ply)
 	end
 end
 function ExtraItem:CanBuy(ply)
-	return ply:Alive()
+	local InfectionBomb = ply:GetWeapon(INFECTION_BOMB)
+	
+	return RoundManager:IsPlayingRound() && !RoundManager:IsSpecialRound() && ply:Alive() && (!IsValid(InfectionBomb) || (IsValid(InfectionBomb) && InfectionBomb:Clip1() < 1))
 end

@@ -6,5 +6,5 @@ function ExtraItem:OnBuy(ply)
 	InfectionManager:Cure(ply, ply)
 end
 function ExtraItem:CanBuy(ply)
-	return !RoundManager:IsSpecialRound() && !RoundManager:LastZombie() && ply:Alive()
+	return RoundManager:IsPlayingRound() && !RoundManager:IsSpecialRound() && !RoundManager:LastZombie() && ply:Alive()
 end

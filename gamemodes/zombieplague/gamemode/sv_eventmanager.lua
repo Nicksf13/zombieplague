@@ -91,16 +91,7 @@ hook.Add("ZPZombieInflictedDamageOnPlayer", "HandleZombieCausingDamage", functio
 		end
 		if !RoundManager:IsSpecialRound() && !RoundManager:LastHuman() then
 			if Target:Team() != TEAM_ZOMBIES then
-				if DmgInfo:GetInflictor():GetClass() == INFECTION_BOMB_ENTITY then
-					if DmgInfo:IsDamageType(DMG_BLAST) then
-						local InfectionBombRadius = cvars.Number("zp_infection_bomb_radius", 20000)
-						if(DmgInfo:GetDamagePosition():DistToSqr(Target:GetPos()) <= InfectionBombRadius) then
-							InfectionManager:Infect(Target, Attacker)
-						end
-
-						DmgInfo:SetDamage(0)
-					end
-				elseif Damage > 0 then
+				if Damage > 0 then
 					InfectionManager:Infect(Target, Attacker)
 					DmgInfo:SetDamage(0)
 				end
