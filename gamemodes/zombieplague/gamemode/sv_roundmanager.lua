@@ -28,10 +28,20 @@ function RoundManager:SearchRounds()
 			RoundToAdd.Order = 100
 			include(Files)
 			
+			--Improve this validation in the future
 			if RoundToAdd:ShouldBeEnabled() then
 				if !RoundToAdd.StartFunction || !RoundToAdd.Name then
 					Utils:Print(WARNING_MESSAGE, "Invalid round format: '" .. File .. "'!")
-				else
+				elseif RoundToAdd.Sound then
+					if RoundToAdd.Sound.Path then
+						Utils:Print(WARNING_MESSAGE, "No 'Path' was informed to the 'Sound' on file: '" .. File .. "'!")
+					end
+					if RoundToAdd.Sound.Duration then
+						Utils:Print(WARNING_MESSAGE, "No 'Duration' was informed to the 'Sound' on file: '" .. File .. "'!")
+					end
+
+					RoundManager:AddRoundType(RoundToAdd)
+				elseif !RoundToAdd.Sound || (RoundToAdd.Sound.Path && RoundToAdd.Sound.Duration) then
 					RoundManager:AddRoundType(RoundToAdd)
 				end
 			end
@@ -46,6 +56,13 @@ function RoundManager:AddRoundType(RoundID, RoundType)
 	if RoundType.StartSound then
 		for k, SoundPath in pairs(RoundType.StartSound) do
 			resource.AddFile("sound/" .. SoundPath)
+		end
+	end
+	if RoundType.Sound then
+		for k, Sound in pairs(RoundType.Sound) do
+			PrintTable(RoundType.Sound)
+			local SoundPath = Sound.Path
+			resource.AddFile("sound/" .. Sound.Path)
 		end
 	end
 end
@@ -270,6 +287,12 @@ function RoundManager:StartRound(RoundToStart, ply)
 	self:SetRoundState(ROUND_PLAYING)
 	self.RoundPlaying = RoundToStart
 
+	if RoundToStart.Sound then
+		timer.Create("TriggerRoundSound", 2, 1, function()
+			SoundManager:EmitLoopSound("RoundSound", SafeTableRandom(RoundToStart.Sound))
+		end)
+	end
+
 	hook.Call("ZPNewRound", GAMEMODE, RoundToStart, self:GetRound())
 end
 function RoundManager:GetCurrentRoundPlaying()
@@ -391,12 +414,17 @@ function RoundManager:ReturnValidPlayerToBeRewardedOrNil(SteamID64, Team)
 	return (ply && ply:Team() == Team) and ply or nil
 end
 function RoundManager:AddDefaultRounds()
+	local AmbienceSound = {{
+		Path = "zombieplague/ambience.wav",
+		Duration = 18
+	}}
 	local ROUND = {}
 	ROUND.Name = "RoundSimpleName"
 	ROUND.MinPlayers = cvars.Number("zp_min_players", 2)
 	ROUND.Chance = 100
 	ROUND.SpecialRound = false
 	ROUND.Respawn = false
+	ROUND.Sound = AmbienceSound
 	ROUND.Order = 1
 	ROUND.StartFunction = function(ply)
 		local PlayersToPlay = RoundManager:GetPlayersToPlay(true)
@@ -419,6 +447,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.Name = "RoundMultiInfectionName"
 	ROUND.Chance = 15
 	ROUND.MinPlayers = 4
+	ROUND.Sound = AmbienceSound
 	ROUND.Order = 2
 	ROUND.Respawn = false
 	ROUND.StartFunction = function()
@@ -444,6 +473,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.SpecialRound = true
 	ROUND.Respawn = false
 	ROUND.StartSound = {"zombieplague/nemesis1.mp3", "zombieplague/nemesis2.mp3"}
+	ROUND.Sound = AmbienceSound
 	ROUND.Order = 3
 	ROUND.StartFunction = function()
 		local PlayersToPlay = RoundManager:GetPlayersToPlay(true)
@@ -476,6 +506,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 3
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/survivor1.mp3", "zombieplague/survivor2.mp3"}
+	ROUND.Sound = AmbienceSound
 	ROUND.Order = 4
 	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
@@ -508,6 +539,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/swarmmode.mp3"}
+	ROUND.Sound = AmbienceSound
 	ROUND.Order = 5
 	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
@@ -532,6 +564,7 @@ function RoundManager:AddDefaultRounds()
 	ROUND.MinPlayers = 4
 	ROUND.SpecialRound = true
 	ROUND.StartSound = {"zombieplague/plaguemode.mp3"}
+	ROUND.Sound = AmbienceSound
 	ROUND.Order = 6
 	ROUND.StartFunction = function()
 		local Players = RoundManager:GetPlayersToPlay(true)
