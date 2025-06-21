@@ -24,6 +24,9 @@ end
 function RoundManager:GetRoundState()
 	return GetGlobalInt("RoundState", ROUND_WAITING_PLAYERS)
 end
+function RoundManager:IsPlayingRound()
+	return self:GetRoundState() == ROUND_PLAYING
+end
 function RoundManager:IsRealisticMod()
 	return cvars.Bool("zp_realistic_mode", false)
 end

@@ -247,7 +247,10 @@ function Dictionary:Init()
 				ZombiePlagueMenu = "Zombie plague menus",
 				ZombiePlagueOptions = "Options menu",
 				PopupYes = "Yes",
-				PopupNo = "No"
+				PopupNo = "No",
+				ZPGrenadeExplodeOnHit = "Projectile set to explode on hit",
+				ZPGrenadeArmOnHit = "Projectile set to arm on hit, will explode %d second(s) after",
+				ZPGrenadeTimeMode = "Projectile will explode %d after shot"
 			}
 		},
 		Order = 0

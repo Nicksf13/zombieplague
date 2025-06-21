@@ -119,6 +119,7 @@ end
 function PLAYER:GiveZombieAllowedWeapon(Weap)
 	self:AddZombieAllowedWeapon(Weap)
 	self:Give(Weap)
+	self:SelectWeapon(Weap)
 end
 function PLAYER:AddZombieAllowedWeapon(Weap)
 	table.insert(self:GetZombieAllowedWeapons(), Weap)

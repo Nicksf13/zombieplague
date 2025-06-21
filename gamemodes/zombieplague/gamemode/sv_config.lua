@@ -1,14 +1,19 @@
 ZOMBIE_KNIFE = "zp_weapon_fists"
 
-INFECTION_BOMB = "weapon_frag"
-INFECTION_BOMB_ENTITY = "npc_grenade_frag"
+INFECTION_BOMB = "zp_infection_grenade_thrower"
+ANTIDOTE_GRENADE = "zp_antidote_grenade_thrower"
 
-ALLOWED_PREFIX = {"zm_", "ze_", "zp_"}
+ALLOWED_PREFIX = {
+	"zm_",
+	"ze_",
+	"zp_"
+}
 
 AdminHumanPlayerModel = "models/player/combine_super_soldier.mdl"
 AdminZombiePlayerModel = "models/player/zombie_soldier.mdl"
 
-NemesisClass = {Health = 5000,
+NemesisClass = {
+		Health = 5000,
 		Speed = 270,
 		RunSpeed = 270,
 		CrouchedSpeed = 0.7,
@@ -16,7 +21,8 @@ NemesisClass = {Health = 5000,
 		Ability = false,
 		PlayerModel = "models/player/zombie_soldier.mdl"
 	}
-SurvivorClass = {Health = 250,
+SurvivorClass = {
+		Health = 250,
 		Speed = 270,
 		RunSpeed = 230,
 		CrouchedSpeed = 0.5,
