@@ -74,7 +74,12 @@ function WeaponManager:CreateNewWeapon()
 	Weapon.DamageMultiplier = 1
 	Weapon.Order = 100
 	function Weapon:GiveWeapon(ply)
-		local Weap = ply:Give(self.WeaponID)
+		local Weap = ply:GetWeapon(self.WeaponID)
+
+    	if !IsValid(Weap) then
+    	    Weap = ply:Give(self.WeaponID)
+    	end
+
 		if Weap:GetMaxClip1() then
 			ply:GiveAmmo(Weap:GetMaxClip1() * 10, Weap:GetPrimaryAmmoType(), true) 
 		else
