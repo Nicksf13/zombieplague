@@ -439,7 +439,7 @@ function PLAYER:SetMeleeWeapon(MeleeWeapon)
 	end
 end
 function PLAYER:GetMeleeWeapon()
-	return self.MeleeWeapon
+	return self.MeleeWeapon or WeaponManager:FindWeaponByWeaponId("weapon_crowbar", WEAPON_MELEE)
 end
 function PLAYER:SetMeleeWeaponGiven(MeleeWeaponGiven)
 	self.MeleeWeaponGiven = MeleeWeaponGiven

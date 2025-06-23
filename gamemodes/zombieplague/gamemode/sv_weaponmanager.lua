@@ -1,3 +1,7 @@
+ConvarManager:CreateConVar("zp_max_allowed_primary_weapons", 1, 8, "cvar used to define how many primary weapons a player can have")
+ConvarManager:CreateConVar("zp_max_allowed_secondary_weapons", 1, 8, "cvar used to define how many secondary weapons a player can have")
+ConvarManager:CreateConVar("zp_max_allowed_melee_weapons", 1, 8, "cvar used to define how many melee weapons a player can have")
+
 WEAPON_PRIMARY = 1
 WEAPON_SECONDARY = 2
 WEAPON_MELEE = 3
@@ -99,7 +103,9 @@ function WeaponManager:AddWeaponMultiplier(WeaponID, DamageMultiplier)
 	self.WeaponsMultiplier[WeaponID] = DamageMultiplier
 end
 function WeaponManager:AddWeapon(Weapon, WeaponType)
-	table.insert(self:GetWeaponsTableByWeaponType(WeaponType), Weapon)
+	local Weapons = self:GetWeaponsTableByWeaponType(WeaponType)
+
+	Weapons[Weapon.WeaponID] = Weapon
 
 	WeaponManager:AddWeaponMultiplier(Weapon.ProjectileID and Weapon.ProjectileID or Weapon.WeaponID, Weapon.DamageMultiplier)
 end
@@ -112,14 +118,42 @@ end
 function WeaponManager:GetMeleeWeapons()
 	return self.MeleeWeapons
 end
+function WeaponManager:PlayerCanPickupWeapon(Ply, WeaponClass)
+	local PrimaryWeapons = self:GetWeaponsTableByWeaponType(WEAPON_PRIMARY)
+
+	if PrimaryWeapons[WeaponClass] then
+		return self:CountPlayerWeaponsByWeaponType(Ply, WEAPON_PRIMARY) < cvars.Number("zp_max_allowed_primary_weapons", 1)
+	end
+
+	local SecondaryWeapons = self:GetWeaponsTableByWeaponType(WEAPON_SECONDARY)
+
+	if SecondaryWeapons[WeaponClass] then
+		return self:CountPlayerWeaponsByWeaponType(Ply, WEAPON_SECONDARY) < cvars.Number("zp_max_allowed_secondary_weapons", 1)
+	end
+
+	return self:CountPlayerWeaponsByWeaponType(Ply, WEAPON_MELEE) < cvars.Number("zp_max_allowed_melee_weapons", 1)
+end
+function WeaponManager:CountPlayerWeaponsByWeaponType(Ply, WeaponType)
+	local Weapons = self:GetWeaponsTableByWeaponType(WeaponType)
+
+	local Amount = 0
+	for _, Weapon in pairs(Ply:GetWeapons()) do
+		if Weapons[Weapon:GetClass()] then
+			Amount = Amount + 1
+		end
+	end
+
+	return Amount
+end
 function WeaponManager:GetWeaponsTableByWeaponType(WeaponType)
 	if WeaponType == WEAPON_PRIMARY then
 		return self.PrimaryWeapons
-	elseif WeaponType == WEAPON_SECONDARY then
-		return self.SecondaryWeapons
-	else
-		return self.MeleeWeapons
 	end
+	if WeaponType == WEAPON_SECONDARY then
+		return self.SecondaryWeapons
+	end
+
+	return self.MeleeWeapons
 end
 function WeaponManager:FindWeaponByWeaponId(ID, WeaponType)
 	for k, Weapon in pairs(self:GetWeaponsTableByWeaponType(WeaponType)) do
@@ -173,14 +207,14 @@ function WeaponManager:OpenWeaponMenu(ply, WeaponType)
 end
 function WeaponManager:IsWeaponTypeSet(ply, WeaponType)
 	if WeaponType == WEAPON_PRIMARY then
-		return ply:GetPrimaryWeapon() != nil
+		return !!ply:GetPrimaryWeapon()
 	end
 
 	if WeaponType == WEAPON_SECONDARY then
-		return ply:GetSecondaryWeapon() != nil
+		return !!ply:GetSecondaryWeapon()
 	end
 
-	return ply:GetMeleeWeapon() != nil
+	return !!ply:GetMeleeWeapon()
 end
 function WeaponManager:GetWeaponNetworkString(WeaponType)
 	if WeaponType == WEAPON_PRIMARY then
@@ -192,9 +226,6 @@ function WeaponManager:GetWeaponNetworkString(WeaponType)
 	end
 
 	return "SendMeleeWeapon"
-end
-function WeaponManager:ReadWeaponRequest(ply, WeaponType)
-	
 end
 net.Receive("SendPrimaryWeapon", function(len, ply)
 	local WeaponID = net.ReadString()

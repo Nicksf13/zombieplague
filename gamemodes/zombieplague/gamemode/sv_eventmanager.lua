@@ -382,14 +382,16 @@ function GM:PlayerSetModel(ply)
 	ply:SetModel(ModelToSet)
 	ply:SetupHands()
 end
-function GM:PlayerCanPickupWeapon(ply, wep)
-	if(ply:IsZombie()) then
-		return ply:ZombieCanUseWeapon(wep:GetClass())
+function GM:PlayerCanPickupWeapon(Ply, Weapon)
+	local WeaponClass = Weapon:GetClass()
+
+	if(Ply:IsZombie()) then
+		return Ply:ZombieCanUseWeapon(WeaponClass)
 	end
 
-	return true
+	return WeaponManager:PlayerCanPickupWeapon(Ply, WeaponClass)
 end
-function GM:CanPlayerSuicide(ply)
+function GM:CanPlayerSuicide(Ply)
 	return false
 end
 function GM:PlayerShouldTaunt()
