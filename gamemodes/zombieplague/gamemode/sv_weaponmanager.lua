@@ -131,7 +131,13 @@ function WeaponManager:PlayerCanPickupWeapon(Ply, WeaponClass)
 		return self:CountPlayerWeaponsByWeaponType(Ply, WEAPON_SECONDARY) < cvars.Number("zp_max_allowed_secondary_weapons", 1)
 	end
 
-	return self:CountPlayerWeaponsByWeaponType(Ply, WEAPON_MELEE) < cvars.Number("zp_max_allowed_melee_weapons", 1)
+	local MeeleWeapons = self:GetWeaponsTableByWeaponType(WEAPON_MELEE)
+
+	if MeeleWeapons[WeaponClass] then
+		return self:CountPlayerWeaponsByWeaponType(Ply, WEAPON_MELEE) < cvars.Number("zp_max_allowed_melee_weapons", 1)
+	end
+
+	return true
 end
 function WeaponManager:CountPlayerWeaponsByWeaponType(Ply, WeaponType)
 	local Weapons = self:GetWeaponsTableByWeaponType(WeaponType)
