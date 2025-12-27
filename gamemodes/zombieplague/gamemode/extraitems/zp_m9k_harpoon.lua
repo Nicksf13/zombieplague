@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPHarpoon"
+﻿ExtraItem.ID = "ZPHarpoon"
 ExtraItem.Name = "ExtraItemHarpoonName"
 ExtraItem.Price = 15
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_thrown_harpoon", 3.4)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemHarpoonName", "Harpoon", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemHarpoonName", "Arpão", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemHarpoonName", "Arpón", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemHarpoonName", "Гарпун", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemHarpoonName", "Гарпун", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemHarpoonName", "魚叉", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemHarpoonName", "もり", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemHarpoonName", "작살", false)

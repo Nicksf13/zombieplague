@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPMatador"
+﻿ExtraItem.ID = "ZPMatador"
 ExtraItem.Name = "ExtraItemMatadorName"
 ExtraItem.Price = 20
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_gdcwa_matador_90mm", 5)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemMatadorName", "Matador", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemMatadorName", "Matador", false)

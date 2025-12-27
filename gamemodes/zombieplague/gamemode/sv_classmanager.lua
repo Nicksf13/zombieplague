@@ -134,27 +134,27 @@ net.Receive("RequestAbility", function(len, ply)
 		local Ability = ply:GetZPClass().Ability
 		if Ability then
 			if !(ply:IsNemesis() || ply:IsSurvivor()) then
-				if Ability:CanUseAbility() then
-					if ply:GetAbilityPower() >= Ability.Drain then
-						if Ability.DrainOnActivation then
-							ply:DrainAbilityPower(Ability.Drain)
+					if Ability:CanUseAbility() then
+						if ply:GetAbilityPower() >= Ability.Drain then
+							if Ability.DrainOnActivation then
+								ply:DrainAbilityPower(Ability.Drain)
+							end
+							Ability:UseAction(ply)
+						else
+							SendPopupMessage(ply, "NoticeNotEnoughAbilityPower")
 						end
-						Ability:UseAction(ply)
 					else
-						SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotEnoughAbilityPower", ply))
+						SendPopupMessage(ply, "NoticeNotAllowed")
 					end
 				else
-					SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
+					SendPopupMessage(ply, "NoticeSpecialClassNotAllowed")
 				end
 			else
-				SendPopupMessage(ply, Dictionary:GetPhrase("NoticeSpecialClassNotAllowed", ply))
+				SendPopupMessage(ply, "NoticeNoAbility")
 			end
 		else
-			SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNoAbility", ply))
+			SendPopupMessage(ply, "NoticeIsNotAlive")
 		end
-	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeIsNotAlive", ply))
-	end
 end)
 net.Receive("SendHumanClass", function(len, ply)
 	ply:SetNextHumanClass(ClassManager:GetZPClass(net.ReadString(), TEAM_HUMANS))

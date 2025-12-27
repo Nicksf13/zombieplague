@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPIED"
+﻿ExtraItem.ID = "ZPIED"
 ExtraItem.Name = "ExtraItemIEDName"
 ExtraItem.Price = 20
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_improvised_explosive", 8)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemIEDName", "IED", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemIEDName", "IED", false)

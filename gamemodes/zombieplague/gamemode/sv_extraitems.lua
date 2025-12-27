@@ -50,7 +50,8 @@ function ExtraItemsManager:GetAvailableExtraItems(ply)
 	for k, ExtraItem in pairs(ExtraItems) do
 		if ExtraItem:CanBuy(ply) then
 			PrettyItems[ExtraItem.ID] = {
-				Description = Dictionary:GetPhrase(ExtraItem.Name, ply) .. " - " .. ExtraItem.Price,
+				Description = ExtraItem.Name .. " - " .. ExtraItem.Price,
+				PhraseKeys = {ExtraItem.Name},
 				Order = ExtraItem.Order
 			}
 		end
@@ -89,15 +90,15 @@ function ExtraItemsManager:BuyItem(ply, ExtraItem)
 					SendSound(ply, SafeTableRandom(ExtraItem.BuySounds))
 				end
 				ply:TakeAmmoPacks(ExtraItem.Price)
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("ExtraItemBought", ply), Dictionary:GetPhrase(ExtraItem.Name, ply)))
+				SendPopupMessage(ply, "ExtraItemBought", ZPPhraseArg(ExtraItem.Name))
 			else
-				SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemEnought", ply))
+				SendPopupMessage(ply, "ExtraItemEnought")
 			end
 		else
-			SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantBuy", ply))
+			SendPopupMessage(ply, "ExtraItemCantBuy")
 		end
 	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemChoose", ply))
+		SendPopupMessage(ply, "ExtraItemChoose")
 	end
 end
 net.Receive("BuyExtraItem", function(len, ply)
@@ -114,14 +115,14 @@ Commands:AddCommand("extraitem", "Open extra item menu.", function(ply, args)
 	if !(ply:IsNemesis() || ply:IsSurvivor()) then
 		ExtraItemsManager:OpenExtraItemMenu(ply)
 	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantOpen", ply))
+		SendPopupMessage(ply, "ExtraItemCantOpen")
 	end
 end)
 net.Receive("RequestExtraItemMenu", function(len, ply)
 	if !(ply:IsNemesis() || ply:IsSurvivor()) then
 		ExtraItemsManager:OpenExtraItemMenu(ply)
 	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("ExtraItemCantOpen", ply))
+		SendPopupMessage(ply, "ExtraItemCantOpen")
 	end
 end)
 

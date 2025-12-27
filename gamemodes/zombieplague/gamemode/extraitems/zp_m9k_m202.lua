@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPM202"
+﻿ExtraItem.ID = "ZPM202"
 ExtraItem.Name = "ExtraItemM202Name"
 ExtraItem.Price = 40
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_m202_rocket", 2)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemM202Name", "M202", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemM202Name", "M202", false)

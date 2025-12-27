@@ -1,24 +1,17 @@
-Dictionary = {LanguageID = "en-us", Language = {}}
+Dictionary = Dictionary or {}
 
+function Dictionary:GetPhrase(PhraseID, ...)
+	local Phrase = language.GetPhrase(PhraseID)
+	if not Phrase or Phrase == PhraseID then
+		Phrase = "{UNKNOWN}"
+	end
 
-function Dictionary:GetPhrase(PhraseID)
-	return Dictionary:GetLanguageBook()[PhraseID] or "{UNKNOWN}"
-end
-function Dictionary:SetLanguageBook(LanguageID, Language, ShouldSave)
-	if ShouldSave then
-		file.Write("zombieplague/language.txt", LanguageID)
+	if select("#", ...) > 0 then
+		local Ok, Formatted = pcall(string.format, Phrase, ...)
+		if Ok then
+			return Formatted
+		end
 	end
-	
-	Dictionary.Language = Language.Value
+
+	return Phrase
 end
-function Dictionary:GetLanguageBook()
-	return Dictionary.Language or {}
-end
-function Dictionary:Start()
-	if file.Exists("zombieplague/language.txt", "DATA") then
-		Dictionary.LanguageID = (file.Read("zombieplague/language.txt", "DATA") or "en-us")
-	end
-end
-net.Receive("SendPlayerLanguage", function()
-	Dictionary:SetLanguageBook(net.ReadString(), net.ReadTable(), net.ReadBool())
-end)

@@ -18,9 +18,9 @@ function InfectionManager:Infect(Infected, Attacker)
 	if !RoundManager:IsRealisticMod() then
 		for i, ply in ipairs(player.GetAll()) do
 			if Infected != Attacker then
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeInfect", ply), Infected:Name(), Attacker:Name()))
+				SendPopupMessage(ply, "NoticeInfect", Infected:Name(), Attacker:Name())
 			else
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeSelfInfect", ply), Infected:Name()))
+				SendPopupMessage(ply, "NoticeSelfInfect", Infected:Name())
 			end
 		end
 	end
@@ -39,9 +39,9 @@ function InfectionManager:Cure(Cured, Attacker)
 	if !RoundManager:IsRealisticMod() then
 		for i, ply in ipairs(player.GetAll()) do
 			if Cured != Attacker then
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeGetCured", ply), Cured:Name(), Attacker:Name()))
+				SendPopupMessage(ply, "NoticeGetCured", Cured:Name(), Attacker:Name())
 			else
-				SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeAntidote", ply), Cured:Name()))
+				SendPopupMessage(ply, "NoticeAntidote", Cured:Name())
 			end
 		end
 	end

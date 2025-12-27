@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPRPG7"
+﻿ExtraItem.ID = "ZPRPG7"
 ExtraItem.Name = "ExtraItemRPG7Name"
 ExtraItem.Price = 20
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_gdcwa_rpg_heat", 5)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemRPG7Name", "RPG-7", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemRPG7Name", "RPG-7", false)

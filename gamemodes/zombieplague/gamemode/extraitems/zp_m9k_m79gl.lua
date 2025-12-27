@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPM79GL"
+﻿ExtraItem.ID = "ZPM79GL"
 ExtraItem.Name = "ExtraItemM79GLName"
 ExtraItem.Price = 22
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_launched_m79", 2)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemM79GLName", "M79 GL", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemM79GLName", "M79 GL", false)

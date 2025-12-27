@@ -198,7 +198,7 @@ end
 function WeaponManager:OpenWeaponMenu(ply, WeaponType)
 	local FixedOptions = {
 		ShouldSaveWeapon = {
-			DescribeText = Dictionary:GetPhrase("SaveSelection", ply),
+			DescribeText = "SaveSelection",
 			Type = "Boolean",
 			Value = WeaponManager:IsWeaponTypeSet(ply, WeaponType)
 		}
