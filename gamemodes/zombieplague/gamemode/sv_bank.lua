@@ -21,19 +21,19 @@ function Bank:GiveTakeAmmoPacks(Requester, Target, GiveTake, Amount)
 			if Amount && Amount > 0 then
 				if GiveTake then
 					Target:GiveAmmoPacks(Amount)
-					SendPopupMessage(Target, string.format(Dictionary:GetPhrase("AmmoPackGiveName", Target), Requester:Name(), Amount))
+					SendPopupMessage(Target, "AmmoPackGiveName", Requester:Name(), Amount)
 				else
 					Target:TakeAmmoPacks(Amount)
-					SendPopupMessage(Target, string.format(Dictionary:GetPhrase("AmmoPackTakeName", Target), Requester:Name(), Amount))
+					SendPopupMessage(Target, "AmmoPackTakeName", Requester:Name(), Amount)
 				end
 			else
-				SendPopupMessage(Requester, Dictionary:GetPhrase("AmmoPackGiveInvalidAmount", Requester))
+				SendPopupMessage(Requester, "AmmoPackGiveInvalidAmount")
 			end
 		else
-			SendPopupMessage(Requester, Dictionary:GetPhrase("AmmoPackGivePlyNotFound", Requester))
+			SendPopupMessage(Requester, "AmmoPackGivePlyNotFound")
 		end
 	else
-		SendPopupMessage(Requester, Dictionary:GetPhrase("CommandNotAccess", Requester))
+		SendPopupMessage(Requester, "CommandNotAccess")
 	end
 end
 

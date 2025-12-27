@@ -136,11 +136,12 @@ function CreateMenu()
 		end)
 	end
 	function MMenu:GetFormatedText(FixedOption)
+		local DescribeText = Dictionary:GetPhrase(FixedOption.DescribeText)
 		if FixedOption.Type == "Boolean" then
-			return FixedOption.DescribeText .. " " .. (FixedOption.Value and Dictionary:GetPhrase("PopupYes") or Dictionary:GetPhrase("PopupNo"))
+			return DescribeText .. " " .. (FixedOption.Value and Dictionary:GetPhrase("PopupYes") or Dictionary:GetPhrase("PopupNo"))
 		end
 
-		return string.format(FixedOption.DescribeText, FixedOption.Value)
+		return string.format(DescribeText, FixedOption.Value)
 	end
 	function MMenu:GetPressFunction(FixedOption)
 		if FixedOption.Type == "Boolean" then
@@ -176,11 +177,10 @@ function OpenZPMenu()
 	table.insert(Options, {Order = 2, Name = Dictionary:GetPhrase("MenuHumanChoose"), Function = function() net.Start("RequestHumanMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
 	table.insert(Options, {Order = 3, Name = Dictionary:GetPhrase("MenuWeaponChoose"), Function = OpenWeaponMenu})
 	table.insert(Options, {Order = 4, Name = Dictionary:GetPhrase("MenuExtraItemChoose"), Function = function() net.Start("RequestExtraItemMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Order = 5, Name = Dictionary:GetPhrase("MenuLanguageChoose"), Function = function() net.Start("RequestLanguageMenu") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu") end})
-	table.insert(Options, {Order = 6, Name = (LocalPlayer():Team() != TEAM_SPECTATOR and Dictionary:GetPhrase("MenuSpectator") or Dictionary:GetPhrase("MenuNonSpectator")), Function = function() net.Start("RequestSpectator") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu")end})
+	table.insert(Options, {Order = 5, Name = (LocalPlayer():Team() != TEAM_SPECTATOR and Dictionary:GetPhrase("MenuSpectator") or Dictionary:GetPhrase("MenuNonSpectator")), Function = function() net.Start("RequestSpectator") net.SendToServer() hook.Remove("SetupMove", "ZPMenuKeyListener") hook.Remove("HUDPaint", "ChooseMenu")end})
 	if LocalPlayer():IsAdmin() || LocalPlayer():IsSuperAdmin() then
 		table.insert(Options, {
-			Order = 7,
+			Order = 6,
 			Name = Dictionary:GetPhrase("MenuAdmin"),
 			Function = function()
 				local AdminOptions = {}
@@ -251,7 +251,7 @@ net.Receive("OpenBackMenu", function()
 
 		if ReceivedOption.PhraseValues then
 			for ValueToReplace, Value in pairs(ReceivedOption.PhraseValues) do
-				Description = string.Replace(Description, "{" .. ValueToReplace .. "}", Value)
+				Description = string.Replace(Description, "{" .. ValueToReplace .. "}", tostring(Value))
 			end
 		end
 

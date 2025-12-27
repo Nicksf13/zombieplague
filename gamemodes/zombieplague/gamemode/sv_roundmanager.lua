@@ -227,17 +227,17 @@ function RoundManager:EndRound(Reason)
 
 	if Reason == ZOMBIES_WIN then
 		for i, ply in ipairs(player.GetAll()) do
-			SendNotifyMessage(ply, Dictionary:GetPhrase("ZombiesWin", ply), 5, Color(0, 255, 0))
+			SendNotifyMessage(ply, "ZombiesWin", 5, Color(0, 255, 0))
 		end
 		BroadcastSound(SafeTableRandom(ZombieWinSounds))
 	elseif Reason == HUMANS_WIN then
 		for i, ply in ipairs(player.GetAll()) do
-			SendNotifyMessage(ply, Dictionary:GetPhrase("HumansWin", ply), 5, Color(0, 255, 0))
+			SendNotifyMessage(ply, "HumansWin", 5, Color(0, 255, 0))
 		end
 		BroadcastSound(SafeTableRandom(HumanWinSounds))
 	else
 		for i, ply in ipairs(player.GetAll()) do
-			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundDraw", ply), 5, Color(0, 255, 0))
+			SendNotifyMessage(ply, "RoundDraw", 5, Color(0, 255, 0))
 		end
 		BroadcastSound(SafeTableRandom(DrawSounds))
 	end
@@ -302,7 +302,8 @@ function RoundManager:OpenRoundsMenu(ply)
 
 	for RoundID, Round in pairs(GoodRounds) do
 		Pretty[RoundID] = {
-			Description = Dictionary:GetPhrase(Round.Name, ply),
+			Description = Round.Name,
+			PhraseKeys = {Round.Name},
 			Order = Round.Order
 		}
 	end
@@ -330,14 +331,14 @@ function RoundManager:RemovePlayerToPlay(ply)
 		NewZombie:Infect()
 
 		for i, ply in ipairs(player.GetAll()) do
-			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("LastZombieLeft", ply), NewZombie:Name()))
+			SendPopupMessage(ply, "LastZombieLeft", NewZombie:Name())
 		end
 	elseif ply:IsHuman() && RoundManager:CountHumansAlive() == 0 && RoundManager:CountZombiesAlive() > 1 then
 		local NewHuman = SafeTableRandom(RoundManager:GetAliveZombies())
 		NewHuman:Cure()
 
 		for i, ply in ipairs(player.GetAll()) do
-			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("LastHumanLeft", ply), NewHuman:Name()))
+			SendPopupMessage(ply, "LastHumanLeft", NewHuman:Name())
 		end
 	end
 	
@@ -404,8 +405,8 @@ function RoundManager:AddDefaultRounds()
 		FirstZombie:Infect()
 		for i, ply in ipairs(PlayersToPlay) do
 			self:AddPlayerToBeRewarded(ply)
-			SendNotifyMessage(ply, Dictionary:GetPhrase("RoundSimple", ply), 5, Color(0, 255, 0))
-			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeFirstZombie", ply), FirstZombie:Name()))
+			SendNotifyMessage(ply, "RoundSimple", 5, Color(0, 255, 0))
+			SendPopupMessage(ply, "NoticeFirstZombie", FirstZombie:Name())
 		end
 		
 	end
@@ -428,7 +429,7 @@ function RoundManager:AddDefaultRounds()
 		
 		for i, ply in ipairs(ValidPlayers) do
 			self:AddPlayerToBeRewarded(ply)
-			SendNotifyMessage(ply, Dictionary:GetPhrase("NoticeMultiInfection", ply), 5, Color(0, 255, 0))
+			SendNotifyMessage(ply, "NoticeMultiInfection", 5, Color(0, 255, 0))
 		end
 	end
 	ROUND.RespawnFunction = function(ply)
@@ -453,7 +454,7 @@ function RoundManager:AddDefaultRounds()
 		
 		for i, ply in ipairs(PlayersToPlay) do
 			self:AddPlayerToBeRewarded(ply)
-			SendPopupMessage(ply, string.format(Dictionary:GetPhrase("NoticeNemesis", ply), Nemesis:Name()))
+			SendPopupMessage(ply, "NoticeNemesis", Nemesis:Name())
 
 			if ROUND.Respawn && ply:IsHuman() then
 				ply.Lifes = 5
@@ -487,7 +488,7 @@ function RoundManager:AddDefaultRounds()
 			end
 			ply:Infect()
 			self:AddPlayerToBeRewarded(ply)
-			SendNotifyMessage(ply, string.format(Dictionary:GetPhrase("NoticeSurvivor", ply), Survivor:Name()), 5, SURVIVOR_COLOR)
+			SendNotifyMessage(ply, "NoticeSurvivor", 5, SURVIVOR_COLOR, Survivor:Name())
 		end
 		Survivor:MakeSurvivor()
 		self:AddPlayerToBeRewarded(Survivor)
@@ -521,7 +522,7 @@ function RoundManager:AddDefaultRounds()
 			i = i + 1
 
 			self:AddPlayerToBeRewarded(v)
-			SendNotifyMessage(v, Dictionary:GetPhrase("NoticeSwarm", v), 5, Color(0, 255, 0))
+			SendNotifyMessage(v, "NoticeSwarm", 5, Color(0, 255, 0))
 		end
 	end
 	RoundManager:AddRoundType("SwarmRound", ROUND)
@@ -545,7 +546,7 @@ function RoundManager:AddDefaultRounds()
 			i = i + 1
 
 			self:AddPlayerToBeRewarded(v)
-			SendNotifyMessage(v, Dictionary:GetPhrase("NoticePlague", v), 5, Color(0, 255, 0))
+			SendNotifyMessage(v, "NoticePlague", 5, Color(0, 255, 0))
 		end
 		SafeTableRandom(RoundManager:GetAliveZombies()):MakeNemesis()
 		SafeTableRandom(RoundManager:GetAliveHumans()):MakeSurvivor()
@@ -567,20 +568,20 @@ net.Receive("SendRounds", function(len, ply)
 		if Round then
 			RoundManager:StartRound(Round)
 			for k, Play in ipairs(player.GetAll()) do
-				SendPopupMessage(Play, string.format(Dictionary:GetPhrase("NoticeForceRound", Play), ply:Name(), Dictionary:GetPhrase(Round.Name, ply)))
+				SendPopupMessage(Play, "NoticeForceRound", ply:Name(), ZPPhraseArg(Round.Name))
 			end
 		else
-			SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
+			SendPopupMessage(ply, "NoticeNotAllowed")
 		end
 	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
+		SendPopupMessage(ply, "NoticeNotAllowed")
 	end
 end)
 net.Receive("RequestRoundsMenu", function(len, ply)
 	if ply:IsAdmin() || ply:IsSuperAdmin() then
 		RoundManager:OpenRoundsMenu(ply)
 	else
-		SendPopupMessage(ply, Dictionary:GetPhrase("NoticeNotAllowed", ply))
+		SendPopupMessage(ply, "NoticeNotAllowed")
 	end
 end)
 

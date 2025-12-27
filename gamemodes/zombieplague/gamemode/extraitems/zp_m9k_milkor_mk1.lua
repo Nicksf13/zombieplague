@@ -1,4 +1,4 @@
-ExtraItem.ID = "ZPMilkorMK1"
+﻿ExtraItem.ID = "ZPMilkorMK1"
 ExtraItem.Name = "ExtraItemMilkorMK1Name"
 ExtraItem.Price = 35
 function ExtraItem:OnBuy(ply)
@@ -14,12 +14,3 @@ function ExtraItem:ShouldBeEnabled()
 end
 
 WeaponManager:AddWeaponMultiplier("m9k_m202_rocket", 4)
-
-Dictionary:RegisterPhrase("en-us", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("pt-br", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("es-ar", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("ru", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("uk", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("tchinese", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("ja", "ExtraItemMilkorMK1Name", "Milkor MK1", false)
-Dictionary:RegisterPhrase("ko", "ExtraItemMilkorMK1Name", "Milkor MK1", false)

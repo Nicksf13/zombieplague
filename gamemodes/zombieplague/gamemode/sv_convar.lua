@@ -18,7 +18,7 @@ Commands:AddCommand("cvars", "List all cvars available for zombieplague", functi
         SendConsoleMessage(ply, Cvar.Name .. " - " .. Cvar.Description)
     end
 
-    SendColorMessage(ply, "ConVars has been printed on the console", Color(255, 255, 0))
+    SendColorMessage(ply, "ConvarsPrinted", Color(255, 255, 0))
 end, "", true)
 
 Commands:AddCommand("makecvarslist", "Make a list of all cvars available for zombieplague", ConvarManager.ListCvars, "", true)

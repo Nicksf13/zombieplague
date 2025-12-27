@@ -1,11 +1,25 @@
+local function ResolvePhraseArgs(Args)
+	for i, Arg in ipairs(Args) do
+		if istable(Arg) and Arg.__phrase then
+			Args[i] = Dictionary:GetPhrase(Arg.__phrase)
+		end
+	end
+	return Args
+end
+
 net.Receive("SendMessage", function()
-	chat.AddText(net.ReadColor(), "[ZP] ", Color(255, 255, 255), net.ReadString())
+	local MessageColor = net.ReadColor()
+	local PhraseID = net.ReadString()
+	local PhraseArgs = ResolvePhraseArgs(net.ReadTable())
+	chat.AddText(MessageColor, "[ZP] ", Color(255, 255, 255), Dictionary:GetPhrase(PhraseID, unpack(PhraseArgs)))
 end)
 net.Receive("SendConsoleMessage", function()
 	print(net.ReadString())
 end)
 net.Receive("SendPopupMessage", function()
-	notification.AddLegacy(net.ReadString(), NOTIFY_GENERIC, 5)
+	local PhraseID = net.ReadString()
+	local PhraseArgs = ResolvePhraseArgs(net.ReadTable())
+	notification.AddLegacy(Dictionary:GetPhrase(PhraseID, unpack(PhraseArgs)), NOTIFY_GENERIC, 5)
 end)
 net.Receive("SendSound", function()
 	surface.PlaySound(net.ReadString())
@@ -21,7 +35,9 @@ net.Receive("SendNotifyMessage", function()
 	lbl:Dock(FILL)
 	lbl:SetFont("GModNotify")
 	lbl:SetContentAlignment(5)
-	lbl:SetText(net.ReadString())
+	local PhraseID = net.ReadString()
+	local PhraseArgs = ResolvePhraseArgs(net.ReadTable())
+	lbl:SetText(Dictionary:GetPhrase(PhraseID, unpack(PhraseArgs)))
 	lbl:SetColor(net.ReadColor())
 	
 	ZPNotice:AddItem(lbl)

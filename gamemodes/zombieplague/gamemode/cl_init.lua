@@ -38,10 +38,8 @@ hook.Add("InitPostEntity", "PlayerRdy", function()
 		file.CreateDir("zombieplague")
 	end
 
-	Dictionary:Start()
 	CreateMenu()
 	net.Start("RequestServerStatus")
-		net.WriteString(Dictionary.LanguageID)
 	net.SendToServer()
 end)
 concommand.Add("zp_ability", function( ply, cmd, args )

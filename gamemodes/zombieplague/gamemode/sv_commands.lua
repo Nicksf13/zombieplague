@@ -15,7 +15,7 @@ function Commands:AddCommand(Command, Description, Function, Help, Private, Perm
 	end
 end
 Commands:AddCommand("commands", "Print the server's commands.", function(ply, args)
-	SendColorMessage(ply, "Server's command list has been printed!", Color(255, 255, 0))
+	SendColorMessage(ply, "CommandListPrinted", Color(255, 255, 0))
 	local StringCommands = "--------------------------Commands--------------------------\n"
 	for k, v in pairs(Commands.CommandList) do
 		if v.Private then
@@ -49,12 +49,12 @@ hook.Add("PlayerSay", "Commands", function(ply, txt)
 		table.remove(args, 1)
 		if Command then
 			if args[1] == "help" || args[1] == "ajuda" then
-				SendColorMessage(ply, "Help:\n" .. Command.Help, Color(255, 255, 0))
+				SendColorMessage(ply, "CommandHelp", Color(255, 255, 0), Command.Help)
 			else
 				if(!Command.PermissionFunction || Command.PermissionFunction(ply)) then
 					Command.Function(ply, args)
 				else
-					SendPopupMessage(ply, Dictionary:GetPhrase("CommandNotAccess", ply))
+					SendPopupMessage(ply, "CommandNotAccess")
 				end
 			end
 			if Command.Private then

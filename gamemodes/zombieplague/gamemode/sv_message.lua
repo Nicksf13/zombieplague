@@ -1,13 +1,22 @@
 AddCSLuaFile("cl_message.lua")
-function BroadcastMessage(text)
+local function WritePhrasePayload(PhraseID, Args)
+	net.WriteString(PhraseID or "")
+	net.WriteTable(Args or {})
+end
+
+function ZPPhraseArg(PhraseID)
+	return {__phrase = PhraseID}
+end
+
+function BroadcastMessage(PhraseID, ...)
 	for i, ply in ipairs(player.GetAll()) do
-		SendColorMessage(ply, text, Color(255, 255, 255))
+		SendColorMessage(ply, PhraseID, Color(255, 255, 255), ...)
 	end
 end
-function BroadcastColorMessage(text, Clr, Exclude)
+function BroadcastColorMessage(PhraseID, Clr, Exclude, ...)
 	for i, ply in ipairs(player.GetAll()) do
 		if !Exclude || !table.HasValue(Exclude, ply) then
-			SendColorMessage(ply, text, Clr)
+			SendColorMessage(ply, PhraseID, Clr, ...)
 		end
 	end
 end
@@ -18,18 +27,18 @@ function BroadcastSound(SoundPath, Exclude)
 		end
 	end
 end
-function BroadcastNotifyMessage(txt, time, Clr)
+function BroadcastNotifyMessage(PhraseID, time, Clr, ...)
 	for i, ply in ipairs(player.GetAll()) do
-		SendNotifyMessage(ply, txt, time, Clr)
+		SendNotifyMessage(ply, PhraseID, time, Clr, ...)
 	end
 end
-function SendMessage(ply, text)
-	SendColorMessage(ply, text, Color(255, 255, 255))
+function SendMessage(ply, PhraseID, ...)
+	SendColorMessage(ply, PhraseID, Color(255, 255, 255), ...)
 end
-function SendColorMessage(ply, text, Clr)
+function SendColorMessage(ply, PhraseID, Clr, ...)
 	net.Start("SendMessage")
 		net.WriteColor(Clr)
-		net.WriteString(text)
+		WritePhrasePayload(PhraseID, {...})
 	net.Send(ply)
 end
 function SendConsoleMessage(ply, text)
@@ -37,9 +46,9 @@ function SendConsoleMessage(ply, text)
 		net.WriteString(text)
 	net.Send(ply)
 end
-function SendPopupMessage(ply, txt)
+function SendPopupMessage(ply, PhraseID, ...)
 	net.Start("SendPopupMessage")
-		net.WriteString(txt)
+		WritePhrasePayload(PhraseID, {...})
 	net.Send(ply)
 end
 function SendSound(ply, SoundPath)
@@ -47,10 +56,10 @@ function SendSound(ply, SoundPath)
 		net.WriteString(SoundPath)
 	net.Send(ply)
 end
-function SendNotifyMessage(ply, txt, time, color)
+function SendNotifyMessage(ply, PhraseID, time, color, ...)
 	net.Start("SendNotifyMessage")
 		net.WriteInt(time or 5, 8)
-		net.WriteString(txt)
+		WritePhrasePayload(PhraseID, {...})
 		net.WriteColor(color or Color(255, 255, 255))
 	net.Send(ply)
 end

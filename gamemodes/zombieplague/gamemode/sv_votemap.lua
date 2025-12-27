@@ -79,15 +79,15 @@ function ZPVoteMap:EndVotemap()
 	RoundManager:SetTimer(5, EndVoteFunction)
 
 	for i, ply in ipairs(player.GetAll()) do
-		SendColorMessage(ply, string.format(Dictionary:GetPhrase(Phrase, ply), Replace), Color(0, 255, 0))
+		SendColorMessage(ply, Phrase, Color(0, 255, 0), Replace)
 	end
 end
 Commands:AddCommand("rounds_left", "Check how many rounds are left.", function(ply)
 	local RoundsLeft = RoundManager:RoundsLeft()
 	if RoundsLeft > 0 then
-		SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
+		SendColorMessage(ply, "RoundsLeft", Color(0, 255, 0), RoundsLeft)
 	else
-		SendColorMessage(ply, Dictionary:GetPhrase("FinalRound", ply), Color(255, 0, 0))
+		SendColorMessage(ply, "FinalRound", Color(255, 0, 0))
 	end
 end)
 hook.Add("ZPNewRound", "zp_round_start_notify_rounds_left", function()
@@ -95,9 +95,9 @@ hook.Add("ZPNewRound", "zp_round_start_notify_rounds_left", function()
 		local RoundsLeft = RoundManager:RoundsLeft()
 		for i, ply in ipairs(player.GetAll()) do
 			if RoundsLeft > 0 then
-				SendColorMessage(ply, string.format(Dictionary:GetPhrase("RoundsLeft", ply), RoundsLeft), Color(0, 255, 0))
+				SendColorMessage(ply, "RoundsLeft", Color(0, 255, 0), RoundsLeft)
 			else
-				SendColorMessage(ply, Dictionary:GetPhrase("FinalRound", ply), Color(255, 0, 0))
+				SendColorMessage(ply, "FinalRound", Color(255, 0, 0))
 			end
 		end
 	end

@@ -448,19 +448,6 @@ function PLAYER:GetMeleeWeaponGiven()
 	return self.MeleeWeaponGiven or false
 end
 ---------------------------Weapons--------------------------
---------------------------Languages-------------------------
-function PLAYER:SetLanguage(Language, ShouldSave)
-	self.Language = Language
-	net.Start("SendPlayerLanguage")
-		net.WriteString(Language)
-		net.WriteTable(Dictionary:GetClientSideLanguageBook(Language))
-		net.WriteBool(ShouldSave)
-	net.Send(self)
-end
-function PLAYER:GetLanguage()
-	return self.Language or "en-us"
-end
---------------------------Languages-------------------------
 ---------------------------Move-----------------------------
 function PLAYER:SetLastMove(LastMove)
 	self.LastMove = LastMove
@@ -539,7 +526,7 @@ function PLAYER:Infect(SilentInfection)
 		self:SetMaxAbilityPower(Ability.MaxAbilityPower)
 		self:SetAbilityPower(Ability.MaxAbilityPower)
 
-		SendPopupMessage(self, Dictionary:GetPhrase("NoticeHasHability", self))
+		SendPopupMessage(self, "NoticeHasHability")
 	else
 		self:SetMaxAbilityPower(-1)
 		self:SetAbilityPower(-1)
@@ -627,7 +614,7 @@ function PLAYER:MakeHuman()
 		self:SetMaxAbilityPower(Ability.MaxAbilityPower)
 		self:SetAbilityPower(Ability.MaxAbilityPower)
 
-		SendPopupMessage(self, Dictionary:GetPhrase("NoticeHasHability", self))
+		SendPopupMessage(self, "NoticeHasHability")
 	else
 		self:SetMaxAbilityPower(-1)
 		self:SetAbilityPower(-1)
@@ -790,7 +777,6 @@ net.Receive("SendVoice", function(len, ply)
 	ply:SetTalking(net.ReadBool())
 end)
 
-util.AddNetworkString("SendPlayerLanguage")
 util.AddNetworkString("SendAmmoPacks")
 util.AddNetworkString("SendBatteryCharge")
 util.AddNetworkString("SendMaxBatteryCharge")
